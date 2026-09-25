@@ -1,0 +1,25 @@
+---
+// Intro con texto a la izquierda y dos fotos apiladas a la derecha (Dental
+// Trauma, Professional Development). El texto va en el slot; normalmente
+// H2 + párrafos + botón Contact Us.
+interface Props {
+  topSrc: string;
+  topAlt: string;
+  bottomSrc: string;
+  bottomAlt: string;
+  bottomPosition?: string;
+}
+const { topSrc, topAlt, bottomSrc, bottomAlt, bottomPosition = 'object-top' } = Astro.props;
+---
+
+<section class="bg-white py-16 lg:py-20">
+  <div class="mx-auto grid max-w-6xl items-center gap-10 px-6 md:grid-cols-[36fr_64fr]">
+    <div>
+      <slot />
+    </div>
+    <div class="flex flex-col gap-5">
+      <img src={topSrc} alt={topAlt} class="aspect-[670/300] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+      <img src={bottomSrc} alt={bottomAlt} class={`aspect-[670/290] w-full rounded-[20px] object-cover shadow-md ${bottomPosition}`} loading="lazy" />
+    </div>
+  </div>
+</section>

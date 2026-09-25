@@ -1,0 +1,31 @@
+---
+import { wp, GET_FAQS } from '../../lib/wordpress';
+
+interface Props {
+  heading?: string;
+}
+const { heading } = Astro.props;
+
+let faqs: { title: string; content: string }[] = [];
+try {
+  const data = await wp.request<{ faqs: { nodes: { title: string; content: string }[] } }>(GET_FAQS);
+  faqs = data.faqs.nodes;
+} catch {
+  faqs = [];
+}
+---
+
+<section class="mx-auto max-w-3xl px-6 py-16">
+  {heading && <h2 class="text-3xl font-semibold leading-tight text-stone-900 text-center reveal">{heading}</h2>}
+  <div class="mt-8 divide-y divide-stone-200">
+    {faqs.map((faq) => (
+      <details class="group py-4">
+        <summary class="flex cursor-pointer list-none items-center justify-between font-medium text-stone-900">
+          {faq.title}
+          <span class="ml-4 shrink-0 transition group-open:rotate-45">+</span>
+        </summary>
+        <div class="prose mt-3 text-stone-600" set:html={faq.content} />
+      </details>
+    ))}
+  </div>
+</section>

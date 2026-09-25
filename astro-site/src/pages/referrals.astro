@@ -1,0 +1,396 @@
+---
+// Referrals: el formulario original (JetFormBuilder) es un único bloque
+// larguísimo (doctor + paciente + tratamiento + seguro + adjuntos +
+// condiciones especiales). Se divide en 4 pasos para bajar la fricción de
+// abandono, con validación nativa del navegador por paso — el envío real
+// sigue siendo un solo POST a /api/referral al final.
+//
+// Nombres de campo (`name="..."`) alineados a los del formulario original en
+// WordPress donde tiene sentido conservarlos (ver auditoría del cliente),
+// para que una futura integración/migración de datos no tenga que remapear.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+
+const referringDoctors = [
+  'Dr. Jacqueline Lopez Gross, DDS, MSc, FRCD (C)',
+  'Dr. Manfred Friedman, B.D.S (Wits.) B.Ch.D Hons (Pret)',
+  'Dr. R. Gregory Carr, DDS',
+  "Dr. Inés Marín Betancourt, DDS, FRCD (C)",
+];
+
+const steps = [
+  { label: 'Referring Doctor' },
+  { label: 'Patient' },
+  { label: 'Treatment' },
+  { label: 'Insurance & Notes' },
+];
+---
+
+<BaseLayout title="Referrals" description="Refer a patient to 562 Endodontics online in minutes.">
+
+  <!-- Banner de título: componente compartido (src/components/PageHero.astro)
+       para que el resto de páginas internas (Endodontic Treatments, High
+       Tech Facility, etc.) usen el mismo alto y tratamiento de foto. -->
+  <PageHero title="Referrals" image="/images/referrals/hero.jpg" />
+
+  <!-- 2. INTRO + CTAs -->
+  <section class="bg-white py-20 text-center">
+    <div class="mx-auto max-w-2xl px-6">
+      <h2 class="font-heading text-3xl font-light leading-tight text-brand-ink sm:text-[38px]">
+        Thanks for entrusting us with your patients' endodontic needs.
+      </h2>
+      <p class="mt-5 text-lg text-brand-ink/70">
+        At <strong class="font-semibold text-brand-ink">562 endodontics</strong>, we understand how important it is
+        to ensure the highest quality of care, and your referral means a lot to us. Rest assured that we will take
+        great care in providing the best possible service for your patient.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        <a href="#form" class="rounded-full bg-brand-rust px-8 py-3.5 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-brand-rustDark">
+          Online Referral Form
+        </a>
+        <a href="/files/PatientReferral_FORM2025.pdf" download class="rounded-full border border-brand-rust px-8 py-3.5 font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust transition hover:bg-brand-rust/5">
+          Printable Referral Form
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ONLINE REFERRAL FORM -->
+  <section id="form" class="relative scroll-mt-24 overflow-hidden bg-cover bg-center py-20" style="background-image: url('/images/referrals/form-bg.jpg');">
+    <div class="absolute inset-0 bg-[#f2eeea]/95" aria-hidden="true"></div>
+
+    <div class="relative mx-auto max-w-3xl px-6">
+      <div class="text-center">
+        <h2 class="font-heading text-3xl font-light leading-tight text-brand-ink sm:text-[38px]">Online Referral Form</h2>
+        <p class="mt-4 text-lg text-brand-ink/70">Please fill out this form to refer a patient.</p>
+        <p class="mt-1 text-lg text-brand-ink/70">You will receive a copy of the referral form via email for your records after submission.</p>
+      </div>
+      <hr class="my-10 border-brand-rust/20" />
+
+      <!-- Barra de pasos: línea conectora de fondo + línea de progreso rust
+           encima, ambas centradas en los círculos; el paso activo se
+           destaca con un anillo y un leve aumento de escala. -->
+      <div class="relative mb-12">
+        <div class="absolute top-5 h-0.5 bg-stone-300" style="left: 12.5%; right: 12.5%;" aria-hidden="true"></div>
+        <div id="progress-line" class="absolute top-5 h-0.5 bg-brand-rust transition-all duration-300" style="left: 12.5%; width: 0%;" aria-hidden="true"></div>
+        <ol class="relative grid grid-cols-4 gap-2" id="progress-steps">
+          {steps.map((step, i) => (
+            <li class="step-indicator flex flex-col items-center" data-step-indicator={i}>
+              <span class="flex h-10 w-10 items-center justify-center rounded-full border-2 border-stone-300 bg-white font-heading text-sm font-semibold text-stone-400 transition-all duration-300">
+                {i + 1}
+              </span>
+              <span class="mt-2 block text-center text-xs font-medium text-stone-500">{step.label}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <form id="referral-form" action="/api/referral" method="post" enctype="multipart/form-data" novalidate class="rounded-2xl bg-white p-6 shadow-lg sm:p-10">
+
+        <!-- PASO 1: Doctor referente -->
+        <fieldset data-step="0" class="form-step space-y-6">
+          <div>
+            <legend class="font-heading text-xl font-semibold text-brand-ink">Preferred doctor for appointment scheduling</legend>
+            <div class="mt-3 space-y-2 text-sm text-brand-ink/80">
+              {referringDoctors.map((d, i) => (
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" name="refering_doctor[]" value={d} />
+                  {d}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p class="font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">Referring Doctor</p>
+            <div class="mt-3 grid gap-4 sm:grid-cols-2">
+              <label class="block text-sm font-medium text-brand-ink">
+                Dr.'s First Name *
+                <input type="text" name="doctor_name" required class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+              <label class="block text-sm font-medium text-brand-ink">
+                Last Name *
+                <input type="text" name="doctor_last_name" required class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+              <label class="block text-sm font-medium text-brand-ink">
+                Email *
+                <input type="email" name="_email" required class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+              <label class="block text-sm font-medium text-brand-ink">
+                Office Phone Number *
+                <input type="tel" name="OfficePhoneNumber" required class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+              <label class="block text-sm font-medium text-brand-ink sm:col-span-2">
+                Office Name *
+                <input type="text" name="office_name" required class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- PASO 2: Información del paciente -->
+        <fieldset data-step="1" class="form-step hidden space-y-4">
+          <legend class="font-heading text-xl font-semibold text-brand-ink">Patient Information</legend>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="block text-sm font-medium text-brand-ink">
+              First Name *
+              <input type="text" name="first_name" required class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+            </label>
+            <label class="block text-sm font-medium text-brand-ink">
+              Last Name *
+              <input type="text" name="last_name" required class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+            </label>
+            <label class="block text-sm font-medium text-brand-ink">
+              Patient Email
+              <input type="email" name="_patient_email" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+            </label>
+            <label class="block text-sm font-medium text-brand-ink">
+              Preferred Phone number *
+              <input type="tel" name="cell_phone" required class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+            </label>
+            <label class="block text-sm font-medium text-brand-ink">
+              Home Phone
+              <input type="tel" name="home_phone" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+            </label>
+            <label class="block text-sm font-medium text-brand-ink">
+              Date of Birth *
+              <input type="date" name="date_birth" required class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- PASO 3: Referred for + adjuntos -->
+        <fieldset data-step="2" class="form-step hidden space-y-6">
+          <div>
+            <legend class="font-heading text-xl font-semibold text-brand-ink">Referred For</legend>
+            <div class="mt-4 space-y-4">
+              <label class="block text-sm font-medium text-brand-ink">
+                Tooth Number (separate with comma) *
+                <textarea name="tooth_number" required rows="2" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm"></textarea>
+              </label>
+
+              <fieldset class="rounded-lg border border-stone-200 p-4">
+                <legend class="px-1 text-sm font-medium text-brand-ink">Referred for *</legend>
+                <div class="mt-2 space-y-2 text-sm">
+                  <label class="flex items-center gap-2"><input type="radio" name="referred_for" value="Consult Only" required /> Consult Only</label>
+                  <label class="flex items-center gap-2"><input type="radio" name="referred_for" value="Consult and Treatment as Needed" /> Consult and Treatment as Needed</label>
+                  <label class="flex items-center gap-2"><input type="radio" name="referred_for" value="Emergency Appointment" /> Emergency Appointment</label>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+
+          <div>
+            <p class="font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">Please upload any patient files or x-rays here:</p>
+            <p class="mt-1 text-xs text-brand-ink/60">Please send the most recent periapical and bitewing if available.</p>
+            <label class="mt-2 block text-sm font-medium text-brand-ink">
+              Add your file here
+              <input type="file" name="media_field[]" multiple accept="image/*,.pdf" class="mt-1 w-full rounded-lg border border-dashed border-stone-300 px-4 py-3 text-sm" />
+              <span class="mt-1 block text-xs font-normal text-brand-ink/50">Maximum file size: 10 MB per file.</span>
+            </label>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="block text-sm font-medium text-brand-ink">
+              Tooth Status *
+              <select name="tooth_status" required class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
+                <option value="">Select an option</option>
+                <option>Previous RCT - Initiated RCT</option>
+                <option>Symptomatic</option>
+                <option>Asymptomatic</option>
+                <option>Fractured Tooth/Restoration</option>
+                <option>Severe Pain/Swelling</option>
+                <option>Trauma</option>
+                <option>Sinus Tract</option>
+              </select>
+            </label>
+            <label class="block text-sm font-medium text-brand-ink">
+              Restorative Treatment Planned *
+              <select name="restorative_treatment_planned" required class="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
+                <option value="">Select an option</option>
+                <option>Direct Restoration</option>
+                <option>Crown</option>
+                <option>No treatment plan yet</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="block text-sm font-medium text-brand-ink">
+            Restoration After Treatment *
+            <span class="mt-0.5 block text-xs font-normal text-brand-ink/60">We will restore with Fuji to keep as a base for the composite core unless you prefer:</span>
+            <select name="restoration_after_treatment" required class="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
+              <option value="">Select an option</option>
+              <option>Leave space for post</option>
+              <option>Restore the core</option>
+              <option>Restore with post and core</option>
+              <option>Restore with sponge + Glass Ionomer</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <!-- PASO 4: Seguro + notas + consentimiento -->
+        <fieldset data-step="3" class="form-step hidden space-y-6">
+          <div>
+            <legend class="font-heading text-xl font-semibold text-brand-ink">Insurance Information</legend>
+            <div class="mt-4 grid gap-4 sm:grid-cols-2">
+              <label class="block text-sm font-medium text-brand-ink">
+                Company *
+                <input type="text" name="_company" required class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+              <label class="block text-sm font-medium text-brand-ink">
+                Member ID/Certificate ID #
+                <input type="text" name="member_id_policy" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+              <label class="block text-sm font-medium text-brand-ink">
+                Group #/Policy #
+                <input type="text" name="group_number" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+              <label class="block text-sm font-medium text-brand-ink">
+                Policy Holder
+                <input type="text" name="policy_holder" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+              <label class="block text-sm font-medium text-brand-ink">
+                Policy Holder: Date of Birth
+                <input type="date" name="policy_holder_date_birth" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+              <label class="block text-sm font-medium text-brand-ink">
+                Policy Holder Address
+                <input type="text" name="policy_holder_address" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm" />
+              </label>
+            </div>
+          </div>
+
+          <label class="block text-sm font-medium text-brand-ink">
+            Special Accommodation
+            <span class="mt-0.5 block text-xs font-normal text-brand-ink/60">Relevant medical condition, accommodation, dental anxiety, urgent matter, staff member, doctor's relative, etc.</span>
+            <textarea name="special_considerations" rows="3" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm"></textarea>
+          </label>
+
+          <p class="text-xs text-brand-ink/50">All your data is protected through reCAPTCHA.</p>
+
+          <label class="flex items-start gap-2 text-xs text-brand-ink/70">
+            <input type="checkbox" name="terms_conditions" required class="mt-0.5" />
+            I acknowledge that I agree to the Terms of Use and have read the <a href="/privacy-policy" class="underline">Privacy Policy</a> *
+          </label>
+        </fieldset>
+
+        <!-- Navegación entre pasos -->
+        <div class="mt-8 flex items-center justify-between border-t border-stone-100 pt-6">
+          <button type="button" id="prev-step" class="hidden rounded-full border border-stone-300 px-6 py-2 font-heading text-sm font-semibold text-brand-ink transition hover:bg-stone-50">
+            Back
+          </button>
+          <div class="ml-auto flex gap-3">
+            <button type="button" id="next-step" class="rounded-full bg-brand-rust px-8 py-2 font-heading text-sm font-semibold text-white transition hover:bg-brand-rustDark">
+              Next
+            </button>
+            <button type="submit" id="submit-step" class="hidden rounded-full bg-brand-rust px-8 py-2 font-heading text-sm font-semibold text-white transition hover:bg-brand-rustDark">
+              Submit
+            </button>
+          </div>
+        </div>
+
+        <p id="form-error" class="mt-4 hidden text-sm font-medium text-red-600" role="alert"></p>
+      </form>
+
+      <div id="form-success" class="hidden rounded-2xl border border-emerald-200 bg-emerald-50 p-8 text-center">
+        <h2 class="font-heading text-xl font-semibold text-emerald-800">Referral received</h2>
+        <p class="mt-2 text-sm text-emerald-700">
+          Thank you — we've sent a copy of this referral to your email for your records. Our team will
+          be in touch shortly to confirm the appointment.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById('referral-form') as HTMLFormElement;
+    const stepsEls = [...document.querySelectorAll<HTMLFieldSetElement>('.form-step')];
+    const indicators = [...document.querySelectorAll<HTMLLIElement>('[data-step-indicator]')];
+    const progressLine = document.getElementById('progress-line') as HTMLDivElement;
+    const prevBtn = document.getElementById('prev-step') as HTMLButtonElement;
+    const nextBtn = document.getElementById('next-step') as HTMLButtonElement;
+    const submitBtn = document.getElementById('submit-step') as HTMLButtonElement;
+    const errorEl = document.getElementById('form-error') as HTMLParagraphElement;
+
+    let current = 0;
+
+    function render() {
+      stepsEls.forEach((step, i) => step.classList.toggle('hidden', i !== current));
+
+      indicators.forEach((ind, i) => {
+        const circle = ind.querySelector('span');
+        if (!circle) return;
+        const isDone = i < current;
+        const isActive = i === current;
+
+        circle.classList.toggle('bg-brand-rust', isActive || isDone);
+        circle.classList.toggle('border-brand-rust', isActive || isDone);
+        circle.classList.toggle('text-white', isActive || isDone);
+        circle.classList.toggle('bg-white', !(isActive || isDone));
+        circle.classList.toggle('text-stone-400', !(isActive || isDone));
+        circle.classList.toggle('border-stone-300', !(isActive || isDone));
+
+        // El paso ACTIVO se destaca más que uno simplemente "completado":
+        // anillo exterior + un poco más grande.
+        circle.classList.toggle('ring-4', isActive);
+        circle.classList.toggle('ring-brand-rust/25', isActive);
+        circle.classList.toggle('scale-110', isActive);
+      });
+
+      // Línea de progreso: 0% en el paso 1, 100% del tramo en el último paso.
+      const progressFraction = current / (stepsEls.length - 1);
+      progressLine.style.width = `calc(75% * ${progressFraction})`;
+
+      prevBtn.classList.toggle('hidden', current === 0);
+      nextBtn.classList.toggle('hidden', current === stepsEls.length - 1);
+      submitBtn.classList.toggle('hidden', current !== stepsEls.length - 1);
+      errorEl.classList.add('hidden');
+    }
+
+    function currentStepIsValid(): boolean {
+      const step = stepsEls[current];
+      const fields = [...step.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea')];
+      for (const field of fields) {
+        if (!field.reportValidity()) return false;
+      }
+      return true;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (!currentStepIsValid()) return;
+      current = Math.min(current + 1, stepsEls.length - 1);
+      render();
+      window.scrollTo({ top: (form.closest('section') as HTMLElement).offsetTop - 20, behavior: 'smooth' });
+    });
+
+    prevBtn.addEventListener('click', () => {
+      current = Math.max(current - 1, 0);
+      render();
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentStepIsValid()) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      errorEl.classList.add('hidden');
+
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+        if (!res.ok) throw new Error('Request failed');
+        form.classList.add('hidden');
+        document.querySelector('.relative.mb-12')?.classList.add('hidden');
+        document.getElementById('form-success')?.classList.remove('hidden');
+      } catch {
+        errorEl.textContent = 'Something went wrong sending your referral. Please call us at (519) 601-3636 or try again.';
+        errorEl.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
+      }
+    });
+
+    render();
+  </script>
+
+</BaseLayout>

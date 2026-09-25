@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import LineIcon from '../components/LineIcon.astro';
+import JustifiedGallery from '../components/JustifiedGallery.astro';
+import ContactCta from '../components/ContactCta.astro';
+import { doctors } from '../data/doctors';
+
+const G = '/images/gallery';
+
+const values = [
+  { icon: 'stethoscope' as const, title: 'Limited to endodontics', text: 'Experts in pain management and treating complex root canal treatments.' },
+  { icon: 'heart' as const, title: 'Empathetic', text: 'We believe that dental care should be respectful, responsive to individual patient preferences, needs and values.' },
+  { icon: 'users' as const, title: 'Professional team', text: 'We work with dentists by providing high-quality endodontic care in a comprehensive and collaborative environment.' },
+  { icon: 'award' as const, title: 'Community focused', text: 'We teach and actively volunteer in our community. We also welcome dental students, dental practitioners, and staff in our clinic for learning and shadowing opportunities to contribute in their professional development, strengthen our network, and to encourage collaboration in the field.' },
+];
+
+const gallery = [
+  { src: `${G}/562-endodontics-jacqueline-lopez-2.jpg`, alt: 'Dr. Jacqueline Lopez Gross at 562 endodontics' },
+  { src: `${G}/562-endodontics-19.jpg`, alt: 'Inside the 562 endodontics clinic' },
+  { src: `${G}/562-endodontics-jacqueline-lopez-3.jpg`, alt: 'Dr. Jacqueline Lopez Gross holding a tooth model' },
+  { src: `${G}/562-endodontics-34.jpg`, alt: 'Treatment room at 562 endodontics' },
+  { src: `${G}/562-endodontics-4.jpg`, alt: 'Interior of the 562 endodontics clinic' },
+  { src: `${G}/562-endodontics-35.jpg`, alt: 'Detail of the 562 endodontics clinic' },
+  { src: `${G}/562-endodontics-clinic.jpg`, alt: 'The 562 endodontics clinic building on Waterloo Street' },
+  { src: `${G}/502-team-shots-7-low.jpg`, alt: 'The 562 endodontics team of doctors' },
+  { src: `${G}/502-team-shots-4-low.jpg`, alt: 'The full 562 endodontics team' },
+  { src: `${G}/562-endodontics-explore-our-technology.jpg`, alt: 'Endodontic technology at 562 endodontics' },
+  { src: `${G}/562-endodontics-jacqueline-lopez.jpg`, alt: 'Dr. Jacqueline Lopez Gross, endodontist' },
+];
+---
+
+<BaseLayout
+  title="About Us"
+  description="562 endodontics is one of the largest teams of doctors in London, Ontario dedicated exclusively to endodontic care and root canal treatment. Meet our endodontists."
+>
+  <PageHero title="About Us" image={`${G}/562-endodontics-clinic.jpg`} />
+
+  <!-- S2: Intro + valores + collage -->
+  <section class="bg-white py-16 lg:py-20">
+    <div class="mx-auto grid max-w-6xl items-start gap-12 px-6 md:grid-cols-[57fr_43fr]">
+      <div>
+        <p class="font-heading text-lg font-semibold text-brand-tan">562 endodontics</p>
+        <h2 class="mt-2 font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">We are the place dedicated to root canals.</h2>
+        <p class="mt-5 text-lg text-brand-ink/80">
+          562 endodontics is proud to be one of the largest teams of doctors in the London, Ontario area dedicated
+          exclusively to endodontic care and root canal treatment. Our practice focuses entirely on advanced
+          endodontic diagnosis and the management of routine and complex cases referred by dentists throughout London
+          and surrounding communities. By concentrating solely on root canal therapy, we provide focused clinical
+          expertise supported by modern endodontic technology. Our office integrates 3D CBCT imaging, enhanced
+          magnification, advanced irrigation protocols, the GentleWave® System, and SWEEPS® laser-activated
+          irrigation to support thorough canal disinfection and comprehensive treatment. Combining experience,
+          innovation, and a patient-centered approach, we are committed to delivering precise, efficient, and
+          compassionate root canal care in a professional environment.
+        </p>
+
+        <div class="mt-10 grid gap-8 sm:grid-cols-2" data-reveal-each>
+          {values.map((v) => (
+            <div>
+              <span class="flex h-[60px] w-[60px] items-center justify-center rounded-[14px] bg-brand-tan text-white">
+                <LineIcon name={v.icon} class="h-8 w-8" />
+              </span>
+              <h3 class="mt-4 font-heading text-2xl font-semibold text-brand-rust">{v.title}</h3>
+              <p class="mt-2 text-lg text-brand-ink/80">{v.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:mt-28">
+        <div class="grid grid-cols-2 gap-4">
+          <img src={`${G}/img_5894-1.jpg`} alt="Doctor working at the operating microscope in the 562 endodontics clinic" class="aspect-[208/300] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+          <img src={`${G}/img_5818-2-e1695851227303.jpg`} alt="Doctor and assistants with the operating microscope" class="aspect-[208/300] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+        </div>
+        <img src={`${G}/502-team-shots-4-low.jpg`} alt="The 562 endodontics team" class="aspect-[447/290] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- S3: Meet the Doctors -->
+  <section class="bg-white pb-16 lg:pb-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="text-center font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Meet the Doctors</h2>
+      <div class="mt-10 space-y-8" data-reveal-each>
+        {doctors.map((doc) => (
+          <article class="grid items-center gap-8 rounded-[20px] bg-brand-rust p-6 md:grid-cols-[40fr_60fr] md:p-8">
+            <img src={doc.photo} alt={`${doc.name}, endodontist`} class="h-auto w-full rounded-[20px]" loading="lazy" />
+            <div class="flex flex-col justify-center md:pr-6">
+              <h3 class="font-heading text-3xl font-semibold leading-tight text-white sm:text-[32px]">{doc.name}</h3>
+              <div class="my-5 h-0.5 w-20 bg-brand-tan"></div>
+              <div class="space-y-4 text-lg text-white">
+                {doc.bio.map((p) => <p>{p}</p>)}
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- S4: Galería -->
+  <section class="bg-white pb-16 lg:pb-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <JustifiedGallery images={gallery} />
+    </div>
+  </section>
+
+  <ContactCta />
+</BaseLayout>

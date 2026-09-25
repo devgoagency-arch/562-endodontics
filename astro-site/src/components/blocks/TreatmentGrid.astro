@@ -1,0 +1,58 @@
+---
+import Icon from '../Icon.astro';
+import { wp, GET_TREATMENTS } from '../../lib/wordpress';
+
+interface Props {
+  heading?: string;
+  intro?: string;
+}
+const { heading, intro } = Astro.props;
+
+// Respaldo con los 6 tratamientos reales del sitio actual. Nota: en el
+// WordPress en vivo estas descripciones son texto Lorem Ipsum sin terminar
+// — aquí se reemplazan por contenido real en vez de repetir el placeholder.
+// Íconos: del set real descargado del sitio (public/icons); "apical-surgery"
+// y "cracked-teeth" están confirmados 1:1 contra el original (Dentist Chair /
+// broken tooth), el resto es la asignación más semánticamente cercana del
+// mismo set — ajustar si el cliente confirma otra asociación.
+const FALLBACK_TREATMENTS = [
+  { slug: 'root-canal', title: 'Root Canal Therapy', summary: 'Removing infected pulp to relieve pain and save your natural tooth.', icon: 'nerve' },
+  { slug: 'endodontic-retreatment', title: 'Endodontic Retreatment', summary: "A second chance for a tooth when an earlier root canal hasn't healed properly.", icon: 'tools' },
+  { slug: 'apical-surgery', title: 'Apical Surgery', summary: "A precise surgical option when conventional retreatment isn't enough.", icon: 'Dentist-Chair' },
+  { slug: 'cracked-teeth', title: 'Cracked Teeth', summary: 'Diagnosis and treatment to save a fractured tooth whenever possible.', icon: 'broken-tooth' },
+  { slug: 'dental-trauma', title: 'Dental Trauma', summary: 'Prompt care for injured teeth to maximize the chance of long-term survival.', icon: 'Tooth' },
+  { slug: 'dental-emergencies', title: 'Dental Emergencies', summary: 'Same-day attention for severe pain, swelling, or sudden injury.', icon: 'medicine' },
+];
+
+let treatments: any[] = [];
+try {
+  const data = await wp.request<{ treatments: { nodes: any[] } }>(GET_TREATMENTS);
+  treatments = data.treatments.nodes;
+} catch {
+  treatments = [];
+}
+
+const items = treatments.length > 0
+  ? treatments.map((t) => ({ slug: t.slug, title: t.title, summary: t.treatmentFields?.summary, icon: t.treatmentFields?.icon }))
+  : FALLBACK_TREATMENTS;
+---
+
+<section class="bg-[#f2eeea] py-24">
+  <div class="mx-auto max-w-6xl px-6">
+    {heading && <h2 class="reveal text-center font-heading text-4xl font-light leading-tight text-brand-ink sm:text-[43px]">{heading}</h2>}
+    {intro && <p class="reveal mx-auto mt-4 max-w-2xl text-center text-lg text-brand-ink/70">{intro}</p>}
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((t) => (
+        <a href={`/endodontic-treatments/${t.slug}`} class="reveal group rounded-2xl border border-stone-200 p-7 transition hover:border-brand-rust hover:shadow-md">
+          {t.icon && t.icon.startsWith('http') ? (
+            <img src={t.icon} alt="" class="h-12 w-12 transition group-hover:scale-110" />
+          ) : (
+            <Icon name={t.icon ?? 'Tooth'} class="h-12 w-12 text-brand-rust transition group-hover:scale-110" />
+          )}
+          <h3 class="mt-4 font-heading text-lg font-semibold text-brand-ink">{t.title}</h3>
+          <p class="mt-2 text-base text-brand-ink/70">{t.summary}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

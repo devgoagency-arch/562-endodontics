@@ -1,0 +1,104 @@
+---
+// High Tech Facility: bloques en zigzag (texto/media alternados) con fondos
+// blanco / rojo / beige. Cada equipo tiene ancla para enlazar desde el home.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ZigzagSection from '../components/ZigzagSection.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import ContactCta from '../components/ContactCta.astro';
+
+const IMG = '/images/tech';
+const FOTONA_VIDEO = 'https://562endodontics.com/wp-content/uploads/338491871_1417227822442679_7795680675852427648_n.mp4';
+---
+
+<BaseLayout
+  title="High Tech Facility"
+  description="At 562 endodontics we utilize advanced materials and equipment designed to help with accurate diagnosis and make your treatment more comfortable and efficient."
+>
+  <PageHero title="High Tech Facility" image={`${IMG}/hero.jpg`} />
+
+  <!-- S2: Explore our technology -->
+  <ZigzagSection gridCols="md:grid-cols-[38fr_62fr]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Explore our technology</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      At 562 endodontics we utilize advanced materials and equipment designed to help with accurate diagnosis and make
+      your treatment more comfortable and efficient
+    </p>
+    <img slot="media" src={`${IMG}/explore-technology.jpg`} alt="Endodontic technology at 562 endodontics" class="mx-auto h-auto w-full max-w-[440px] rounded-[20px] shadow-md" loading="lazy" />
+  </ZigzagSection>
+
+  <!-- S3: GentleWave (banda roja) -->
+  <ZigzagSection id="gentlewave" bg="bg-brand-rust" reverse gridCols="md:grid-cols-[46fr_54fr]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-[#E3DBD4] sm:text-[32px]">The GentleWave</h2>
+    <p class="mt-5 text-lg text-white">
+      The GentleWave Procedure is a high-tech fluid delivery system that uses gentle waves of energy to distribute
+      disinfecting fluids throughout the root canal system while preserving tooth structure. It is a minimally-invasive
+      alternative to traditional techniques. In more simple words, the Gentlewave is like doing a "power-wash" inside
+      your tooth to eliminate bacteria and biofilm causing infection.
+    </p>
+    <div class="mt-6 inline-block rounded-[20px] bg-white p-4">
+      <img src={`${IMG}/gentle-wave-logo.webp`} alt="GentleWave" class="h-auto w-[226px]" loading="lazy" />
+    </div>
+    <div slot="media" class="rounded-[20px] bg-white p-4">
+      <VideoEmbed youtube="jG12YTYbnEI" title="The GentleWave Procedure" />
+    </div>
+  </ZigzagSection>
+
+  <!-- S4: Skypulse Fotona Laser -->
+  <ZigzagSection id="fotona" reverse gridCols="md:grid-cols-[40fr_60fr]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Skypulse Fotona Laser</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      Fotona's SSP and SWEEPS® laser treatment offers an innovative and fast disinfection solution that is minimally
+      invasive and highly effective
+    </p>
+    <div class="mt-6 rounded-[20px] bg-white p-3 shadow-md">
+      <VideoEmbed mp4={FOTONA_VIDEO} poster={`${IMG}/fotona-poster.png`} title="Skypulse Fotona Laser" />
+    </div>
+    <img slot="media" src={`${IMG}/fotona-laser.jpg`} alt="Fotona Skypulse laser in the 562 endodontics clinic" class="mx-auto h-auto w-full max-w-[446px] rounded-[20px] shadow-md" loading="lazy" />
+  </ZigzagSection>
+
+  <!-- S5: QuickSleeper -->
+  <ZigzagSection id="quicksleeper" bg="bg-[#E3DBD4]" gridCols="md:grid-cols-[43fr_57fr]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">QuickSleeper</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      QuickSleeper is our technique of choice because it is highly effective with a low amount of anesthetic. it is very
+      easy to use, and our patients always report feeling comfortable during and after the procedure.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      The device allows us to directly deposit the anesthetic beside the tooth, avoiding multiple injections and the
+      risk of not getting profound anesthesia.
+    </p>
+    <div slot="media" class="space-y-4 rounded-[20px] bg-white p-4 shadow-md">
+      <img src={`${IMG}/quicksleeper-product.png`} alt="The QuickSleeper 5 computer-controlled local anesthesia system" class="h-auto w-full rounded-[12px]" loading="lazy" />
+      <VideoEmbed youtube="cx_-pYKf5KA" title="QuickSleeper 5" />
+    </div>
+  </ZigzagSection>
+
+  <!-- S6: Dental CT Scan -->
+  <ZigzagSection id="cbct" reverse gridCols="md:grid-cols-[40fr_60fr]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Dental CT Scan (CBCT)</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      CBCT technology has changed the field of dental imaging. This diagnostic tool provides high-resolution, 3D scans
+      of teeth, jaws and facial structures with low radiation exposure to the patient. As a result, CBCT is an ideal tool
+      for diagnosing and planning treatment with precision. For example, with a CBCT scan, you can get detailed
+      information about your teeth, locate and extend any infection, and assess the surrounding tissues without
+      undergoing costly or unnecessary treatment.
+    </p>
+    <img slot="media" src="/images/treatments/dental-trauma/cbct.jpg" alt="CBCT imaging unit with touchscreen" class="h-auto w-full rounded-[20px] shadow-md" loading="lazy" />
+  </ZigzagSection>
+
+  <!-- S7: Microscopios -->
+  <ZigzagSection id="microscopes" bg="bg-[#E3DBD4]" gridCols="md:grid-cols-[52fr_48fr]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Surgical Operating Microscopes</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      The operating microscope significantly improves a clinician's ability to view the tiniest details inside a
+      patient's tooth. With a dental microscope, the vision is magnified up to 25 times that of the naked eye, the dental
+      microscope is useful in both diagnosis and treatment as we can preserve tooth structure, visualized cracks and
+      canal anatomy that otherwise would be missed.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">Research demonstrates better outcomes compared to treatment without magnification.</p>
+    <img slot="media" src="/images/treatments/root-canal/step-2.jpg" alt="Dental operating microscope" class="mx-auto h-auto w-full max-w-[510px] rounded-[20px] shadow-md" loading="lazy" />
+  </ZigzagSection>
+
+  <ContactCta />
+</BaseLayout>

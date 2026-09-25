@@ -1,0 +1,19 @@
+---
+interface Props {
+  heading: string;
+  content: string;
+  image?: string;
+  reverse?: boolean;
+}
+const { heading, content, image, reverse } = Astro.props;
+---
+
+<section class="mx-auto max-w-6xl px-6 py-16">
+  <div class={`grid items-center gap-10 md:grid-cols-2 ${reverse ? 'md:[&>*:first-child]:order-2' : ''}`}>
+    <div class="reveal">
+      <h2 class="text-3xl font-semibold leading-tight text-stone-900">{heading}</h2>
+      <div class="prose mt-4 text-stone-600" set:html={content} />
+    </div>
+    {image && <img src={image} alt="" class="reveal rounded-2xl shadow-lg" loading="lazy" />}
+  </div>
+</section>

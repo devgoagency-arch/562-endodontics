@@ -1,0 +1,41 @@
+---
+// Ruta catch-all: cualquier "Página (bloques)" nueva creada en WordPress
+// aparece aquí automáticamente en el siguiente build/revalidación, sin
+// tocar código. Las páginas muy a medida (home, referrals) tienen su
+// propio archivo .astro y no pasan por aquí.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlockRenderer from '../components/blocks/BlockRenderer.astro';
+import { wp, GET_FLEXIBLE_PAGE, GET_FLEXIBLE_PAGE_SLUGS } from '../lib/wordpress';
+
+export async function getStaticPaths() {
+  try {
+    const data = await wp.request<{ flexiblePages: { nodes: { slug: string }[] } }>(GET_FLEXIBLE_PAGE_SLUGS);
+    return data.flexiblePages.nodes.map((page) => ({
+      params: { slug: page.slug },
+    }));
+  } catch {
+    // WordPress todavía no está conectado (dev local / primer deploy):
+    // no se generan páginas flexibles hasta que exista el endpoint real.
+    return [];
+  }
+}
+
+const { slug } = Astro.params;
+let flexiblePage: { title: string; pageBlocks: { blocks: any[] } } | null = null;
+try {
+  const data = await wp.request<{ flexiblePage: typeof flexiblePage }>(GET_FLEXIBLE_PAGE, { slug });
+  flexiblePage = data.flexiblePage;
+} catch {
+  flexiblePage = null;
+}
+
+if (!flexiblePage) {
+  return Astro.redirect('/404');
+}
+
+const { title, pageBlocks } = flexiblePage;
+---
+
+<BaseLayout title={title}>
+  <BlockRenderer blocks={pageBlocks.blocks} />
+</BaseLayout>

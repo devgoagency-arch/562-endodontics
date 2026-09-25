@@ -1,0 +1,30 @@
+---
+// Bloque texto + media en zigzag (High Tech Facility y similares). El texto va
+// en el slot por defecto y la media (imagen, video, lo que sea) en slot="media".
+// `reverse` pone la media a la izquierda. `bg` es la clase de fondo completa.
+interface Props {
+  id?: string;
+  bg?: string;
+  reverse?: boolean;
+  gridCols?: string; // clases completas, ej. "md:grid-cols-[42fr_58fr]"
+  py?: string;
+}
+const {
+  id,
+  bg = 'bg-white',
+  reverse = false,
+  gridCols = 'md:grid-cols-[50fr_50fr]',
+  py = 'py-16 lg:py-20',
+} = Astro.props;
+---
+
+<section id={id} class={`${bg} ${py} ${id ? 'scroll-mt-24' : ''}`}>
+  <div class={`mx-auto grid max-w-6xl items-center gap-10 px-6 ${gridCols}`}>
+    <div class={reverse ? 'md:order-2' : ''}>
+      <slot />
+    </div>
+    <div class={reverse ? 'md:order-1' : ''}>
+      <slot name="media" />
+    </div>
+  </div>
+</section>

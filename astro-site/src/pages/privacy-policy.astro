@@ -1,0 +1,115 @@
+---
+// Página de texto legal. Contenido del original con los errores tipográficos
+// corregidos (espacio en el dominio, frase duplicada, H2 vacío). El texto
+// legal en sí no se modificó: conviene que la clínica lo revise (menciona fax
+// y no menciona PIPEDA).
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const intro = [
+  'Copyright© 2023 562 endodontics. All rights reserved.',
+  'This statement describes how we collect information from you or about you, why we collect this information, how we will use or disclose this information and how you can update or delete personally identifiable information collected about you from our records.',
+];
+
+const sections = [
+  {
+    title: 'IP Addresses',
+    paragraphs: [
+      'There are several types of information we collect. For all visitors to the website, we collect and log your IP address. An IP address is a number automatically assigned to your computer whenever you access the internet. IP addresses allow computers and servers to recognize and communicate with one another. We collect IP address information to properly administer our system and to gather aggregate information on visitors to our site and how our site is being used, including the pages visitors are viewing.',
+      'We do not associate IP addresses with personal information records to maintain your anonymity. However, we will use IP address information to personally identify you when necessary to enforce our legal rights or when required to do so by law enforcement authorities.',
+    ],
+  },
+  {
+    title: 'Cookies',
+    paragraphs: [
+      'We may also place small data files, called "cookies," in the browser file of your computer\'s hard drive. These cookies automatically identify your browser to our server whenever you interact with the website. Most browsers automatically accept these cookies, but you can usually change your browser setting to prevent the acceptance of cookies. In addition, we usually collect the domain name of the server you are visiting. This can provide us with information relating to the sources of our traffic. Collecting this information does not allow us to identify you personally.',
+    ],
+  },
+  {
+    title: 'Registration Information',
+    paragraphs: [
+      "We also collect the personal information you choose to share with us in this website's registration and interactive portions. This information may include personal information, e-mail addresses, and your answers to questions. This information is only collected with your permission. We collect this information, should you decide to provide it to us, to provide you with the services and information being offered in accordance with 562 endodontics's main Privacy Policy.",
+    ],
+  },
+  {
+    title: 'E-mail Communications, Newsletters, and Related Services',
+    paragraphs: [
+      "We may occasionally send you informational e-mails or surveys. These e-mails will often include links to 562 endodontics's website or the websites of other organizations. To enable 562 endodontics to tailor our communications to your interests, we may track the web links that you click on. This tracked information will only be used to analyze your interest in our communications and, in keeping with 562 endodontics's main Privacy Policy, will not be shared with other organizations. Alternatively, if you wish to remain anonymous, you can access the web pages referenced in those e-mails by visiting 562 endodontics's website, and your visit will not be tracked.",
+      "To stop receiving e-mail communications, e-mail your request to unsubscribe from 562 endodontics's electronic news service to info@562endodontics.com.",
+    ],
+  },
+  {
+    title: 'Aggregate Information',
+    paragraphs: [
+      'We use general traffic, site usage, and length of stay information in reports to advertisers and firms with a business relationship. This information is shared only on an aggregated basis and does not personally identify you.',
+    ],
+  },
+  {
+    title: "Children's Privacy",
+    paragraphs: [
+      'We do not permit registration by, nor do we collect personally identifiable information from, any person we know to be under the age of 18.',
+    ],
+  },
+  {
+    title: 'Changing or Deleting Information',
+    paragraphs: [
+      '562 endodontics will be pleased to inform you of the existence, use, and disclosure of personally identifying information and provide you with access to that Personal Information within 30 (thirty) days of receiving a written request directed by fax or mail to 562 endodontics. To request a change or delete previously furnished information you furnished to us, make that request in writing — by fax or by regular mail (not by e-mail) — to the Director for 562 endodontics, with the details of your request. Contact information is at the end of this statement.',
+    ],
+  },
+  {
+    title: 'Other Sites',
+    paragraphs: [
+      'Our privacy policies apply only to your use of this website (www.562endodontics.com). The website contains links to other sites that may indicate a special relationship with us. While we do not disclose personally identifiable information to those operating these linked sites, we are not responsible for the privacy practices of such other sites. You should read the privacy policies of each site you visit to determine what information that site may be collecting about you.',
+    ],
+  },
+  {
+    title: 'Changes to Our Privacy Policies',
+    paragraphs: [
+      'We may change the terms and conditions of our Privacy Policies at any time by posting revisions on the website. You agree to review the Privacy Policies each time you use the website so that you are aware of any modifications made to these policies. By accessing or using the website, you agree to be bound by all of the terms and conditions of the Terms of Use as posted on the website at the time of your access or use, including the Privacy Policies then in effect.',
+    ],
+  },
+  {
+    title: 'Questions',
+    paragraphs: [
+      "If you have any questions or concerns regarding the 562 endodontics's practices, please contact 562 endodontics by regular mail, by e-mail, or fax using the contact information listed below.",
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="How 562 endodontics collects, uses and protects your information when you visit our website or contact our clinic in London, Ontario."
+>
+  <section class="bg-[#f2eeea] py-14 lg:py-16">
+    <div class="mx-auto max-w-[760px] px-6">
+      <h1 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-4xl">Privacy Policy</h1>
+    </div>
+  </section>
+
+  <section class="bg-white py-14 lg:py-16">
+    <div class="mx-auto max-w-[760px] space-y-10 px-6">
+      <div class="space-y-4 text-lg text-brand-ink/80">
+        {intro.map((p) => <p>{p}</p>)}
+      </div>
+
+      {sections.map((section) => (
+        <div>
+          <h2 class="font-heading text-2xl font-semibold text-brand-rust">{section.title}</h2>
+          <div class="mt-3 space-y-4 text-lg text-brand-ink/80">
+            {section.paragraphs.map((p) => <p>{p}</p>)}
+          </div>
+        </div>
+      ))}
+
+      <address class="text-lg not-italic text-brand-ink/80">
+        562 endodontics<br />
+        562 Waterloo Street, Office. 101, London, Ontario, Canada, N6B 2P9<br />
+        Attention: Director Officer<br />
+        Tel: +1 (519) 601-ENDO (3636)<br />
+        E-mail: <a href="mailto:info@562endodontics.com" class="font-semibold text-brand-rust hover:underline">info@562endodontics.com</a>
+      </address>
+
+      <p class="text-lg text-brand-ink/60">562 endodontics website Privacy Policy April 8, 2023</p>
+    </div>
+  </section>
+</BaseLayout>

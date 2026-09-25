@@ -1,0 +1,32 @@
+---
+// Portada de video: muestra la miniatura original (la de YouTube, o el poster
+// indicado) con el botón de play y abre el modal de video del sitio
+// (VideoModal, incluido en BaseLayout). No carga ningún reproductor hasta el
+// click.
+interface Props {
+  title: string;
+  youtube?: string; // ID del video
+  mp4?: string;
+  poster?: string;
+  class?: string;
+}
+const { title, youtube, mp4, poster, class: className = '' } = Astro.props;
+const thumb = poster ?? (youtube ? `https://i.ytimg.com/vi/${youtube}/hqdefault.jpg` : '');
+---
+
+<button
+  type="button"
+  class={`group relative block aspect-video w-full cursor-pointer overflow-hidden rounded-[20px] bg-black ${className}`}
+  data-video-trigger
+  data-video-youtube={youtube ?? ''}
+  data-video-mp4={mp4 ?? ''}
+  data-video-title={title}
+  aria-label={`Play video: ${title}`}
+>
+  {thumb && <img src={thumb} alt="" class="h-full w-full object-cover opacity-90 transition group-hover:opacity-70" loading="lazy" />}
+  <span class="absolute inset-0 flex items-center justify-center">
+    <span class="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-lg transition group-hover:scale-110">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="ml-1 text-brand-rust" aria-hidden="true"><path d="M8 5v14l11-7Z" /></svg>
+    </span>
+  </span>
+</button>

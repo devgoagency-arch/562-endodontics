@@ -1,0 +1,34 @@
+---
+// Fila "imagen a la izquierda + texto a la derecha" (H3 + párrafo/lista).
+// Se repite en todas las páginas de tratamiento. `size` fija la proporción
+// imagen/texto: sm ≈ 21%/79% (fotos cuadradas), md ≈ 30%/70% (dípticos).
+// Las clases van completas (no concatenadas) para que Tailwind las detecte.
+import SplitSection from './SplitSection.astro';
+
+interface Props {
+  imageSrc: string;
+  imageAlt: string;
+  imageAspect?: string;
+  size?: 'sm' | 'md';
+  py?: string;
+}
+const { imageSrc, imageAlt, imageAspect = 'aspect-square', size = 'sm', py } = Astro.props;
+
+const GRID = {
+  sm: 'md:grid-cols-[21.3fr_78.7fr]',
+  md: 'md:grid-cols-[30fr_70fr]',
+};
+---
+
+<SplitSection
+  imageSrc={imageSrc}
+  imageAlt={imageAlt}
+  imagePosition="left"
+  imageAspect={imageAspect}
+  gridCols={GRID[size]}
+  imageCols="md:col-start-1"
+  textCols="md:col-start-2"
+  py={py}
+>
+  <slot />
+</SplitSection>

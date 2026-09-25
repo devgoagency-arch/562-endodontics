@@ -1,0 +1,298 @@
+---
+import InfoItem from './InfoItem.astro';
+
+// Menús desplegables (mega menú) del nav. Cada clave de `menus` se enlaza
+// desde `navLinks[].menu`. Para agregar una columna basta sumar un ítem; el
+// grid se adapta a la cantidad (2 o 3 columnas).
+const menus: Record<string, { title: string; href: string; intro: string; image: string }[]> = {
+  about: [
+    {
+      title: 'About Us',
+      href: '/about-us/',
+      intro: 'One of the largest teams of doctors in London dedicated exclusively to endodontic care and root canal treatment.',
+      image: '/images/gallery/502-team-shots-4-low.jpg',
+    },
+    {
+      title: 'Our Dental Clinic',
+      href: '/our-clinic/',
+      intro: 'A Victorian house in downtown London with modern technology, private parking and a safe environment.',
+      image: '/images/gallery/562-endodontics-clinic.jpg',
+    },
+  ],
+  treatments: [
+    {
+      title: 'Root Canal',
+      href: '/endodontic-treatments/root-canal/',
+      intro: 'Microscope-guided root canal treatment with in-house CBCT imaging for accurate diagnosis and planning.',
+      image: '/images/treatments/root-canal/step-2.jpg',
+    },
+    {
+      title: 'Cracked Teeth',
+      href: '/endodontic-treatments/cracked-teeth/',
+      intro: 'Diagnosis and management of cracked and fractured teeth using a microscope and CBCT imaging.',
+      image: '/images/treatments/cracked-teeth/tooth-render.jpg',
+    },
+    {
+      title: 'Dental Trauma',
+      href: '/endodontic-treatments/dental-trauma/',
+      intro: 'Same-day emergency referrals for dental injuries, from fractures to knocked-out teeth.',
+      image: '/images/treatments/dental-trauma/tooth-avulsion.jpg',
+    },
+  ],
+};
+
+const navLinks: { label: string; href: string; menu?: string }[] = [
+  { label: 'About 562', href: '/about-us', menu: 'about' },
+  { label: 'Endodontic Treatments', href: '/endodontic-treatments', menu: 'treatments' },
+  { label: 'High Tech Facility', href: '/high-tech-facility' },
+  { label: 'Referrals', href: '/referrals' },
+  { label: 'Professional Development', href: '/professional-development' },
+];
+
+// Clases completas (no concatenadas) para que Tailwind las detecte.
+const panelLayout = (count: number) =>
+  count === 2 ? 'max-w-4xl grid-cols-2' : 'max-w-7xl grid-cols-3';
+---
+
+<header id="site-header" class="sticky top-0 z-50 bg-white shadow-sm transition-shadow">
+  <!-- Barra de info superior: se colapsa al hacer scroll (ver script) para
+       que el header sticky no ocupe demasiado alto una vez fijo arriba. -->
+  <div id="header-info-bar" class="mx-auto hidden max-w-7xl items-center justify-between overflow-hidden px-6 transition-[max-height,opacity,padding] duration-300 lg:flex" style="max-height: 130px; padding-top: 1.5rem; padding-bottom: 1.5rem;">
+    <a href="/">
+      <img src="/logo/logo-black.png" alt="562 endodontics" id="header-logo" class="h-[74px] w-auto transition-all duration-300" />
+    </a>
+
+    <div class="flex items-center gap-8 text-base">
+      <InfoItem label="Location" text="562 Waterloo st, London, ON, N6B 2P9" icon="pin" href="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9" />
+      <InfoItem label="Our Hours" text={"Mon, Tue, Thu & Fri 8:30am–5pm\nWed 8:30am–4pm"} icon="clock" />
+      <InfoItem label="Contact us" text="(519) 601-3636" icon="phone" href="tel:+15196013636" />
+    </div>
+  </div>
+
+  <!-- Nav principal -->
+  <nav id="header-nav" class="border-t border-stone-100">
+    <div class="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-4 transition-[padding] duration-300 lg:justify-center">
+      <a href="/" id="nav-logo-link" class="lg:hidden"><img src="/logo/logo-black.png" alt="562 endodontics" id="nav-logo-img" class="h-12 w-auto" /></a>
+
+      <ul class="hidden gap-8 font-heading text-sm font-semibold uppercase tracking-wide text-brand-ink lg:flex">
+        {navLinks.map((link) => (
+          link.menu ? (
+            <li data-mega-item={link.menu}>
+              <button
+                type="button"
+                data-mega-trigger
+                aria-expanded="false"
+                aria-haspopup="true"
+                aria-controls={`mega-panel-${link.menu}`}
+                data-open="false"
+                class="group flex items-center gap-1.5 uppercase transition hover:text-brand-rust data-[open=true]:text-brand-rust"
+              >
+                {link.label}
+                <svg class="h-3.5 w-3.5 transition-transform group-data-[open=true]:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+              </button>
+            </li>
+          ) : (
+            <li><a href={link.href} class="transition hover:text-brand-rust">{link.label}</a></li>
+          )
+        ))}
+        <li><a href="#form" class="rounded-full bg-brand-rust px-6 py-2.5 text-white transition hover:bg-brand-rustDark">Contact Us</a></li>
+      </ul>
+
+      <button
+        id="menu-toggle"
+        class="lg:hidden"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M3 12h18M3 18h18" stroke-width="1.5" /></svg>
+      </button>
+    </div>
+
+    <ul id="mobile-menu" class="hidden flex-col gap-1 border-t border-stone-100 px-6 py-4 font-heading text-sm font-medium lg:hidden">
+      {navLinks.map((link) => (
+        link.menu ? (
+          <li>
+            <span class="block py-2">{link.label}</span>
+            <ul class="mb-1 ml-3 border-l border-brand-rust/30 pl-4">
+              {menus[link.menu].map((item) => (
+                <li><a href={item.href} class="block py-1.5 text-brand-rust">{item.title}</a></li>
+              ))}
+            </ul>
+          </li>
+        ) : (
+          <li><a href={link.href} class="block py-2">{link.label}</a></li>
+        )
+      ))}
+      <li><a href="#form" class="mt-2 block rounded-full bg-brand-rust px-5 py-2 text-center text-white">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Mega menús (solo desktop): un panel a todo el ancho bajo el header por
+       cada entrada con `menu`. Se abren con hover/click/teclado (ver script). -->
+  {navLinks.filter((l) => l.menu).map((link) => (
+    <div
+      id={`mega-panel-${link.menu}`}
+      data-mega-panel={link.menu}
+      role="region"
+      aria-label={link.label}
+      data-open="false"
+      class="invisible absolute inset-x-0 top-full hidden border-t border-stone-100 bg-white opacity-0 shadow-lg transition-[opacity,visibility] duration-200 data-[open=true]:visible data-[open=true]:opacity-100 lg:block"
+    >
+      <div class={`mx-auto grid gap-6 px-6 py-8 ${panelLayout(menus[link.menu!].length)}`}>
+        {menus[link.menu!].map((item) => (
+          <a href={item.href} class="group flex gap-5 rounded-2xl p-4 transition hover:bg-[#f2eeea]">
+            <div class="min-w-0 flex-1 self-center">
+              <h3 class="font-heading text-lg font-semibold text-brand-rust">{item.title}</h3>
+              <p class="mt-2 text-base text-brand-ink/80">{item.intro}</p>
+              <span class="mt-3 inline-flex items-center gap-1 font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">
+                Learn more <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </div>
+            <div class="relative min-h-[9rem] w-[38%] shrink-0">
+              <img src={item.image} alt="" class="absolute inset-0 h-full w-full rounded-[20px] object-cover" loading="lazy" />
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  ))}
+</header>
+
+<!-- Barra sticky de acción rápida en móvil: llamar / referir siempre a mano,
+     porque la mayoría del tráfico local llega con intención inmediata. -->
+<div class="fixed inset-x-0 bottom-0 z-40 flex border-t border-stone-200 bg-white shadow-lg lg:hidden">
+  <a href="tel:+15196013636" class="flex flex-1 items-center justify-center gap-2 py-3 font-heading text-sm font-semibold text-brand-ink">
+    Call Now
+  </a>
+  <a href="/referrals" class="flex flex-1 items-center justify-center gap-2 bg-brand-rust py-3 font-heading text-sm font-semibold text-white">
+    Refer a Patient
+  </a>
+</div>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  toggle?.addEventListener('click', () => {
+    const isOpen = menu?.classList.toggle('flex');
+    menu?.classList.toggle('hidden');
+    toggle.setAttribute('aria-expanded', String(Boolean(isOpen)));
+  });
+
+  // Mega menús: abren con hover (con una pequeña demora al cerrar para poder
+  // cruzar del botón al panel), con click/tap y con teclado; cierran con
+  // Escape, click fuera o al perder el foco. Solo uno abierto a la vez.
+  const canHover = window.matchMedia('(hover: hover)');
+  const megas = [...document.querySelectorAll<HTMLElement>('[data-mega-item]')].map((item) => {
+    const key = item.dataset.megaItem!;
+    return {
+      item,
+      trigger: item.querySelector<HTMLButtonElement>('[data-mega-trigger]')!,
+      panel: document.getElementById(`mega-panel-${key}`)!,
+      timer: undefined as number | undefined,
+    };
+  });
+  type Mega = (typeof megas)[number];
+  function setMega(m: Mega, open: boolean) {
+    m.trigger.setAttribute('aria-expanded', String(open));
+    m.trigger.dataset.open = String(open);
+    m.panel.dataset.open = String(open);
+  }
+  function closeAll(except?: Mega) {
+    megas.forEach((m) => {
+      if (m === except) return;
+      window.clearTimeout(m.timer);
+      setMega(m, false);
+    });
+  }
+  megas.forEach((m) => {
+    [m.item, m.panel].forEach((el) => {
+      el.addEventListener('mouseenter', () => {
+        if (!canHover.matches) return;
+        window.clearTimeout(m.timer);
+        closeAll(m);
+        setMega(m, true);
+      });
+      el.addEventListener('mouseleave', () => {
+        if (!canHover.matches) return;
+        m.timer = window.setTimeout(() => setMega(m, false), 150);
+      });
+      el.addEventListener('focusout', (e) => {
+        const next = (e as FocusEvent).relatedTarget as Node | null;
+        if (next && !m.item.contains(next) && !m.panel.contains(next)) setMega(m, false);
+      });
+    });
+    m.trigger.addEventListener('click', () => {
+      const isOpen = m.trigger.getAttribute('aria-expanded') === 'true';
+      closeAll(m);
+      setMega(m, canHover.matches ? true : !isOpen);
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
+  document.addEventListener('click', (e) => {
+    const target = e.target as Node;
+    if (!megas.some((m) => m.item.contains(target) || m.panel.contains(target))) closeAll();
+  });
+
+  // Expone la altura real del header como variable CSS --header-h, para que
+  // la home pueda calcular "hero + teasers = 100vh restante" con precisión
+  // (la altura del header cambia entre breakpoints: con/sin barra de info).
+  const header = document.querySelector('header');
+  function setHeaderHeightVar() {
+    if (header) document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+  }
+  setHeaderHeightVar();
+  window.addEventListener('resize', setHeaderHeightVar);
+
+  // Header sticky: colapsa la barra de info (ubicación/horario/teléfono) y
+  // encoge el logo al hacer scroll, para que quede fijo arriba sin ocupar
+  // demasiado alto — el nav principal con los links siempre queda visible.
+  //
+  // Histéresis (dos umbrales distintos para colapsar vs expandir, con una
+  // "zona muerta" entre 20 y 80px) en vez de un único punto de corte: con un
+  // solo umbral, el scroll natural del mouse/trackpad oscila unos pocos
+  // píxeles alrededor de ese punto y el header queda abriendo/cerrando en
+  // bucle — el temblor que se veía cerca del tope.
+  const infoBar = document.getElementById('header-info-bar');
+  const logo = document.getElementById('header-logo');
+  const navRow = document.getElementById('header-nav')?.firstElementChild as HTMLElement | undefined;
+  // El logo del nav (navLogoLink) por defecto solo se ve en móvil (lg:hidden)
+  // porque en desktop el logo grande de la barra de info ya lo muestra. Ese
+  // logo grande vive DENTRO de header-info-bar, así que al colapsarse la
+  // barra (scroll) el logo desaparecía con ella — no se achicaba, se iba
+  // por completo. Fix: en desktop, cuando colapsa, forzamos visible este
+  // logo del nav (que sí sobrevive siempre) en tamaño chico.
+  const navLogoLink = document.getElementById('nav-logo-link');
+  const navLogoImg = document.getElementById('nav-logo-img');
+  let collapsed = false;
+  function applyState(next: boolean) {
+    if (next === collapsed) return;
+    collapsed = next;
+    if (infoBar) {
+      infoBar.style.maxHeight = collapsed ? '0px' : '130px';
+      infoBar.style.opacity = collapsed ? '0' : '1';
+      infoBar.style.paddingTop = collapsed ? '0' : '1.5rem';
+      infoBar.style.paddingBottom = collapsed ? '0' : '1.5rem';
+    }
+    if (logo) logo.style.height = collapsed ? '42px' : '74px';
+    if (navRow) {
+      navRow.style.paddingTop = collapsed ? '1.25rem' : '1rem';
+      navRow.style.paddingBottom = collapsed ? '1.25rem' : '1rem';
+      // El nav de links es casi tan ancho como el header completo (5 links +
+      // botón Contact Us); centrarlo Y mostrar el logo a la izquierda no
+      // caben a la vez — se solapan. Con el logo visible (colapsado), se
+      // pasa a "logo izquierda + nav a la derecha" en vez de nav centrado.
+      navRow.style.justifyContent = collapsed ? 'space-between' : '';
+    }
+    if (navLogoLink) navLogoLink.style.display = collapsed ? 'flex' : '';
+    if (navLogoImg) (navLogoImg as HTMLElement).style.height = collapsed ? '42px' : '';
+  }
+  function onScroll() {
+    if (!collapsed && window.scrollY > 80) applyState(true);
+    else if (collapsed && window.scrollY < 20) applyState(false);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>

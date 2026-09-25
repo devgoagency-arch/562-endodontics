@@ -1,0 +1,18 @@
+---
+// Íconos reales del set dental del sitio original (public/icons/*.svg).
+// Se usan como máscara CSS (no <img>) para poder colorearlos con
+// currentColor/Tailwind igual que cualquier ícono inline — un <img> normal
+// no puede heredar color del texto que lo rodea.
+interface Props {
+  name: string;
+  class?: string;
+}
+const { name, class: className = '' } = Astro.props;
+const url = `/icons/${name}.svg`;
+---
+
+<span
+  class={`inline-block shrink-0 bg-current ${className}`}
+  style={`-webkit-mask-image:url(${url});mask-image:url(${url});-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;`}
+  aria-hidden="true"
+></span>

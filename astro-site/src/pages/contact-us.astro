@@ -1,0 +1,82 @@
+---
+// Contact Us: mapa a todo el ancho + datos de contacto y formulario. Esta
+// página no lleva el pre-footer (el formulario ya está aquí) y el H1 es
+// "Contact us" en vez de un hero.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LineIcon from '../components/LineIcon.astro';
+import ContactForm from '../components/ContactForm.astro';
+
+const MAP_SRC = 'https://www.google.com/maps?q=562+Waterloo+St,+London,+ON+N6B+2P9&output=embed';
+
+const contacts = [
+  { icon: 'pin' as const, title: 'Location', text: '562 Waterloo st, London, ON, N6B 2P9', href: 'https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9', external: true },
+  { icon: 'phone' as const, title: 'Call Us', text: '(519) 601-ENDO (3636)', href: 'tel:+15196013636', external: false },
+  { icon: 'mail' as const, title: 'Email', text: 'info@562endodontics.com', href: 'mailto:info@562endodontics.com', external: false },
+];
+---
+
+<BaseLayout
+  title="Contact Us"
+  description="Contact 562 endodontics in downtown London, Ontario to learn more about how we can help you care for your endodontic needs."
+>
+  <section aria-label="Map">
+    <iframe
+      src={MAP_SRC}
+      title="Map showing 562 endodontics at 562 Waterloo St, London, ON"
+      class="block h-[457px] w-full border-0"
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      allowfullscreen
+    ></iframe>
+  </section>
+
+  <section class="bg-white py-16 lg:py-20">
+    <div class="mx-auto grid max-w-6xl items-start gap-12 px-6 md:grid-cols-2">
+      <div>
+        <h1 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Contact us</h1>
+        <p class="mt-5 text-lg text-brand-ink/80">
+          Contact us today to learn more about how we can help you care for your endodontic needs.
+        </p>
+        <p class="mt-4 text-lg text-brand-ink/80">
+          Thank you for considering <strong class="font-semibold text-brand-ink">562 endodontics</strong> as your endodontic care provider.
+        </p>
+
+        <ul class="mt-8 space-y-6">
+          {contacts.map((c) => (
+            <li>
+              <a
+                href={c.href}
+                target={c.external ? '_blank' : undefined}
+                rel={c.external ? 'noopener' : undefined}
+                class="group flex items-center gap-4"
+              >
+                <span class="flex h-[54px] w-[54px] shrink-0 items-center justify-center rounded-[14px] bg-brand-rust text-white">
+                  <LineIcon name={c.icon} class="h-6 w-6" />
+                </span>
+                <span>
+                  <span class="block font-heading text-lg font-semibold text-brand-rust">{c.title}</span>
+                  <span class="block text-lg text-brand-ink/80 group-hover:underline">{c.text}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <h2 class="mt-10 font-heading text-2xl font-semibold text-brand-rust">Working Hours</h2>
+        <div class="mt-4 flex items-start gap-4">
+          <span class="flex h-[54px] w-[54px] shrink-0 items-center justify-center rounded-[14px] bg-brand-rust text-white">
+            <LineIcon name="clock" class="h-6 w-6" />
+          </span>
+          <p class="text-lg text-brand-ink/80">
+            Mon, Tue, Thu &amp; Fri 8:30am–5pm<br />
+            Wed 8:30am–4pm
+          </p>
+        </div>
+      </div>
+
+      <div class="rounded-[20px] bg-white p-6 shadow-[0_5px_30px_rgba(16,23,46,0.08)] md:p-10">
+        <ContactForm id="form" class="scroll-mt-32" />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

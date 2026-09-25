@@ -1,0 +1,40 @@
+---
+// Bloque texto + imagen reutilizable para páginas de tratamiento (plantilla
+// para Cracked Teeth y el resto). `imagePosition` controla de qué lado va
+// la foto; el texto siempre va en el <slot />.
+interface Props {
+  imageSrc: string;
+  imageAlt: string;
+  imagePosition?: 'left' | 'right';
+  bg?: string;
+  imageAspect?: string;
+  imageRounded?: string;
+  textCols?: string; // ej. "md:col-span-3" cuando el texto debe pesar más que la mitad
+  imageCols?: string;
+  gridCols?: string; // override del md:grid-cols-5 base, ej. "md:grid-cols-[24fr_76fr]"
+  py?: string; // para filas agrupadas que no necesitan el padding vertical completo
+}
+const {
+  imageSrc,
+  imageAlt,
+  imagePosition = 'right',
+  bg = 'bg-white',
+  imageAspect = 'aspect-[4/3]',
+  imageRounded = 'rounded-[20px]',
+  textCols = 'md:col-span-3',
+  imageCols = 'md:col-span-2',
+  gridCols = 'md:grid-cols-5',
+  py = 'py-16 lg:py-20',
+} = Astro.props;
+---
+
+<section class={`${bg} ${py}`}>
+  <div class={`mx-auto grid max-w-6xl items-center gap-10 px-6 ${gridCols}`}>
+    <div class={`${textCols} ${imagePosition === 'left' ? 'md:order-2' : ''}`}>
+      <slot />
+    </div>
+    <div class={`${imageCols} ${imagePosition === 'left' ? 'md:order-1' : ''}`}>
+      <img src={imageSrc} alt={imageAlt} class={`h-full w-full ${imageAspect} ${imageRounded} object-cover shadow-md`} loading="lazy" />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,31 @@
+---
+// Recibe el array `blocks` que viene de WPGraphQL (ACF Flexible Content)
+// y renderiza el componente Astro que corresponde a cada layout.
+// Agregar un layout nuevo en ACF + un componente aquí = un bloque reutilizable
+// más disponible para el equipo de contenido, sin tocar el resto del sitio.
+import Hero from './Hero.astro';
+import TextImage from './TextImage.astro';
+import TreatmentGrid from './TreatmentGrid.astro';
+import FaqAccordion from './FaqAccordion.astro';
+import CtaBanner from './CtaBanner.astro';
+
+interface Props {
+  blocks: Array<{ __typename: string; [key: string]: unknown }>;
+}
+
+const { blocks } = Astro.props;
+
+const componentMap: Record<string, unknown> = {
+  FlexiblePagePageBlocksBlocksHeroLayout: Hero,
+  FlexiblePagePageBlocksBlocksTextImageLayout: TextImage,
+  FlexiblePagePageBlocksBlocksTreatmentGridLayout: TreatmentGrid,
+  FlexiblePagePageBlocksBlocksFaqAccordionLayout: FaqAccordion,
+  FlexiblePagePageBlocksBlocksCtaBannerLayout: CtaBanner,
+};
+---
+
+{blocks.map((block) => {
+  const Component = componentMap[block.__typename];
+  if (!Component) return null;
+  return <Component {...block} />;
+})}

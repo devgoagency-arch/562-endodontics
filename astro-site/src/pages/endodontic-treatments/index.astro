@@ -1,0 +1,113 @@
+---
+// Índice de tratamientos: intro + tarjetas con video. Solo enlazan a los
+// tratamientos que ya tienen página; Retreatment y Apical Surgery no la tienen
+// todavía (se agrega `href` cuando existan).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SplitSection from '../../components/treatments/SplitSection.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import Icon from '../../components/Icon.astro';
+import ContactCta from '../../components/ContactCta.astro';
+
+interface Card {
+  title: string;
+  text: string;
+  href?: string;
+  videos: { id: string; title: string }[];
+  wide?: boolean;
+}
+
+const cards: Card[] = [
+  {
+    title: 'Root Canal Treatment',
+    text: 'The root canal treatment at our office is fast, comfortable, and efficient due to our expertise, technology, and anesthesia techniques. The procedure involves removing the damaged tissue inside the tooth, cleaning and disinfecting the area, and then filling and sealing the tooth. Root canal therapy can help you keep your natural teeth and avoid the need for dental implants or bridges',
+    href: '/endodontic-treatments/root-canal/',
+    wide: true,
+    videos: [
+      { id: 'JLeiDmOVfcg', title: 'Root Canal Treatment Step by Step' },
+      { id: '1abG9tbhX6U', title: 'Root Canal Safety' },
+    ],
+  },
+  {
+    title: 'Endodontic Retreatment',
+    text: 'A dental procedure that is performed when a previous root canal treatment has failed or for patients who have developed new infections after previous root canal treatment',
+    videos: [{ id: 'xlYYc7_BFTI', title: 'Endodontic Retreatment Explained' }],
+  },
+  {
+    title: 'Apical Surgery',
+    text: 'The goal of apical surgery is to remove infectious lesions associated with the roots of the teeth. Thanks to advances in surgical techniques, technology and anesthesia, this procedure can be performed with minimal discomfort and a quick recovery.',
+    videos: [{ id: 'B2zzXiXQbU0', title: 'Endodontic Surgery' }],
+  },
+  {
+    title: 'Cracked Teeth',
+    text: 'Cracks can occur due to a clenching/grinding habit, an injury, large filling, or general wear and tear. Diagnosing cracked teeth can be very difficult and we have the expertise, experience and technology to determine the location and extent of the crack to offer you possible treatment options.',
+    href: '/endodontic-treatments/cracked-teeth/',
+    videos: [{ id: 'oL6Do_AVAeA', title: 'Cracked Teeth' }],
+  },
+  {
+    title: 'Dental Trauma',
+    text: 'A common injury that can occur by unintentional falls, sports injuries or accidents. While the severity of dental trauma can vary, it can often lead to dental complications such as tooth fractures, teeth displacement or teeth that are knocked out entirely. The good news is that with prompt treatment, most dental injuries can be successfully managed.',
+    href: '/endodontic-treatments/dental-trauma/',
+    videos: [],
+  },
+];
+---
+
+<BaseLayout
+  title="Endodontic Treatments"
+  description="At 562 Endodontics, we specialize in preserving natural teeth through advanced endodontic treatments, offering expert care and innovative techniques for optimal dental health."
+>
+  <PageHero title="Endodontic Treatments" image="/images/treatments/hub/hero.jpg" />
+
+  <!-- S2: Intro -->
+  <SplitSection
+    imageSrc="/images/gallery/img_5894-1.jpg"
+    imageAlt="Doctor working at the operating microscope"
+    imagePosition="right"
+    bg="bg-white"
+    imageAspect="aspect-[640/363]"
+    gridCols="md:grid-cols-[45fr_55fr]"
+    textCols="md:col-start-1"
+    imageCols="md:col-start-2"
+  >
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Explore our Endodontic Treatments</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      Nothing looks, feels or functions like your natural teeth. When possible, you should always consider treatments
+      to save them. It is not always more cost-effective or easier to pull your tooth. Missing teeth can shift other
+      teeth, change your smile and affect your ability to chew properly.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      Endodontic treatment helps you maintain your natural smile, continue eating the foods you love and limits the
+      need for ongoing dental work.
+    </p>
+  </SplitSection>
+
+  <!-- S3: Tarjetas -->
+  <section class="bg-white pb-16 pt-10 lg:pb-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="grid items-start gap-x-8 gap-y-20 pt-10 md:grid-cols-2" data-reveal-each>
+        {cards.map((card) => (
+          <article class={`relative rounded-[20px] bg-white px-8 pb-8 pt-16 shadow-[0_3px_30px_rgba(16,23,46,0.1)] ${card.wide ? 'md:col-span-2' : ''}`}>
+            <span class="absolute -top-10 left-8 flex h-20 w-20 items-center justify-center rounded-[20px] bg-brand-tan text-white shadow-md">
+              <Icon name="Tooth" class="h-11 w-11" />
+            </span>
+            <h3 class="font-heading text-2xl font-semibold text-brand-rust">{card.title}</h3>
+            <p class="mt-3 text-lg text-brand-ink/80">{card.text}</p>
+            {card.href && (
+              <a href={card.href} class="mt-4 inline-flex items-center gap-1 font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust hover:underline">
+                Learn more <span aria-hidden="true">→</span>
+              </a>
+            )}
+            {card.videos.length > 0 && (
+              <div class={`mt-6 grid gap-4 ${card.videos.length > 1 ? 'md:grid-cols-2' : ''}`}>
+                {card.videos.map((video) => <VideoEmbed youtube={video.id} title={video.title} />)}
+              </div>
+            )}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ContactCta />
+</BaseLayout>

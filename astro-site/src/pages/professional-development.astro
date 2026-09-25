@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import IntroStacked from '../components/IntroStacked.astro';
+import LineIcon from '../components/LineIcon.astro';
+import ContactCta from '../components/ContactCta.astro';
+
+const blocks = [
+  {
+    title: 'By having you in our office we:',
+    left: [
+      'Share our best practices with others.',
+      'Will discover the areas you can improve in.',
+      'Build professional connections.',
+    ],
+    right: [
+      'Provide a transparent operation for the trust of our community and referring dentists.',
+      'Develop coaching/mentoring skills.',
+    ],
+  },
+  {
+    title: 'By coming to our office you:',
+    left: [
+      'Will have a safe space to ask questions',
+      'Discover areas of improvement.',
+      'Build professional connections',
+    ],
+    right: [
+      'Gain insight into the clinical and diagnostic skills and the use of technology in endodontics',
+      'Explore possible career in endodontics.',
+      'Gain experience and build up your CV',
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Professional Development"
+  description="Clinical shadowing for professional development at 562 endodontics in London, Ontario: opportunities for high school and university students, dental staff and referring dentists."
+>
+  <PageHero title="Professional Development" image="/images/professional-development/hero.jpg" />
+
+  <IntroStacked
+    topSrc="/images/gallery/img_5818-2-e1695851227303.jpg"
+    topAlt="Doctor and assistants working with the operating microscope"
+    bottomSrc="/images/gallery/img_5894-1.jpg"
+    bottomAlt="Overhead view of the 562 endodontics operatory"
+    bottomPosition="object-center"
+  >
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">We welcome students, dentists and dental staff.</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      Clinical shadowing can provide many benefits to your professional development. Our team is excited to offer
+      shadowing opportunities to high school and university students, staff members, and referring dentists.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">Please contact us to schedule a visit.</p>
+    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-brand-tan px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
+      Contact Us <span aria-hidden="true">→</span>
+    </a>
+  </IntroStacked>
+
+  <!-- S3: Beneficios (banda roja) -->
+  <section class="bg-brand-rust py-16 text-white lg:py-20">
+    <div class="mx-auto max-w-4xl space-y-14 px-6">
+      {blocks.map((block) => (
+        <div>
+          <h2 class="text-center font-heading text-3xl font-semibold leading-tight sm:text-[32px]">{block.title}</h2>
+          <div class="mt-8 grid gap-x-12 gap-y-4 md:grid-cols-2">
+            {[block.left, block.right].map((list) => (
+              <ul class="space-y-4">
+                {list.map((item) => (
+                  <li class="flex items-start gap-3 text-lg">
+                    <LineIcon name="check" class="mt-1 h-5 w-5 shrink-0 text-brand-tan" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <ContactCta />
+</BaseLayout>

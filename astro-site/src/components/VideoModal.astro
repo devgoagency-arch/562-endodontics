@@ -1,0 +1,87 @@
+---
+// Modal de video único del sitio (se incluye una vez desde BaseLayout). Cualquier
+// elemento con [data-video-trigger] lo abre:
+//   data-video-youtube  ID de YouTube o URL de embed completa
+//   data-video-mp4      URL de un mp4
+//   data-video-title    título accesible
+// El reproductor se inyecta recién al abrir y se destruye al cerrar (detiene el
+// video y evita cargar reproductores ocultos).
+---
+
+<div
+  id="video-modal"
+  class="fixed inset-0 z-[60] hidden items-center justify-center bg-brand-rust/10 p-6 backdrop-blur-sm"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+>
+  <div id="video-modal-backdrop" class="absolute inset-0"></div>
+  <div class="relative w-[60vw] min-w-[320px] max-w-4xl">
+    <button
+      type="button"
+      id="video-modal-close"
+      aria-label="Close video"
+      class="absolute -top-12 right-0 flex h-10 w-10 items-center justify-center rounded-full bg-white text-brand-rust shadow-lg transition hover:bg-stone-100"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
+    </button>
+    <div id="video-modal-content" class="aspect-video w-full overflow-hidden rounded-2xl bg-black shadow-2xl"></div>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById('video-modal') as HTMLElement;
+  const modalContent = document.getElementById('video-modal-content') as HTMLElement;
+  let lastTrigger: HTMLElement | null = null;
+
+  function openVideoModal(trigger: HTMLElement) {
+    const { videoYoutube, videoMp4, videoTitle } = trigger.dataset;
+    lastTrigger = trigger;
+
+    if (videoYoutube) {
+      const base = videoYoutube.startsWith('http')
+        ? videoYoutube
+        : `https://www.youtube-nocookie.com/embed/${videoYoutube}`;
+      const frame = document.createElement('iframe');
+      frame.src = `${base}${base.includes('?') ? '&' : '?'}autoplay=1&rel=0`;
+      frame.title = videoTitle ?? 'Video';
+      frame.className = 'h-full w-full';
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture';
+      frame.allowFullscreen = true;
+      modalContent.replaceChildren(frame);
+    } else if (videoMp4) {
+      const video = document.createElement('video');
+      video.src = videoMp4;
+      video.className = 'h-full w-full';
+      video.controls = true;
+      video.autoplay = true;
+      modalContent.replaceChildren(video);
+    } else {
+      return;
+    }
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('video-modal-close')?.focus();
+  }
+
+  function closeVideoModal() {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    modal.setAttribute('aria-hidden', 'true');
+    modalContent.replaceChildren();
+    document.body.style.overflow = '';
+    lastTrigger?.focus();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-video-trigger]').forEach((btn) => {
+    btn.addEventListener('click', () => openVideoModal(btn));
+  });
+  document.getElementById('video-modal-backdrop')?.addEventListener('click', closeVideoModal);
+  document.getElementById('video-modal-close')?.addEventListener('click', closeVideoModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeVideoModal();
+  });
+</script>

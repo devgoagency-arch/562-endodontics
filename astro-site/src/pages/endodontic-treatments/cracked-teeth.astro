@@ -1,0 +1,219 @@
+---
+// Página de tratamiento "Cracked Teeth" — sirve como PLANTILLA para el
+// resto de páginas de /endodontic-treatments/* (misma estructura de
+// secciones: hero, intro, tabla clínica, guía de paciente, guía de
+// doctores, protocolo diagnóstico, FAQ, pre-footer). Ver auditoría del
+// cliente para la fuente de todo el contenido.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SplitSection from '../../components/treatments/SplitSection.astro';
+import DataTable from '../../components/treatments/DataTable.astro';
+import TreatmentFaq from '../../components/treatments/TreatmentFaq.astro';
+import ContactCta from '../../components/ContactCta.astro';
+
+const crackTypesTable = {
+  headers: ['Crack type', 'Description', 'Endodontic relevance', 'Referral urgency'],
+  rows: [
+    ['Craze lines', "Small, superficial cracks on the surface of the enamel, which do not affect the tooth's internal structure.", "These cracks generally do not impact the tooth's pulp or structural integrity, and are usually not a cause for concern.", 'No referral is typically necessary, unless the patient experiences symptoms that suggest further evaluation may be needed.'],
+    ['Fractured cusp', 'Cusp separation, typically not extending below the gingival margin', 'Low unless pulp is exposed', 'Refer if symptomatic or if pulp exposure is suspected'],
+    ['Cracked tooth', 'An incomplete crack originating from the crown and potentially extending toward the root', 'High. Pulp involvement is common, and prognosis depends on crack depth', 'Same-week referral recommended'],
+    ['Split tooth', 'Complete separation of tooth segments', 'Poor. Extraction often required', 'Refer for evaluation before extraction'],
+    ['Vertical root fracture', 'A crack that begins in the root, most commonly occurring in teeth that have been previously treated with a root canal.', 'Extraction or partial removal of the tooth (hemisection) may be necessary, depending on the extent of the fracture.', 'Refer for CBCT confirmation'],
+  ],
+};
+
+const managementTable = {
+  headers: ['Clinical scenario', 'Recommended management'],
+  rows: [
+    ['Cracked tooth: Healthy pulp, crack above the bone level.', 'Crown placement to prevent propagation; monitor pulp status'],
+    ['Cracked tooth: Irreversible pulpitis or necrosis.', 'If the crack does not extend below bone level, Root canal treatment followed by a crown may be feasible to save the tooth.'],
+    ['Cracked tooth: Crack extending below the crestal bone.', 'Poor prognosis; extraction recommended.'],
+    ['Vertical root fracture', 'Extraction'],
+  ],
+};
+
+const patientSteps = [
+  { icon: 'warning', text: 'Avoid chewing on the affected side until a dentist has evaluated your tooth.' },
+  { icon: 'warning', text: 'Avoid very hot, cold, or sweet foods and drinks if they cause pain.' },
+  { icon: 'warning', text: 'Do not bite down hard to test the tooth, as this may worsen the crack.' },
+  { icon: 'chair', text: 'See your dentist as soon as possible. Early diagnosis can support timely management and may improve the range of available treatment options.' },
+];
+
+const referralReasons = [
+  'Symptoms suggest cracked tooth, but the source tooth cannot be confirmed.',
+  'The crack is visible on the crown, but its depth and extent below the gumline are unclear.',
+  'The patient has symptoms of pulpitis or pulp necrosis associated with a crack.',
+  'A previously treated tooth presents with new symptoms, and a vertical root fracture is suspected.',
+  'A microscope and CBCT evaluation may help determine restorability before preparing a crown or planning an extraction.',
+];
+
+const faqs = [
+  { q: 'How do I refer a patient with a suspected cracked tooth?', a: 'Referrals may be submitted through the online referral form, by CDANet, by email at info@562endodontics.com, or by phone. Symptomatic cases are typically prioritized based on clinical urgency and scheduling.' },
+  { q: 'Can a cracked tooth always be saved?', a: 'Not always. Prognosis depends on the depth and direction of the crack. Cracks above the crestal bone that do not involve the root may often be managed with root canal treatment and a crown. Cracks extending below the bone or into the root generally have a less favourable prognosis. A clear assessment is provided before treatment begins.' },
+  { q: 'Will a CBCT scan be taken at the consultation?', a: 'If indicated. CBCT imaging is especially useful for suspected vertical root fractures and for determining the extent of cracks in symptomatic teeth when 2D imaging is inconclusive.' },
+  { q: 'Will the referring dentist receive a report?', a: 'If consultation findings significantly change the treatment plan, the endodontist will contact the referring dentist before proceeding.' },
+  { q: 'What if the tooth cannot be saved?', a: 'If extraction is required, our team discusses all options with the patient, including implant referral, and coordinates next steps with your office before proceeding.' },
+];
+---
+
+<BaseLayout
+  title="Cracked Teeth"
+  description="Diagnosis and management of cracked teeth in London, Ontario — microscope and CBCT-guided evaluation, referral guidance for dentists, and what patients should do first."
+>
+  <PageHero title="Cracked Teeth" image="/images/treatments/cracked-teeth/hero.jpg" />
+
+  <!-- S2: Intro -->
+  <SplitSection imageSrc="/images/treatments/cracked-teeth/intro-smile.jpg" imageAlt="Close-up smile showing a fractured incisor" imagePosition="right" bg="bg-white" imageAspect="aspect-[4/3]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Cracked teeth treatment in London, Ontario</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      <strong class="font-semibold text-brand-ink">Cracked teeth can be difficult to diagnose and treat</strong> because
+      symptoms are often inconsistent, and cracks may not be visible on standard radiographs.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      At 562 endodontics, we use an operating microscope and CBCT imaging when indicated to support diagnosis and
+      treatment planning for cracked teeth.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      We welcome referrals from dentists in London and Middlesex County for evaluation and management of suspected
+      cracked teeth.
+    </p>
+    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-brand-tan px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
+      Contact Us <span aria-hidden="true">→</span>
+    </a>
+  </SplitSection>
+
+  <!-- S3: Clasificación -->
+  <section class="bg-[#E3DBD4] py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Classification of cracked teeth and endodontic relevance</h2>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        Management of cracked teeth depends on the extent, location, and direction of the crack, which determine
+        both prognosis and treatment options.
+      </p>
+      <div class="mt-8">
+        <DataTable headers={crackTypesTable.headers} rows={crackTypesTable.rows} />
+      </div>
+      <p class="mt-8 text-lg text-brand-ink/80">
+        Getting checked early is important when a cracked tooth is suspected. If a crack spreads below the gum and
+        bone level, it can significantly affect the tooth's long-term outlook and treatment options. A thorough
+        evaluation using a dental microscope and a 3D X-ray (CBCT) can help determine how deep the crack goes before
+        deciding on the best course of treatment.
+      </p>
+    </div>
+  </section>
+
+  <!-- S4 fila 1: Patient guide intro -->
+  <SplitSection imageSrc="/images/treatments/cracked-teeth/patient-consultation.jpg" imageAlt="Patient consultation for a fractured tooth" imagePosition="right" bg="bg-white" imageAspect="aspect-[4/5]" py="pt-16 pb-8 lg:pt-20 lg:pb-10">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">
+      Patient guide: Immediate steps for a cracked or fractured tooth
+    </h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      A cracked tooth may cause sharp pain when biting, sensitivity to temperature, or general discomfort. These
+      symptoms should not be ignored.
+    </p>
+  </SplitSection>
+
+  <!-- S4 fila 2: Qué hacer -->
+  <SplitSection
+    imageSrc="/images/treatments/cracked-teeth/tooth-render.jpg"
+    imageAlt="Rendering of a cracked incisor"
+    imagePosition="left"
+    bg="bg-white"
+    imageAspect="aspect-square"
+    gridCols="md:grid-cols-[21.3fr_78.7fr]"
+    imageCols="md:col-start-1"
+    textCols="md:col-start-2"
+    py="py-8 lg:py-10"
+  >
+    <h3 class="font-heading text-2xl font-semibold text-brand-rust">What to do if you think you have a cracked tooth:</h3>
+    <ul class="mt-5 space-y-4">
+      {patientSteps.map((step) => (
+        <li class="flex items-start gap-3 text-lg text-brand-ink/80">
+          <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-tan/20 text-brand-tan">
+            {step.icon === 'warning' ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z" /><path d="M6 11V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4" /><path d="M9 18v2" /><path d="M15 18v2" /></svg>
+            )}
+          </span>
+          {step.text}
+        </li>
+      ))}
+    </ul>
+  </SplitSection>
+
+  <!-- S4 fila 3: Qué esperar -->
+  <SplitSection
+    imageSrc="/images/treatments/cracked-teeth/microscope.jpg"
+    imageAlt="Dental operating microscope"
+    imagePosition="left"
+    bg="bg-white"
+    imageAspect="aspect-square"
+    gridCols="md:grid-cols-[21.3fr_78.7fr]"
+    imageCols="md:col-start-1"
+    textCols="md:col-start-2"
+    py="pt-8 pb-16 lg:pt-10 lg:pb-20"
+  >
+    <h3 class="font-heading text-2xl font-semibold text-brand-rust">What to expect at your appointment:</h3>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      Cracks in teeth can be tricky; they don't always show up on regular or even 3D X-rays. Dentists may do some
+      additional tests or use a microscope to get a closer look, and may refer you to a specialist if needed. A 3D
+      X-ray (CBCT scan) might also be taken to check the surrounding bone.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      Treatment will depend on how severe the crack is. Options can range from a crown to protect the tooth to a
+      root canal if the dental pulp is involved, or, in more serious cases, removal of the tooth if the crack
+      cannot be treated.
+    </p>
+  </SplitSection>
+
+  <!-- S5: Doctors Guide -->
+  <SplitSection imageSrc="/images/treatments/cracked-teeth/doctor-microscope.jpg" imageAlt="Dentist working with an operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-square">
+    <p class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Doctors Guide:</p>
+    <h3 class="mt-2 font-heading text-2xl font-semibold text-brand-rust">Clinical Protocol and Co-Management</h3>
+    <h3 class="mt-1 font-heading text-2xl font-semibold text-brand-rust">When to refer a cracked tooth to 562 endodontics</h3>
+    <p class="mt-5 text-lg font-medium text-brand-ink">Consider referral when any of the following apply:</p>
+    <ul class="mt-3 list-disc space-y-2 pl-5 text-lg text-brand-ink/80">
+      {referralReasons.map((reason) => <li>{reason}</li>)}
+    </ul>
+  </SplitSection>
+
+  <!-- S6: Protocolo diagnóstico -->
+  <section class="bg-[#E3DBD4] py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Diagnostic protocol at 562 endodontics</h2>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        Each cracked tooth evaluation starts with a dedicated consultation. During the exam, your dentist will
+        perform a series of tests, including biting tests, shining a light through the tooth, checking the gum
+        health, and assessing temperature sensitivity. If more information is needed, a 3D X-ray (CBCT scan) may
+        also be taken.
+      </p>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        Findings are sent to your office in a written report, including prognosis, and recommended management.
+      </p>
+
+      <div class="mt-8">
+        <DataTable headers={managementTable.headers} rows={managementTable.rows} />
+      </div>
+
+      <h3 class="mt-10 font-heading text-2xl font-semibold text-brand-rust">Splinting and temporization</h3>
+      <p class="mt-3 text-lg text-brand-ink/80">
+        For symptomatic cracked teeth awaiting definitive restoration, a temporary crown or orthodontic band can
+        reduce mobility and alleviate discomfort during treatment planning. Interim management is coordinated with
+        the referring office as needed.
+      </p>
+    </div>
+  </section>
+
+  <!-- S7: FAQ -->
+  <section class="bg-[#E3DBD4]/50 py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="text-center font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Frequently asked questions</h2>
+      <div class="mt-10">
+        <TreatmentFaq items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <ContactCta />
+</BaseLayout>

@@ -1,0 +1,260 @@
+---
+// Página de tratamiento "Dental Trauma". Usa la misma plantilla que
+// Cracked Teeth (PageHero, SplitSection, ImageRow, DataTable, TreatmentFaq)
+// más IconList para las listas con íconos.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SplitSection from '../../components/treatments/SplitSection.astro';
+import ImageRow from '../../components/treatments/ImageRow.astro';
+import IntroStacked from '../../components/IntroStacked.astro';
+import IconList from '../../components/treatments/IconList.astro';
+import DataTable from '../../components/treatments/DataTable.astro';
+import TreatmentFaq from '../../components/treatments/TreatmentFaq.astro';
+import ContactCta from '../../components/ContactCta.astro';
+
+const IMG = '/images/treatments/dental-trauma';
+
+const injuryTable = {
+  headers: ['Injury type', 'Endodontic relevance', 'Referral urgency'],
+  rows: [
+    ['Concussion', 'Low risk of pulp necrosis (~3%). No displacement', 'Consider a referral to rule out a root fracture.'],
+    ['Subluxation', 'Possible periodontal ligament injury. Necrosis risk ~6%', 'Consider a referral to rule out a root fracture.'],
+    ['Extrusive luxation', 'Necrosis risk ~26% in mature teeth', 'Same-day referral recommended'],
+    ['Lateral luxation', 'Necrosis risk up to 58% in mature teeth', 'Same-day or within 24 hours'],
+    ['Intrusive luxation', 'Highest severity injury. Necrosis risk up to 96%', 'Immediate referral'],
+    ['Root fracture', 'The endodontic prognosis depends on the location of the fracture.', 'Refer within 24–48 hours'],
+    ['Alveolar fracture', 'Maxillary, mandibular fracture with multiple teeth involved', 'Same-day referral recommended to a hospital.'],
+  ],
+};
+
+const splintTable = {
+  headers: ['Injury', 'Splint duration'],
+  rows: [
+    ['Subluxation', 'Up to 2 weeks if mobility is present'],
+    ['Extrusive luxation', '4 weeks'],
+    ['Lateral luxation', '4 weeks'],
+    ['Intrusive luxation', '4–8 weeks, depending on severity'],
+    ['Root fracture', '4 weeks'],
+    ['Cervical root fracture', 'Up to 4 months'],
+    ['Avulsion', '2 weeks'],
+    ['Alveolar fracture', '4 weeks'],
+  ],
+};
+
+const fractureSteps = [
+  { icon: 'glass' as const, text: 'Rinse the mouth with water if there is bleeding.' },
+  { icon: 'firstaid' as const, text: 'See a dentist as soon as possible — urgent care may be needed depending on the severity of the fracture.' },
+];
+
+const luxationSteps = [
+  { icon: 'warning' as const, text: 'Avoid touching or trying to reposition the tooth yourself unless instructed by a professional.' },
+  { icon: 'search' as const, text: 'Prompt evaluation is recommended to assess the injury and determine next steps.' },
+];
+
+const avulsionSteps = [
+  { icon: 'box' as const, text: 'Replant the tooth right away if possible.' },
+  { icon: 'box' as const, text: 'If you cannot put it back in the socket, keep it in a safe storage medium until you see a dentist.' },
+];
+
+const storageOptions = [
+  { icon: 'check' as const, text: "Hank's Balanced Salt Solution (HBSS), such as Save-A-Tooth®" },
+  { icon: 'check' as const, text: 'Cold milk (Easier to get!)' },
+  { icon: 'check' as const, text: 'Saline solution' },
+  { icon: 'check' as const, text: 'Your own saliva (for short-term transport only)' },
+];
+
+const sequelae = [
+  { img: 'sequela-1.jpg', aspect: 'aspect-[1024/989]', title: 'Pulp canal obliteration', text: 'This condition presents as a narrowed pulp chamber and yellow discoloration of the crown. Most teeth remain asymptomatic.' },
+  { img: 'sequela-2.jpg', aspect: 'aspect-[1024/695]', title: 'Internal inflammatory resorption', text: 'This appears as a balloon-shaped enlargement of the pulp space on radiographs.' },
+  { img: 'sequela-3.jpg', aspect: 'aspect-[1024/695]', title: 'External cervical resorption', text: "Progressive loss of tooth structure at the cervical region, often presenting radiographically as a 'moth-eaten' radiolucency. Early detection and monitoring are critical to prevent extensive structural compromise." },
+  { img: 'sequela-4.jpg', aspect: 'aspect-[1024/695]', title: 'External replacement resorption (ankylosis)', text: 'This condition results in fusion between the tooth and the surrounding bone. The periodontal ligament space disappears on radiographs, and a metallic percussion sound may be detected clinically.' },
+];
+
+const faqs = [
+  { q: 'How quickly can 562 endodontics see a trauma emergency?', a: 'Same-day appointments are available for acute trauma. Call <a href="tel:+15196013636" class="font-semibold text-brand-rust hover:underline">(519) 601-3636</a>. For avulsion cases, our team provides phone guidance to patients during transit to our office.' },
+  { q: 'Does the consultation include CBCT imaging?', a: 'Yes. The consultation fee includes a CBCT scan, which is particularly valuable in trauma cases where 2D imaging may miss root fractures or underestimate the extent of injury.' },
+  { q: 'Can a tooth infection occur months after trauma?', a: 'Yes. Infection may develop months or even years after the initial injury. Referral is advised if symptoms or radiographic changes appear.' },
+  { q: 'Does 562 endodontics manage trauma in immature teeth?', a: 'Yes. Treatment options include vital pulp therapy, regenerative endodontic procedures, and apexification for teeth with open apices.' },
+];
+
+const ROW_PY = 'py-8 lg:py-10';
+---
+
+<BaseLayout
+  title="Dental Trauma"
+  description="Same-day dental trauma referrals in London, Ontario: assessment of fractures, luxation and avulsion injuries, splinting protocols, CBCT imaging and guidance for dentists and patients."
+>
+  <PageHero title="Dental Trauma" image={`${IMG}/hero.jpg`} />
+
+  <!-- S2: Intro — texto a la izquierda, dos fotos apiladas a la derecha -->
+  <IntroStacked
+    topSrc={`${IMG}/clinic-exterior.jpg`}
+    topAlt="562 endodontics clinic building in London, Ontario"
+    bottomSrc={`${IMG}/team.jpg`}
+    bottomAlt="The 562 endodontics team of doctors"
+  >
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Dental trauma management in London, Ontario</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      Dental trauma requires prompt assessment and appropriate clinical management. At 562 endodontics, our
+      doctors accept same-day emergency referrals for dental injuries.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      Immediate management is important for diagnosis, stabilization, and follow-up planning. We welcome urgent
+      referrals from dentists in London and Middlesex County.
+    </p>
+    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-brand-tan px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
+      Contact Us <span aria-hidden="true">→</span>
+    </a>
+  </IntroStacked>
+
+  <!-- S3: Clasificación -->
+  <section class="bg-[#E3DBD4] py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Classification of traumatic dental injuries and endodontic relevance</h2>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        Not all dental trauma requires immediate endodontic treatment. However, many injuries require close
+        monitoring, as pulp necrosis and inflammatory root resorption may develop weeks or months after the initial
+        injury.
+      </p>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        We encourage dentists to follow the recommended guidelines established by the
+        <a href="https://onlinelibrary.wiley.com/toc/16009657/2024/40/S1" target="_blank" rel="noopener" class="font-semibold text-brand-rust underline hover:no-underline">International Association of Dental Traumatology</a>.
+      </p>
+      <p class="mt-4 text-lg font-semibold text-brand-ink">
+        The following classification summarizes common traumatic dental injuries and their endodontic implications.
+      </p>
+      <div class="mt-8">
+        <DataTable headers={injuryTable.headers} rows={injuryTable.rows} />
+      </div>
+      <p class="mt-8 text-lg text-brand-ink/80">Early evaluation supports timely diagnosis and treatment planning.</p>
+    </div>
+  </section>
+
+  <!-- S4: Patient guide -->
+  <section class="bg-white pb-4 pt-16 lg:pt-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Patient guide: Immediate Management of Dental Trauma</h2>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        Dental injuries require prompt attention to maximize the chance of saving the tooth and preventing long-term
+        problems.
+      </p>
+    </div>
+  </section>
+
+  <ImageRow imageSrc={`${IMG}/tooth-fractures.jpg`} imageAlt="Rendering of a fractured incisor" py={ROW_PY}>
+    <h3 class="font-heading text-2xl font-semibold text-brand-rust">Tooth Fractures</h3>
+    <p class="mt-4 text-lg text-brand-ink/80">If a tooth chips or breaks, save any pieces and bring them with the patient.</p>
+    <IconList items={fractureSteps} />
+  </ImageRow>
+
+  <ImageRow imageSrc={`${IMG}/tooth-luxation.jpg`} imageAlt="Rendering of a displaced tooth" py={ROW_PY}>
+    <h3 class="font-heading text-2xl font-semibold text-brand-rust">Tooth Luxation (Displacement)</h3>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      A tooth that is pushed out of place, loose, or knocked sideways should be examined immediately by a dentist.
+    </p>
+    <IconList items={luxationSteps} />
+  </ImageRow>
+
+  <ImageRow imageSrc={`${IMG}/tooth-avulsion.jpg`} imageAlt="Rendering of a knocked-out tooth" py={ROW_PY}>
+    <h3 class="font-heading text-2xl font-semibold text-brand-rust">Tooth Avulsion (Knocked-Out Tooth)</h3>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      A tooth that is completely knocked out is a serious injury. The faster it is treated, the better the chance of
+      being saved.
+    </p>
+    <h4 class="mt-6 font-heading text-lg font-semibold text-brand-rust">What to do</h4>
+    <IconList items={avulsionSteps} />
+    <h4 class="mt-6 font-heading text-lg font-semibold text-brand-rust">Recommended storage options (best to worst):</h4>
+    <IconList items={storageOptions} />
+  </ImageRow>
+
+  <!-- Barra de alerta -->
+  <section class="bg-white py-8 lg:py-10">
+    <div class="mx-auto max-w-6xl px-6">
+      <p class="mx-auto max-w-[830px] bg-brand-rust px-6 py-4 text-center text-lg text-white">
+        <strong class="font-semibold">Important:</strong> Avoid water if possible — it can damage the cells that help the tooth reattach.
+      </p>
+    </div>
+  </section>
+
+  <!-- Doctors Guide -->
+  <SplitSection imageSrc={`${IMG}/doctor-microscope.jpg`} imageAlt="Doctor working with an operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-[655/540]" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
+    <p class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Doctors Guide:</p>
+    <h3 class="mt-2 font-heading text-2xl font-semibold text-brand-rust">Clinical Protocol and Co-Management</h3>
+    <h3 class="mt-1 font-heading text-2xl font-semibold text-brand-rust">Instructions to relay to a parent or patient calling your office</h3>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      Instruct the patient to handle the tooth by the crown only if possible. If contaminated, briefly rinse the tooth
+      under cool running water without scrubbing the root surface.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      If possible, gently reposition the tooth into the socket and stabilize it by biting on gauze. If this is not
+      possible, place the tooth in cold milk and seek immediate dental care.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      We can provide phone guidance for avulsion emergencies as the patient travels to the clinic.
+    </p>
+  </SplitSection>
+
+  <!-- S5: Splinting -->
+  <section class="bg-[#E3DBD4] py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Luxation injuries and splinting protocol</h2>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        We place and remove all splints at 562 endodontics. Splint type and duration depend on the type of injury. The
+        table below outlines IADT 2020 durations and clinical notes for co-management.
+      </p>
+      <div class="mt-8">
+        <DataTable headers={splintTable.headers} rows={splintTable.rows} />
+      </div>
+    </div>
+  </section>
+
+  <!-- S6: CBCT (banda roja) -->
+  <SplitSection imageSrc={`${IMG}/cbct.jpg`} imageAlt="CBCT imaging unit with touchscreen" imagePosition="left" bg="bg-brand-rust" imageAspect="aspect-[1136/998]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-white sm:text-[32px]">Horizontal root fractures and the role of CBCT imaging</h2>
+    <p class="mt-5 text-lg text-white">
+      Horizontal root fractures are often missed on conventional periapical radiographs if the X-ray beam is not
+      aligned with the fracture plane.
+    </p>
+    <p class="mt-4 text-lg text-white">
+      Early CBCT evaluation improves diagnostic accuracy and reduces the risk of missed cervical root fractures, which
+      may otherwise require extraction.
+    </p>
+  </SplitSection>
+
+  <!-- S7: Delayed trauma sequelae -->
+  <section class="bg-white pb-4 pt-16 lg:pt-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Delayed trauma sequelae</h2>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        After a dental injury, certain changes in the teeth or surrounding tissues can happen over time. These may need
+        to be checked regularly by both the family dentist and our team at 562 endodontics to ensure everything stays
+        healthy.
+      </p>
+    </div>
+  </section>
+
+  {sequelae.map((item, i) => (
+    <ImageRow
+      imageSrc={`${IMG}/${item.img}`}
+      imageAlt={item.title}
+      imageAspect={item.aspect}
+      size="md"
+      py={i === sequelae.length - 1 ? 'pt-8 pb-16 lg:pt-10 lg:pb-20' : ROW_PY}
+    >
+      <h3 class="font-heading text-2xl font-semibold text-brand-rust">{item.title}</h3>
+      <p class="mt-4 text-lg text-brand-ink/80">{item.text}</p>
+    </ImageRow>
+  ))}
+
+  <!-- S8: FAQ -->
+  <section class="bg-[#E3DBD4]/50 py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="text-center font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Frequently asked questions</h2>
+      <div class="mt-10">
+        <TreatmentFaq items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <ContactCta />
+</BaseLayout>

@@ -1,0 +1,362 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import TreatmentGrid from '../components/blocks/TreatmentGrid.astro';
+import TestimonialsSection from '../components/TestimonialsSection.astro';
+import ContactCta from '../components/ContactCta.astro';
+
+const aboutFeatures = [
+  'Limited to endodontics',
+  'High tech facility',
+  'Efficient procedures',
+  'Emergency assistance',
+  'Pleasant atmosphere',
+  'Bilingual in English/Spanish',
+  'Great location with private parking',
+  'Professional development',
+  'Community outreach',
+];
+
+const teasers = [
+  { title: 'Endodontic Treatments', href: '/endodontic-treatments', text: 'Understanding your options is key to your tooth and your future dental health.' },
+  { title: 'High Tech Facility', href: '/high-tech-facility', text: 'A modern, efficient practice built around comfort and precision.' },
+  { title: 'Referrals', href: '/referrals', text: 'Refer a patient online in minutes and track the outcome of the care they received.' },
+];
+
+const techItems = [
+  {
+    id: 'gentlewave',
+    eyebrow: 'GENTLEWAVE',
+    title: 'Experience revolutionary care with the GentleWave® Procedure',
+    youtube: 'https://www.youtube.com/embed/fMccTug-11k',
+    poster: 'https://img.youtube.com/vi/fMccTug-11k/maxresdefault.jpg',
+  },
+  {
+    id: 'fotona',
+    eyebrow: 'Skypulse Fotona Laser',
+    title: 'Minimally invasive disinfection solution that is highly effective',
+    poster: '/images/tech/fotona-poster.png',
+    video: 'https://562endodontics.com/wp-content/uploads/338491871_1417227822442679_7795680675852427648_n.mp4',
+  },
+  {
+    id: 'quicksleeper',
+    eyebrow: 'Quicksleeper 5',
+    title: 'Electronic technique for profound and effective anesthesia',
+    youtube: 'https://www.youtube.com/embed/cx_-pYKf5KA',
+    poster: 'https://img.youtube.com/vi/cx_-pYKf5KA/hqdefault.jpg',
+  },
+];
+
+// "Most dentists refer patients to us for:" — 5 motivos clínicos (sección
+// "Why would a dentist refer you to us"). No confundir con los 6 tratamientos
+// de más abajo: son dos listas distintas del sitio original.
+// "card" define el color de fondo de cada tarjeta, alternando como en la
+// referencia de diseño que mandó el cliente: blanca / rust / beige / rust / blanca.
+const referralReasons = [
+  { text: 'Traumatic dental injuries.', icon: 'broken-tooth', card: 'white' },
+  { text: 'A retreatment is recommended.', icon: 'tools', card: 'rust' },
+  { text: 'Challenging diagnosis.', icon: 'dental-record', card: 'white' },
+  { text: 'Surgical Endodontics treatment.', icon: 'Dentist-Chair', card: 'rust' },
+  { text: 'Symptoms of anxiety and nervousness.', icon: 'patient', card: 'white' },
+];
+---
+
+<BaseLayout title="Home" description="562 Endodontics — The place dedicated to root canals. London, ON." autoReveal={false}>
+
+  <!-- HERO: en el primer vistazo (sin scroll) debe caber el hero completo Y
+       la tarjeta de los 3 accesos COMPLETA (no solo su mitad) — recién
+       después de eso empieza a asomar "Saving a natural tooth". Por eso el
+       alto del hero descuenta también la mitad de la tarjeta (--card-half-h,
+       medida real por JS más abajo), no solo el header. -->
+  <section class="relative flex min-h-[70vh] items-center overflow-hidden bg-brand-rustDark text-white lg:min-h-[calc(100vh-var(--header-h,205px)-var(--card-half-h,100px))]">
+    <img
+      src="/images/hero-clinic.jpg"
+      alt="562 Endodontics clinic building"
+      class="absolute inset-0 h-full w-full object-cover"
+      loading="eager"
+    />
+    <!-- Overlay replica el original: rojo fuerte arriba-izquierda,
+         desvaneciendo a transparente abajo-derecha para que la foto real
+         del edificio se vea (no un lavado parejo de color). -->
+    <div class="absolute inset-0 bg-gradient-to-br from-brand-rust/90 via-brand-rust/50 to-transparent" aria-hidden="true"></div>
+
+    <div class="relative mx-auto max-w-4xl px-6 pb-[calc(var(--card-h,500px)*0.333+2rem)] pt-24 text-center sm:py-24">
+      <p class="reveal font-heading text-base font-semibold uppercase tracking-[0.2em] text-white/80">We are</p>
+      <h1 class="reveal mt-3 font-heading text-5xl font-light leading-tight sm:text-7xl">562 <span class="font-semibold">endodontics</span></h1>
+      <p class="reveal mt-5 text-xl text-white/90">The place dedicated to root canals.</p>
+
+      <div class="reveal mt-10 flex flex-wrap justify-center gap-4">
+        <a href="#form" class="rounded-full bg-white px-9 py-3.5 font-heading text-base font-semibold text-brand-rust transition hover:bg-stone-100">
+          Contact Us
+        </a>
+        <a href="/referrals" class="rounded-full border border-white/70 px-9 py-3.5 font-heading text-base font-semibold text-white transition hover:bg-white/10">
+          Refer a Patient
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANDA DE REFERIDOS / REVIEWS: dos columnas reales — texto sobre rojo
+       sólido a la izquierda, la foto COMPLETA (sin degradado tapándola)
+       ocupando toda su columna a la derecha.
+       La tarjeta de los 3 accesos (TEASERS) es un rectángulo de esquinas
+       redondeadas, posicionado absoluto justo sobre la costura entre el
+       hero y esta sección; con -translate-y-1/2 queda literalmente mitad
+       metida en el hero y mitad en esta sección, sin importar su alto real.
+       IMPORTANTE: sin `overflow-hidden` aquí a propósito — la mitad de la
+       tarjeta se sale hacia arriba de esta sección (por eso el translate),
+       y overflow-hidden se la recortaría (quedaría "escondida" detrás del
+       hero en vez de solaparlo). La foto de la derecha no necesita este
+       overflow-hidden para no desbordar: ya está contenida en su propio
+       div con object-cover. -->
+  <section class="relative">
+    <!-- TEASERS -->
+    <div class="absolute inset-x-0 top-0 z-20 -translate-y-1/3 px-6 sm:-translate-y-1/2">
+      <div id="teasers-card" class="mx-auto grid max-w-6xl gap-6 rounded-2xl bg-brand-rust p-3 shadow-2xl sm:grid-cols-3">
+        {teasers.map((t) => (
+          <a href={t.href} class="reveal group rounded-xl p-7 transition hover:bg-white/10">
+            <h3 class="font-heading text-lg font-semibold text-white">{t.title}</h3>
+            <p class="mt-2 text-base text-white/80">{t.text}</p>
+            <span class="mt-3 inline-block text-sm font-semibold uppercase tracking-wide text-white transition group-hover:translate-x-1">
+              Learn More →
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2">
+      <div class="flex items-center bg-brand-rust px-6 pb-20 pt-[calc(var(--card-h,500px)*0.667+2.5rem)] sm:pt-[calc(var(--card-h,300px)*0.5+2.5rem)] lg:pb-28 lg:pt-44">
+        <div class="mx-auto max-w-md text-left text-white lg:mx-0 lg:ml-auto lg:mr-12">
+          <h2 class="reveal font-heading text-3xl font-light leading-tight sm:text-[43px]">
+            Saving a natural tooth, whenever possible, is always the best option for our patients.
+          </h2>
+
+          <div class="reveal mt-8 flex flex-wrap gap-4">
+            <a href="/referrals" class="rounded-full bg-white px-8 py-3.5 font-heading text-sm font-semibold text-brand-rust transition hover:bg-stone-100">
+              Refer a Patient
+            </a>
+            <a href="https://www.ratemds.com/doctor-ratings/dr-jacqueline-lopez-gross-london-on-ca/" target="_blank" rel="noopener" class="rounded-full border border-white/70 px-8 py-3.5 font-heading text-sm font-semibold text-white transition hover:bg-white/10">
+              Read Our Reviews
+            </a>
+          </div>
+
+          <div class="reveal mt-10 flex flex-wrap items-center gap-8">
+            <a href="https://www.ratemds.com/doctor-ratings/dr-jacqueline-lopez-gross-london-on-ca/" target="_blank" rel="noopener" class="rounded-lg bg-white/95 p-2 transition hover:opacity-90">
+              <img src="/images/reviews/ratemds.svg" alt="RateMDs" class="h-10 w-auto" />
+            </a>
+            <a href="https://www.google.com/maps/place/562+endodontics/@42.9909536,-81.2447238,17z" target="_blank" rel="noopener" class="rounded-lg bg-white/95 p-2 transition hover:opacity-90">
+              <img src="/images/reviews/google.svg" alt="Google Reviews" class="h-10 w-auto" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative min-h-[360px]">
+        <img src="/images/reviews-banner.jpg" alt="Inside the 562 Endodontics office" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Mide la mitad de la altura real de la tarjeta de los 3 accesos y la
+    // expone como --card-half-h, para que el hero pueda descontarla de su
+    // propio alto (ver comentario junto al <section> del hero). Sin esto,
+    // el valor quedaría adivinado a ojo y se rompería en cuanto el texto de
+    // alguna tarjeta envuelva distinto en otro ancho de pantalla.
+    // --card-h (alto completo) se usa en móvil, donde la tarjeta (3 filas apiladas)
+    // solo sube un tercio sobre el hero en vez de la mitad.
+    function setCardHalfHeightVar() {
+      const card = document.getElementById('teasers-card');
+      if (card) {
+        document.documentElement.style.setProperty('--card-half-h', `${card.offsetHeight / 2}px`);
+        document.documentElement.style.setProperty('--card-h', `${card.offsetHeight}px`);
+      }
+    }
+    setCardHalfHeightVar();
+    window.addEventListener('resize', setCardHalfHeightVar);
+  </script>
+
+  <!-- ALTA TECNOLOGÍA: demos en video de los equipos (High Tech Facility) -->
+  <section class="bg-white py-24">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="reveal text-center font-heading text-4xl font-light leading-tight text-brand-ink sm:text-[43px]">
+        A <span class="font-semibold text-brand-rust">High Tech</span> Facility
+      </h2>
+      <div class="mt-12 grid gap-8 md:grid-cols-3">
+        {techItems.map((item) => (
+          <div class="reveal overflow-hidden rounded-2xl bg-white shadow-sm">
+            <button
+              type="button"
+              class="group relative block aspect-video w-full cursor-pointer bg-black"
+              data-video-trigger
+              data-video-id={item.id}
+              data-video-youtube={item.youtube ?? ''}
+              data-video-mp4={item.video ?? ''}
+              data-video-title={item.title}
+              aria-label={`Play video: ${item.title}`}
+            >
+              <img src={item.poster} alt={item.title} class="h-full w-full object-cover opacity-90 transition group-hover:opacity-70" loading="lazy" />
+              <span class="absolute inset-0 flex items-center justify-center">
+                <span class="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-lg transition group-hover:scale-110">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="ml-1 text-brand-rust"><path d="M8 5v14l11-7Z" /></svg>
+                </span>
+              </span>
+            </button>
+            <div class="p-6">
+              <p class="font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">{item.eyebrow}</p>
+              <h3 class="mt-2 font-heading text-lg font-semibold leading-snug text-brand-ink">{item.title}</h3>
+              <a href="/high-tech-facility" class="mt-3 inline-block text-sm font-semibold uppercase tracking-wide text-brand-rust hover:underline">
+                Learn More →
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT 562 -->
+  <section class="bg-[#f2eeea] py-24">
+    <div class="mx-auto max-w-5xl px-6 text-center">
+    <p class="reveal font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">About 562</p>
+    <h2 class="reveal mt-2 font-heading text-4xl font-light leading-tight text-brand-ink sm:text-[43px]">About <span class="font-semibold text-brand-rust">562</span></h2>
+    <p class="reveal mx-auto mt-5 max-w-2xl text-lg text-brand-ink/70">
+      We provide specialized care for protecting and preserving natural teeth with the highest
+      standards while giving back to the community. Our staff is committed to staying up-to-date on
+      the latest treatments and practices. We are dedicated to supporting local initiatives to make a
+      positive impact.
+    </p>
+
+    <div class="reveal mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <img src="/images/about/img-5218.jpg" alt="562 Endodontics" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
+      <img src="/images/about/team-shots.jpg" alt="562 Endodontics team" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
+    </div>
+
+    <ul class="reveal mx-auto mt-10 grid max-w-3xl grid-cols-1 gap-x-8 gap-y-4 text-left sm:grid-cols-3">
+      {aboutFeatures.map((f) => (
+        <li class="flex items-start gap-2 text-base text-brand-ink/80">
+          <svg class="mt-1 h-5 w-5 shrink-0 text-brand-rust" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.7 5.3a1 1 0 010 1.4l-7 7a1 1 0 01-1.4 0l-3-3a1 1 0 111.4-1.4L9 11.6l6.3-6.3a1 1 0 011.4 0z" clip-rule="evenodd"/></svg>
+          {f}
+        </li>
+      ))}
+    </ul>
+    <a href="/about-us" class="reveal mt-10 inline-block rounded-full bg-brand-rust px-9 py-3.5 font-heading text-base font-semibold text-white transition hover:bg-brand-rustDark">
+      Learn More
+    </a>
+    </div>
+  </section>
+
+  <!-- WHY WOULD A DENTIST REFER YOU TO US: rojo sólido (como el original),
+       no una foto con overlay — eso se reserva para el hero. -->
+  <section class="bg-brand-rust py-28 text-white">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+      <p class="reveal font-heading text-sm font-semibold uppercase tracking-wide text-white/70">Best Dental Care</p>
+      <h2 class="reveal mt-2 font-heading text-3xl font-light leading-tight sm:text-[43px]">
+        Why would a dentist refer you to us
+      </h2>
+      <p class="reveal mt-5 text-lg text-white/90">
+        Saving a natural tooth, whenever possible, is always the best option for our patients.
+      </p>
+      <p class="reveal mt-4 text-lg text-white/90">
+        Occasionally, dentists who routinely perform root canals refer their patients to root canal
+        experts for complex clinical procedures or challenging diagnostics.
+      </p>
+      <a href="/about-us" class="reveal mt-8 inline-block rounded-full bg-white px-9 py-3.5 font-heading text-base font-semibold text-brand-rust transition hover:bg-stone-100">
+        Learn More
+      </a>
+    </div>
+
+    <div class="relative mx-auto mt-16 max-w-6xl px-6">
+      <h3 class="reveal text-center font-heading text-2xl font-light leading-snug sm:text-3xl">Most dentists refer patients to us for:</h3>
+      <div class="reveal mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        {referralReasons.map((reason) => (
+          <div class={`group rounded-3xl p-6 transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
+            reason.card === 'white' ? 'bg-white text-brand-rust shadow-lg' :
+            reason.card === 'tan' ? 'bg-brand-tan text-white shadow-lg' :
+            'border border-white/25 bg-brand-rust text-white'
+          }`}>
+            <span class={`flex h-16 w-16 items-center justify-center rounded-full transition group-hover:scale-110 ${
+              reason.card === 'white' ? 'bg-brand-rust/15' : 'bg-white/30'
+            }`}>
+              <Icon name={reason.icon} class="h-8 w-8" />
+            </span>
+            <p class="mt-4 font-heading text-base font-semibold leading-snug">{reason.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- TRATAMIENTOS: dinámico desde WordPress (CPT `treatment`) -->
+  <TreatmentGrid
+    heading="Endodontic Treatments"
+    intro="Having a clear understanding of your choices and how they will affect you is important for your tooth and your future dental health."
+  />
+
+  <!-- ASOCIACIONES -->
+  <section class="border-y border-stone-100 bg-stone-50 py-20">
+    <h2 class="reveal px-6 text-center font-heading text-3xl font-light leading-tight text-brand-ink sm:text-[43px]">
+      We are proudly associated with the following organizations
+    </h2>
+    <div class="mx-auto mt-10 flex max-w-5xl flex-wrap items-center justify-center gap-x-14 gap-y-10 px-6">
+      <a href="https://www.aae.org/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/associations/aae.png" alt="American Association of Endodontists" class="h-24 w-auto object-contain" loading="lazy" /></a>
+      <a href="https://www.caendo.ca/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/associations/cae.png" alt="Canadian Academy of Endodontics" class="h-20 w-auto object-contain" loading="lazy" /></a>
+      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/associations/western.webp" alt="Western University" class="h-16 w-auto object-contain" loading="lazy" /></a>
+      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/associations/uoft.webp" alt="University of Toronto" class="h-16 w-auto object-contain" loading="lazy" /></a>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS: dinámico desde WordPress (CPT `testimonial`) -->
+  <TestimonialsSection />
+
+  <!-- CTA FINAL + FORMULARIO DE CONTACTO (compartido con páginas internas) -->
+  <ContactCta />
+
+  <!-- MAPA + CONTACTO: mapa a la izquierda, datos de contacto a la derecha,
+       bloque centrado verticalmente y todo el texto alineado a la izquierda. -->
+  <section class="bg-white py-24">
+    <div class="mx-auto grid max-w-6xl items-stretch gap-10 px-6 md:grid-cols-2">
+      <div class="reveal overflow-hidden rounded-2xl">
+        <iframe
+          src="https://www.google.com/maps?q=562+Waterloo+St,+London,+ON+N6B+2P9&output=embed"
+          class="h-full min-h-[360px] w-full border-0"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="562 Endodontics location"
+        ></iframe>
+      </div>
+
+      <div class="reveal flex flex-col justify-center text-left">
+        <h2 class="font-heading text-3xl font-light leading-tight text-brand-ink sm:text-[43px]">Contact us</h2>
+        <p class="mt-4 text-lg text-brand-ink/70">
+          Contact us today to learn more about how we can help you care for your endodontic needs.
+        </p>
+        <p class="mt-3 text-lg text-brand-ink/70">
+          Thank you for considering 562 endodontics as your endodontic care provider.
+        </p>
+
+        <div class="mt-8 space-y-5">
+          <div>
+            <a
+              href="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9,+Canad%C3%A1/data=!4m2!3m1!1s0x882ef206eb925bf3:0x4e090e07dcef9be6?sa=X&ved=2ahUKEwiCtJH24rP8AhUjsDEKHUkBCrEQ8gF6BAgSEAE"
+              target="_blank"
+              rel="noopener"
+              class="font-heading text-base font-semibold text-brand-rust hover:underline"
+            >Location</a>
+            <p class="text-base text-brand-ink/70">562 Waterloo st, London, ON, N6B 2P9</p>
+          </div>
+          <div>
+            <a href="tel:+15196013636" class="font-heading text-base font-semibold text-brand-rust hover:underline">Call Us</a>
+            <p class="text-base text-brand-ink/70">(519) 601-ENDO (3636)</p>
+          </div>
+          <div>
+            <p class="font-heading text-base font-semibold text-brand-ink">Working Hours</p>
+            <p class="text-base text-brand-ink/70">Monday to Friday 8:30 a.m. to 5:00 p.m</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>

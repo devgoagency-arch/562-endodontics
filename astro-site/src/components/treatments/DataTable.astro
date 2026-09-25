@@ -1,0 +1,34 @@
+---
+// Tabla de datos reutilizable (comparativas clínicas). Header rojo de marca,
+// filas en beige claro alternado, primera columna en negrita. Con overflow-x
+// en móvil en vez de romper el layout (nota explícita del cliente).
+interface Props {
+  headers: string[];
+  rows: string[][];
+  narrow?: boolean;
+}
+const { headers, rows, narrow = false } = Astro.props;
+---
+
+<div class={`mx-auto overflow-x-auto ${narrow ? 'max-w-3xl' : ''}`}>
+  <table class="w-full min-w-[640px] border-collapse overflow-hidden rounded-xl text-left text-lg">
+    <thead>
+      <tr class="bg-brand-rust text-white">
+        {headers.map((h) => (
+          <th class="px-5 py-4 font-heading font-semibold">{h}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr class="border-b border-white bg-[#E3DBD4]/60 odd:bg-[#E3DBD4]">
+          {row.map((cell, i) => (
+            i === 0
+              ? <td class="px-5 py-4 align-top font-semibold text-brand-ink">{cell}</td>
+              : <td class="px-5 py-4 align-top text-brand-ink/80">{cell}</td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

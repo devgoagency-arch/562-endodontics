@@ -1,0 +1,142 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import LineIcon from '../components/LineIcon.astro';
+import JustifiedGallery from '../components/JustifiedGallery.astro';
+import ContactCta from '../components/ContactCta.astro';
+
+const G = '/images/gallery';
+
+const equipment = ['Dental CT Scan', 'Surgical Operating Microscopes', 'The GentleWave System', 'Quicksleeper, for profound anesthesia'];
+
+const benefits = [
+  { icon: 'clock' as const, title: 'Efficient Procedures', text: 'Our extensive experience, expertise, and technology allow us to avoid long treatment sessions.' },
+  { icon: 'heartPulse' as const, title: 'Emergency Assistance', text: 'We know dental emergencies can occur when you least expect them, our team is available to help you in an emergency' },
+  { icon: 'smile' as const, title: 'Pleasant Atmosphere', text: 'We provide a warm and welcoming atmosphere for our patients, and our highly skilled staff is dedicated to providing the best possible care.' },
+  { icon: 'languages' as const, title: 'Bilingual assistance', text: 'We offer bilingual assistance in both English and Spanish for the convenience of Spanish speaking patients.' },
+  { icon: 'pin' as const, title: 'Great Location with private parking', text: "The clinic is located right in the heart of downtown London, so it's easy to reach from anywhere in the city. We have our own parking lot with plenty of space for our patients." },
+  { icon: 'book' as const, title: 'Professional development', text: 'At <strong class="font-semibold">562 endodontics</strong>, we offer job shadowing and study group opportunities to dental and high school students, dental practitioners, and staff to contribute to their experience and professional growth.' },
+  { icon: 'heart' as const, title: 'Community Focused', text: 'Our doctors are actively involved with the University of Western Ontario and University of Toronto. They are also volunteers at <strong class="font-semibold">The Wright Clinic,</strong> a not-for-profit, community-based dental clinic serving Londoners facing barriers due to income or housing insecurity.' },
+];
+const firstRow = benefits.slice(0, 4);
+const secondRow = benefits.slice(4);
+
+// Colores alternados por posición global (1 y 3 beige/rojo, 2 y 4 rojo/taupe oscuro).
+const tone = (i: number) =>
+  i % 2 === 0
+    ? { icon: 'text-brand-tan', title: 'text-brand-rust' }
+    : { icon: 'text-brand-rust', title: 'text-[#9E8D7C]' };
+
+const gallery = [
+  { src: `${G}/562-endodontics-35.jpg`, alt: 'Detail of the 562 endodontics clinic' },
+  { src: `${G}/562-endodontics-jacqueline-lopez-2.jpg`, alt: 'Dr. Jacqueline Lopez Gross at 562 endodontics' },
+  { src: `${G}/562-endodontics-4.jpg`, alt: 'Interior of the 562 endodontics clinic' },
+  { src: `${G}/562-endodontics-team.jpg`, alt: 'The 562 endodontics team' },
+  { src: `${G}/562-endodontics-explore-our-technology.jpg`, alt: 'Endodontic technology at 562 endodontics' },
+  { src: `${G}/562-endodontics-19.jpg`, alt: 'Inside the 562 endodontics clinic' },
+  { src: `${G}/562-endodontics-jacqueline-lopez.jpg`, alt: 'Dr. Jacqueline Lopez Gross, endodontist' },
+  { src: `${G}/562-endodontics-34.jpg`, alt: 'Treatment room at 562 endodontics' },
+  { src: `${G}/562-endodontics-clinic.jpg`, alt: 'The 562 endodontics clinic building on Waterloo Street' },
+  { src: `${G}/562-endodontics-jacqueline-lopez-3.jpg`, alt: 'Dr. Jacqueline Lopez Gross holding a tooth model' },
+];
+---
+
+<BaseLayout
+  title="Our Dental Clinic"
+  description="Our endodontic clinic at 562 Waterloo St. in downtown London, Ontario: a full range of endodontic services from root canals to apical surgery and dental injuries, with modern technology and private parking."
+>
+  <PageHero title="Our Dental Clinic" image="/images/clinic/hero.jpg" />
+
+  <!-- S2: Intro + tarjeta High Tech Facility -->
+  <section class="bg-white py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <a href="/" class="block text-center">
+        <img src="/images/clinic/logo.png" alt="562 endodontics" class="mx-auto h-24 w-auto sm:h-[120px]" />
+      </a>
+      <p class="mt-8 text-center text-lg text-brand-ink/80">
+        Our office is located at <strong class="font-semibold text-brand-ink">562 Waterloo St. in downtown London, Ontario.</strong>
+        Our building is a beautiful Victorian house that combines spacious operatory areas with functional
+        architecture, natural light, and modern accents. There is a private parking lot on the property for your
+        convenience. Our staff is trained to use the latest technology to provide expert patient care. Our clinic
+        offers a full range of endodontic services, from root canals to apical surgery and management of dental
+        injuries.
+      </p>
+
+      <div class="mt-12 rounded-[20px] bg-brand-rust px-6 py-10 text-white md:px-12 md:py-14">
+        <div class="mx-auto max-w-3xl text-center">
+          <LineIcon name="monitor" class="mx-auto h-10 w-10" />
+          <h3 class="mt-4 font-heading text-2xl font-semibold">High Tech Facility</h3>
+          <p class="mt-4 text-lg">
+            We utilize materials and equipment designed to assist with accurate diagnosis and make your treatment more
+            comfortable and efficient. We are equipped with:
+          </p>
+        </div>
+        <div class="mx-auto mt-10 grid max-w-3xl items-center gap-8 md:grid-cols-2">
+          <ul class="space-y-3">
+            {equipment.map((item) => (
+              <li class="flex items-start gap-3 text-lg">
+                <LineIcon name="check" class="mt-1 h-5 w-5 shrink-0 text-brand-tan" />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <div class="md:text-center">
+            <a href="#form" class="inline-flex items-center justify-center rounded-[20px_20px_3px_3px] bg-brand-tan px-12 py-6 font-heading text-lg font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
+              Contact Us
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- S3: Galería -->
+  <section class="bg-white pb-16 lg:pb-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <JustifiedGallery images={gallery} />
+    </div>
+  </section>
+
+  <!-- S4: Health & Safety -->
+  <section class="relative overflow-hidden bg-brand-rustDark py-20 text-white">
+    <img src={`${G}/562-endodontics-4.jpg`} alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+    <div class="absolute inset-0 bg-brand-rust/80" aria-hidden="true"></div>
+    <div class="relative mx-auto grid max-w-6xl items-center gap-8 px-6 md:grid-cols-[40fr_60fr]">
+      <h2 class="font-heading text-3xl font-semibold leading-tight sm:text-[32px]">Health &amp; Safety</h2>
+      <div class="space-y-4 text-lg">
+        <p>We understand the importance of providing a safe environment for our patients and staff.</p>
+        <p>
+          <strong class="font-semibold">562 endodontics</strong> was designed and fully renovated to confidently
+          provide clean air and purified water for health and safety. We have a VistaPure water system and a Trane
+          HVAC air purifier system special for healthcare facilities.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- S5 + S6: Beneficios -->
+  <section class="bg-white py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4" data-reveal-each>
+        {firstRow.map((b, i) => (
+          <div>
+            <LineIcon name={b.icon} class={`h-[72px] w-[72px] ${tone(i).icon}`} />
+            <h3 class={`mt-4 font-heading text-2xl font-semibold ${tone(i).title}`}>{b.title}</h3>
+            <p class="mt-3 text-lg text-brand-ink/80" set:html={b.text} />
+          </div>
+        ))}
+      </div>
+      <div class="mx-auto mt-14 grid max-w-4xl gap-10 sm:grid-cols-2 lg:grid-cols-3" data-reveal-each>
+        {secondRow.map((b, i) => (
+          <div>
+            <LineIcon name={b.icon} class={`h-[72px] w-[72px] ${tone(i + firstRow.length).icon}`} />
+            <h3 class={`mt-4 font-heading text-2xl font-semibold ${tone(i + firstRow.length).title}`}>{b.title}</h3>
+            <p class="mt-3 text-lg text-brand-ink/80" set:html={b.text} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ContactCta />
+</BaseLayout>

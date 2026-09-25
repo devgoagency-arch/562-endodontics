@@ -1,0 +1,118 @@
+---
+// Galería "justificada" con lightbox. Las fotos se reparten en `rows` filas
+// de anchos balanceados (sin filas huérfanas) y cada foto ocupa un ancho
+// proporcional a su formato, así que todas las de una fila quedan del mismo
+// alto sin recortarse. En móvil las filas se parten en líneas más cortas.
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+import sharp from 'sharp';
+
+interface Props {
+  images: { src: string; alt: string }[];
+  rows?: number;
+}
+const { images, rows = 2 } = Astro.props;
+
+const items = await Promise.all(
+  images.map(async (img, index) => {
+    let ratio = 4 / 3;
+    try {
+      const file = await readFile(path.join(process.cwd(), 'public', img.src));
+      const meta = await sharp(file).metadata();
+      if (meta.width && meta.height) ratio = meta.width / meta.height;
+    } catch {}
+    return { ...img, ratio, index };
+  })
+);
+
+// Corta la lista (en orden) en `rows` tramos con suma de proporciones lo más
+// pareja posible: cada corte va donde la suma acumulada queda más cerca de
+// total * (fila / rows).
+const total = items.reduce((sum, item) => sum + item.ratio, 0);
+const groups: (typeof items)[] = [];
+let cursor = 0;
+for (let row = 1; row <= rows; row++) {
+  if (row === rows) {
+    groups.push(items.slice(cursor));
+    break;
+  }
+  const target = (total * row) / rows;
+  let acc = items.slice(0, cursor).reduce((sum, item) => sum + item.ratio, 0);
+  let end = cursor;
+  while (end < items.length - (rows - row)) {
+    const next = acc + items[end].ratio;
+    if (Math.abs(next - target) > Math.abs(acc - target) && end > cursor) break;
+    acc = next;
+    end++;
+  }
+  groups.push(items.slice(cursor, end));
+  cursor = end;
+}
+---
+
+<div data-gallery class="space-y-2">
+  {groups.map((group) => (
+    <ul class="flex flex-wrap gap-2 md:flex-nowrap">
+      {group.map((img) => (
+        <li
+          class="min-w-0 [flex:var(--r)_1_calc(var(--r)*110px)] md:[flex:var(--r)_1_0%]"
+          style={`--r:${img.ratio.toFixed(3)}`}
+        >
+          <button type="button" data-gallery-item={img.index} class="block w-full cursor-zoom-in" aria-label={`Open photo: ${img.alt}`}>
+            <img
+              src={img.src}
+              alt={img.alt}
+              loading="lazy"
+              class="h-auto w-full rounded-[20px] object-cover transition hover:opacity-90"
+              style={`aspect-ratio:${img.ratio.toFixed(3)}`}
+            />
+          </button>
+        </li>
+      ))}
+    </ul>
+  ))}
+
+  <dialog data-gallery-dialog class="m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-black/85">
+    <div class="flex h-full w-full items-center justify-center p-4 sm:p-10" data-gallery-backdrop>
+      <img data-gallery-image src="" alt="" class="max-h-full max-w-full rounded-[20px] object-contain shadow-2xl" />
+    </div>
+    <button type="button" data-gallery-close aria-label="Close" class="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-2xl leading-none text-brand-ink transition hover:bg-white">×</button>
+    <button type="button" data-gallery-prev aria-label="Previous photo" class="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-2xl leading-none text-brand-ink transition hover:bg-white">‹</button>
+    <button type="button" data-gallery-next aria-label="Next photo" class="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-2xl leading-none text-brand-ink transition hover:bg-white">›</button>
+  </dialog>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((root) => {
+    const dialog = root.querySelector<HTMLDialogElement>('[data-gallery-dialog]')!;
+    const view = root.querySelector<HTMLImageElement>('[data-gallery-image]')!;
+    const thumbs = [...root.querySelectorAll<HTMLImageElement>('[data-gallery-item] img')].sort(
+      (a, b) => Number(a.closest<HTMLElement>('[data-gallery-item]')!.dataset.galleryItem) - Number(b.closest<HTMLElement>('[data-gallery-item]')!.dataset.galleryItem)
+    );
+    let index = 0;
+
+    const show = (i: number) => {
+      index = (i + thumbs.length) % thumbs.length;
+      view.src = thumbs[index].src;
+      view.alt = thumbs[index].alt;
+    };
+    const open = (i: number) => {
+      show(i);
+      if (!dialog.open) dialog.showModal();
+    };
+
+    root.querySelectorAll<HTMLElement>('[data-gallery-item]').forEach((btn) => {
+      btn.addEventListener('click', () => open(Number(btn.dataset.galleryItem)));
+    });
+    root.querySelector('[data-gallery-close]')?.addEventListener('click', () => dialog.close());
+    root.querySelector('[data-gallery-prev]')?.addEventListener('click', () => show(index - 1));
+    root.querySelector('[data-gallery-next]')?.addEventListener('click', () => show(index + 1));
+    root.querySelector('[data-gallery-backdrop]')?.addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) dialog.close();
+    });
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(index - 1);
+      if (e.key === 'ArrowRight') show(index + 1);
+    });
+  });
+</script>
