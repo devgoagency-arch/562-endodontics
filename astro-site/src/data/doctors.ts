@@ -3,14 +3,18 @@
 // ("R. Greg Carr" vs "R. Gregory Carr", "Ines" vs "Inés"); aquí se usa la
 // versión de About Us hasta que el cliente confirme la oficial.
 export interface Doctor {
+  id: string; // slug estable, usado como @id en el schema.org Person
   name: string;
+  credentials: string; // honorificSuffix del schema (fuente: Referrals, que ya las traía)
   photo: string;
   bio: string[];
 }
 
 export const doctors: Doctor[] = [
   {
+    id: 'dr-jacqueline-lopez-gross',
     name: 'Dr. Jacqueline Lopez Gross',
+    credentials: 'DDS, MSc, FRCD (C)',
     photo: '/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-endodontist.webp',
     bio: [
       "Born in Caracas Venezuela. She received her Master's of Science degree in Endodontics from the University of Toronto in 2018 and is a Fellow of the Royal College of Dentists of Canada.",
@@ -19,7 +23,9 @@ export const doctors: Doctor[] = [
     ],
   },
   {
+    id: 'dr-ines-marin-betancourt',
     name: 'Dr. Ines Marín Betancourt',
+    credentials: 'DDS, FRCD (C)',
     photo: '/images/team/562-endodontics-london-ontario-dr-ines-marin-betancourt-endodontist.webp',
     bio: [
       'Earned her DDS in Venezuela and completed specialty training in Endodontics in Colombia. In 2024, she was selected for the prestigious Dental Specialty Assessment and Training Program (DSATP) at the University of Toronto, which accepts only one internationally trained specialist each year. She is now a Board Certified Endodontist and Fellow of the Royal College of Dentists of Canada.',
@@ -27,7 +33,9 @@ export const doctors: Doctor[] = [
     ],
   },
   {
+    id: 'dr-manfred-friedman',
     name: 'Dr. Manfred Friedman',
+    credentials: 'B.D.S (Wits.) B.Ch.D Hons (Pret)',
     photo: '/images/team/562-endodontics-london-ontario-dr-manfred-friedman-endodontist.webp',
     bio: [
       "Graduated in South Africa in 1971 and emigrated to Canada 35 years ago. He taught the undergrad endodontic course at Schulich School of Medicine and Dentistry at Western University from 1995 to 2021. He has restricted his practice to Endodontics since 1997. He was recently awarded with the 'CY Lung award' for his outstanding contribution to the undergraduate program at Western University.",
@@ -36,7 +44,9 @@ export const doctors: Doctor[] = [
     ],
   },
   {
+    id: 'dr-r-greg-carr',
     name: 'Dr. R. Greg Carr, DDS',
+    credentials: 'DDS',
     photo: '/images/team/562-endodontics-london-ontario-dr-greg-carr-endodontist.webp',
     bio: [
       'Dr. R. Greg Carr earned his dental degree from the University of Western Ontario in 1983. In 2005, he completed a Post-Doctoral Scholars Program in Graduate Endodontics at the University of Michigan, further enhancing his expertise in the field. Dr. Carr also holds an Intravenous Sedation Certification from the Medical College of Georgia.',

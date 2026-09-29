@@ -21,10 +21,19 @@ interface Props {
   // lo desactiva porque ya marca sus elementos a mano con .reveal (y su
   // hero/teasers dependen de posicionamiento fino que no admite transforms).
   autoReveal?: boolean;
-  // Páginas que no deben indexarse (errores): robots noindex y fuera del buscador.
+  // Páginas que no deben indexarse (errores): robots noindex y fuera del buscador
+  // propio del sitio (Pagefind).
   noindex?: boolean;
 }
 const { title, description, autoReveal = true, noindex = false } = Astro.props;
+
+// Vercel fija VERCEL_ENV a "production" solo en el dominio de producción; en
+// previews de rama y en local queda "preview" / "development" / undefined. Esto
+// SOLO controla el robots meta/robots.txt (que Google no indexe un borrador);
+// no toca `noindex` ni data-pagefind-ignore, así que la búsqueda propia del
+// sitio (Pagefind) sigue funcionando igual en cualquier entorno.
+const isProductionDeploy = import.meta.env.VERCEL_ENV === 'production';
+const robotsNoindex = noindex || !isProductionDeploy;
 
 const SITE = (Astro.site ?? new URL('https://562endodontics.com')).origin;
 const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.url.pathname + '/';
@@ -41,10 +50,11 @@ const ogImage = SITE + '/og-image.jpg';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={metaDescription} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
     <meta name="theme-color" content="#B13E25" />
-    {noindex && <meta name="robots" content="noindex, follow" />}
+    {robotsNoindex && <meta name="robots" content="noindex, follow" />}
 
     <!-- Open Graph / Twitter: vista previa al compartir el enlace -->
     <meta property="og:type" content="website" />

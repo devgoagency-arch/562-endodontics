@@ -2,6 +2,8 @@
 // el bloque de contacto del home lo importan de aquí) y para el JSON-LD que usa
 // Google para mostrar la clínica en el mapa y en resultados enriquecidos. Si
 // cambia el horario, el teléfono o la dirección, se actualiza solo aquí.
+import { doctors } from './doctors';
+
 export const hours = {
   weekday: 'Mon, Tue, Thu & Fri 8:30am–5pm',
   wednesday: 'Wed 8:30am–4pm',
@@ -19,7 +21,12 @@ export const businessSchema = {
   image: 'https://562endodontics.com/og-image.jpg',
   telephone: '+1-519-601-3636',
   email: 'info@562endodontics.com',
-  medicalSpecialty: 'Endodontic',
+  // "Dentistry" es el único valor de MedicalSpecialty de schema.org que aplica
+  // aquí ("Endodontic" no es un valor válido de la enumeración).
+  medicalSpecialty: 'Dentistry',
+  // Enlaza cada doctor (schema.org Person, ver about-us.astro) de vuelta a la
+  // clínica, para que la relación quede en los dos sentidos.
+  employee: doctors.map((doc) => ({ '@id': `https://562endodontics.com/about-us/#${doc.id}` })),
   address: {
     '@type': 'PostalAddress',
     streetAddress: '562 Waterloo St',

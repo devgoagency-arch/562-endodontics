@@ -7,16 +7,19 @@ import ContactCta from '../components/ContactCta.astro';
 import { doctors } from '../data/doctors';
 import { businessSchema } from '../data/business';
 
-// Physician (schema.org) por cada doctor, enlazado a la clínica por @id. Ayuda a
-// que Google y los buscadores de IA identifiquen a cada endodoncista como parte
-// del equipo de 562 endodontics.
+// Cada doctor es una Person (no un Physician: en schema.org ese tipo es un
+// negocio médico, no un profesional individual), enlazada a la clínica por
+// worksFor. El @id coincide con el que arma businessSchema.employee, para que
+// la relación quede en los dos sentidos.
 const doctorSchemas = doctors.map((doc) => ({
   '@context': 'https://schema.org',
-  '@type': 'Physician',
+  '@type': 'Person',
+  '@id': `https://562endodontics.com/about-us/#${doc.id}`,
   name: doc.name,
+  honorificSuffix: doc.credentials,
+  jobTitle: 'Endodontist',
   image: `https://562endodontics.com${doc.photo}`,
   description: doc.bio[0],
-  medicalSpecialty: 'Endodontic',
   worksFor: { '@id': businessSchema['@id'] },
 }));
 

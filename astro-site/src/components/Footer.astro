@@ -25,7 +25,9 @@ const quickLinks = [
       Get updates on new treatments, professional development events, and news from 562 endodontics.
     </p>
     <form class="mx-auto mt-5 flex max-w-md flex-col gap-3 sm:flex-row" action="/api/subscribe" method="post">
+      <label for="newsletter-email" class="sr-only">Email address</label>
       <input
+        id="newsletter-email"
         type="email"
         name="email"
         placeholder="Your Email Address"
