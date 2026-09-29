@@ -12,7 +12,6 @@ import DataTable from '../../components/treatments/DataTable.astro';
 import TreatmentFaq from '../../components/treatments/TreatmentFaq.astro';
 import ContactCta from '../../components/ContactCta.astro';
 
-const IMG = '/images/treatments/dental-trauma';
 
 const injuryTable = {
   headers: ['Injury type', 'Endodontic relevance', 'Referral urgency'],
@@ -64,10 +63,10 @@ const storageOptions = [
 ];
 
 const sequelae = [
-  { img: 'sequela-1.jpg', aspect: 'aspect-[1024/989]', title: 'Pulp canal obliteration', text: 'This condition presents as a narrowed pulp chamber and yellow discoloration of the crown. Most teeth remain asymptomatic.' },
-  { img: 'sequela-2.jpg', aspect: 'aspect-[1024/695]', title: 'Internal inflammatory resorption', text: 'This appears as a balloon-shaped enlargement of the pulp space on radiographs.' },
-  { img: 'sequela-3.jpg', aspect: 'aspect-[1024/695]', title: 'External cervical resorption', text: "Progressive loss of tooth structure at the cervical region, often presenting radiographically as a 'moth-eaten' radiolucency. Early detection and monitoring are critical to prevent extensive structural compromise." },
-  { img: 'sequela-4.jpg', aspect: 'aspect-[1024/695]', title: 'External replacement resorption (ankylosis)', text: 'This condition results in fusion between the tooth and the surrounding bone. The periodontal ligament space disappears on radiographs, and a metallic percussion sound may be detected clinically.' },
+  { img: '/images/treatments/dental-trauma/pulp-canal-obliteration.webp', aspect: 'aspect-[1024/989]', title: 'Pulp canal obliteration', text: 'This condition presents as a narrowed pulp chamber and yellow discoloration of the crown. Most teeth remain asymptomatic.' },
+  { img: '/images/treatments/dental-trauma/internal-inflammatory-resorption.webp', aspect: 'aspect-[1024/695]', title: 'Internal inflammatory resorption', text: 'This appears as a balloon-shaped enlargement of the pulp space on radiographs.' },
+  { img: '/images/treatments/dental-trauma/external-cervical-resorption.webp', aspect: 'aspect-[1024/695]', title: 'External cervical resorption', text: "Progressive loss of tooth structure at the cervical region, often presenting radiographically as a 'moth-eaten' radiolucency. Early detection and monitoring are critical to prevent extensive structural compromise." },
+  { img: '/images/treatments/dental-trauma/external-replacement-resorption-ankylosis.webp', aspect: 'aspect-[1024/695]', title: 'External replacement resorption (ankylosis)', text: 'This condition results in fusion between the tooth and the surrounding bone. The periodontal ligament space disappears on radiographs, and a metallic percussion sound may be detected clinically.' },
 ];
 
 const faqs = [
@@ -84,13 +83,13 @@ const ROW_PY = 'py-8 lg:py-10';
   title="Dental Trauma"
   description="Same-day dental trauma referrals in London, Ontario: assessment of fractures, luxation and avulsion injuries, splinting protocols, CBCT imaging and guidance for dentists and patients."
 >
-  <PageHero title="Dental Trauma" image={`${IMG}/hero.jpg`} />
+  <PageHero title="Dental Trauma" image={`/images/clinic/562-endodontics-london-ontario-treatment-room-overhead.webp`} />
 
   <!-- S2: Intro — texto a la izquierda, dos fotos apiladas a la derecha -->
   <IntroStacked
-    topSrc={`${IMG}/clinic-exterior.jpg`}
+    topSrc={`/images/clinic/562-endodontics-london-ontario-clinic-building.webp`}
     topAlt="562 endodontics clinic building in London, Ontario"
-    bottomSrc={`${IMG}/team.jpg`}
+    bottomSrc={`/images/team/562-endodontics-london-ontario-endodontists.webp`}
     bottomAlt="The 562 endodontics team of doctors"
   >
     <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Dental trauma management in London, Ontario</h2>
@@ -102,7 +101,7 @@ const ROW_PY = 'py-8 lg:py-10';
       Immediate management is important for diagnosis, stabilization, and follow-up planning. We welcome urgent
       referrals from dentists in London and Middlesex County.
     </p>
-    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-brand-tan px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
+    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-[#7F6E5D] px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
       Contact Us <span aria-hidden="true">→</span>
     </a>
   </IntroStacked>
@@ -141,13 +140,13 @@ const ROW_PY = 'py-8 lg:py-10';
     </div>
   </section>
 
-  <ImageRow imageSrc={`${IMG}/tooth-fractures.jpg`} imageAlt="Rendering of a fractured incisor" py={ROW_PY}>
+  <ImageRow imageSrc={`/images/treatments/cracked-teeth/cracked-tooth-incisor-diagram.webp`} imageAlt="Rendering of a fractured incisor" py={ROW_PY}>
     <h3 class="font-heading text-2xl font-semibold text-brand-rust">Tooth Fractures</h3>
     <p class="mt-4 text-lg text-brand-ink/80">If a tooth chips or breaks, save any pieces and bring them with the patient.</p>
     <IconList items={fractureSteps} />
   </ImageRow>
 
-  <ImageRow imageSrc={`${IMG}/tooth-luxation.jpg`} imageAlt="Rendering of a displaced tooth" py={ROW_PY}>
+  <ImageRow imageSrc={`/images/treatments/dental-trauma/tooth-luxation-diagram.webp`} imageAlt="Rendering of a displaced tooth" py={ROW_PY}>
     <h3 class="font-heading text-2xl font-semibold text-brand-rust">Tooth Luxation (Displacement)</h3>
     <p class="mt-4 text-lg text-brand-ink/80">
       A tooth that is pushed out of place, loose, or knocked sideways should be examined immediately by a dentist.
@@ -155,7 +154,7 @@ const ROW_PY = 'py-8 lg:py-10';
     <IconList items={luxationSteps} />
   </ImageRow>
 
-  <ImageRow imageSrc={`${IMG}/tooth-avulsion.jpg`} imageAlt="Rendering of a knocked-out tooth" py={ROW_PY}>
+  <ImageRow imageSrc={`/images/treatments/dental-trauma/avulsed-tooth-diagram.webp`} imageAlt="Rendering of a knocked-out tooth" py={ROW_PY}>
     <h3 class="font-heading text-2xl font-semibold text-brand-rust">Tooth Avulsion (Knocked-Out Tooth)</h3>
     <p class="mt-4 text-lg text-brand-ink/80">
       A tooth that is completely knocked out is a serious injury. The faster it is treated, the better the chance of
@@ -177,7 +176,7 @@ const ROW_PY = 'py-8 lg:py-10';
   </section>
 
   <!-- Doctors Guide -->
-  <SplitSection imageSrc={`${IMG}/doctor-microscope.jpg`} imageAlt="Doctor working with an operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-[655/540]" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
+  <SplitSection imageSrc={`/images/team/562-endodontics-london-ontario-endodontist-and-assistants-with-microscope.webp`} imageAlt="Doctor working with an operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-[655/540]" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
     <p class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Doctors Guide:</p>
     <h3 class="mt-2 font-heading text-2xl font-semibold text-brand-rust">Clinical Protocol and Co-Management</h3>
     <h3 class="mt-1 font-heading text-2xl font-semibold text-brand-rust">Instructions to relay to a parent or patient calling your office</h3>
@@ -209,7 +208,7 @@ const ROW_PY = 'py-8 lg:py-10';
   </section>
 
   <!-- S6: CBCT (banda roja) -->
-  <SplitSection imageSrc={`${IMG}/cbct.jpg`} imageAlt="CBCT imaging unit with touchscreen" imagePosition="left" bg="bg-brand-rust" imageAspect="aspect-[1136/998]">
+  <SplitSection imageSrc={`/images/technology/cbct-dental-ct-scanner.webp`} imageAlt="CBCT imaging unit with touchscreen" imagePosition="left" bg="bg-brand-rust" imageAspect="aspect-[1136/998]">
     <h2 class="font-heading text-3xl font-semibold leading-tight text-white sm:text-[32px]">Horizontal root fractures and the role of CBCT imaging</h2>
     <p class="mt-5 text-lg text-white">
       Horizontal root fractures are often missed on conventional periapical radiographs if the X-ray beam is not
@@ -235,7 +234,7 @@ const ROW_PY = 'py-8 lg:py-10';
 
   {sequelae.map((item, i) => (
     <ImageRow
-      imageSrc={`${IMG}/${item.img}`}
+      imageSrc={item.img}
       imageAlt={item.title}
       imageAspect={item.aspect}
       size="md"

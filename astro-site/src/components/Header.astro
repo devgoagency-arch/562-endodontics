@@ -1,5 +1,6 @@
 ---
 import InfoItem from './InfoItem.astro';
+import { hours } from '../data/business';
 
 // Menús desplegables (mega menú) del nav. Cada clave de `menus` se enlaza
 // desde `navLinks[].menu`. Para agregar una columna basta sumar un ítem; el
@@ -10,33 +11,33 @@ const menus: Record<string, { title: string; href: string; intro: string; image:
       title: 'About Us',
       href: '/about-us/',
       intro: 'One of the largest teams of doctors in London dedicated exclusively to endodontic care and root canal treatment.',
-      image: '/images/gallery/502-team-shots-4-low.jpg',
+      image: '/images/team/562-endodontics-london-ontario-team.webp',
     },
     {
       title: 'Our Dental Clinic',
       href: '/our-clinic/',
       intro: 'A Victorian house in downtown London with modern technology, private parking and a safe environment.',
-      image: '/images/gallery/562-endodontics-clinic.jpg',
+      image: '/images/clinic/562-endodontics-london-ontario-clinic-building.webp',
     },
   ],
   treatments: [
     {
-      title: 'Root Canal',
+      title: 'Root Canal Treatment',
       href: '/endodontic-treatments/root-canal/',
       intro: 'Microscope-guided root canal treatment with in-house CBCT imaging for accurate diagnosis and planning.',
-      image: '/images/treatments/root-canal/step-2.jpg',
+      image: '/images/technology/dental-operating-microscope.webp',
     },
     {
       title: 'Cracked Teeth',
       href: '/endodontic-treatments/cracked-teeth/',
       intro: 'Diagnosis and management of cracked and fractured teeth using a microscope and CBCT imaging.',
-      image: '/images/treatments/cracked-teeth/tooth-render.jpg',
+      image: '/images/treatments/cracked-teeth/cracked-tooth-incisor-diagram.webp',
     },
     {
       title: 'Dental Trauma',
       href: '/endodontic-treatments/dental-trauma/',
       intro: 'Same-day emergency referrals for dental injuries, from fractures to knocked-out teeth.',
-      image: '/images/treatments/dental-trauma/tooth-avulsion.jpg',
+      image: '/images/treatments/dental-trauma/avulsed-tooth-diagram.webp',
     },
   ],
 };
@@ -54,27 +55,31 @@ const panelLayout = (count: number) =>
   count === 2 ? 'max-w-4xl grid-cols-2' : 'max-w-7xl grid-cols-3';
 ---
 
-<header id="site-header" class="sticky top-0 z-50 bg-white shadow-sm transition-shadow">
+<!-- Espaciador: reserva el alto del header expandido (lo mide el script). El header es
+     fixed, así que colapsar la barra de info no mueve el contenido ni el scroll. -->
+<div id="header-spacer" aria-hidden="true" class="h-[73px] lg:h-[187px]"></div>
+
+<header id="site-header" data-pagefind-ignore class="fixed inset-x-0 top-0 z-50 bg-white shadow-sm transition-shadow">
   <!-- Barra de info superior: se colapsa al hacer scroll (ver script) para
        que el header sticky no ocupe demasiado alto una vez fijo arriba. -->
   <div id="header-info-bar" class="mx-auto hidden max-w-7xl items-center justify-between overflow-hidden px-6 transition-[max-height,opacity,padding] duration-300 lg:flex" style="max-height: 130px; padding-top: 1.5rem; padding-bottom: 1.5rem;">
     <a href="/">
-      <img src="/logo/logo-black.png" alt="562 endodontics" id="header-logo" class="h-[74px] w-auto transition-all duration-300" />
+      <img src="/logo/logo-black.webp" alt="562 endodontics logo" id="header-logo" class="h-[74px] w-auto transition-all duration-300" />
     </a>
 
     <div class="flex items-center gap-8 text-base">
       <InfoItem label="Location" text="562 Waterloo st, London, ON, N6B 2P9" icon="pin" href="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9" />
-      <InfoItem label="Our Hours" text={"Mon, Tue, Thu & Fri 8:30am–5pm\nWed 8:30am–4pm"} icon="clock" />
+      <InfoItem label="Our Hours" text={`${hours.weekday}\n${hours.wednesday}`} icon="clock" />
       <InfoItem label="Contact us" text="(519) 601-3636" icon="phone" href="tel:+15196013636" />
     </div>
   </div>
 
   <!-- Nav principal -->
   <nav id="header-nav" class="border-t border-stone-100">
-    <div class="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-4 transition-[padding] duration-300 lg:justify-center">
-      <a href="/" id="nav-logo-link" class="lg:hidden"><img src="/logo/logo-black.png" alt="562 endodontics" id="nav-logo-img" class="h-12 w-auto" /></a>
+    <div class="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-3 transition-[padding] duration-300 lg:justify-end min-[1180px]:justify-center">
+      <a href="/" id="nav-logo-link" class="lg:hidden"><img src="/logo/logo-black.webp" alt="562 endodontics logo" id="nav-logo-img" class="h-12 w-auto" /></a>
 
-      <ul class="hidden gap-8 font-heading text-sm font-semibold uppercase tracking-wide text-brand-ink lg:flex">
+      <ul class="hidden items-center gap-3 whitespace-nowrap font-heading text-[13px] font-semibold uppercase tracking-wide text-brand-ink min-[1180px]:flex min-[1360px]:gap-5 min-[1360px]:text-sm">
         {navLinks.map((link) => (
           link.menu ? (
             <li data-mega-item={link.menu}>
@@ -95,21 +100,31 @@ const panelLayout = (count: number) =>
             <li><a href={link.href} class="transition hover:text-brand-rust">{link.label}</a></li>
           )
         ))}
-        <li><a href="#form" class="rounded-full bg-brand-rust px-6 py-2.5 text-white transition hover:bg-brand-rustDark">Contact Us</a></li>
+        <li><a href="#form" class="rounded-full bg-brand-rust px-5 py-2.5 text-white transition hover:bg-brand-rustDark min-[1360px]:px-6">Contact Us</a></li>
+        <li>
+          <button type="button" data-search-open aria-label="Search the site" class="flex h-10 w-10 items-center justify-center rounded-full text-brand-ink transition hover:bg-brand-rust/10 hover:text-brand-rust">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
+          </button>
+        </li>
       </ul>
 
-      <button
-        id="menu-toggle"
-        class="lg:hidden"
-        aria-label="Abrir menú"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-      >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M3 12h18M3 18h18" stroke-width="1.5" /></svg>
-      </button>
+      <div class="flex items-center gap-2 min-[1180px]:hidden">
+        <button type="button" data-search-open aria-label="Search the site" class="flex h-10 w-10 items-center justify-center rounded-full text-brand-ink">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
+        </button>
+        <button
+          id="menu-toggle"
+          class="min-[1180px]:hidden"
+          aria-label="Abrir menú"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18M3 12h18M3 18h18" stroke-width="1.5" /></svg>
+        </button>
+        </div>
     </div>
 
-    <ul id="mobile-menu" class="hidden flex-col gap-1 border-t border-stone-100 px-6 py-4 font-heading text-sm font-medium lg:hidden">
+    <ul id="mobile-menu" class="hidden flex-col gap-1 border-t border-stone-100 px-6 py-4 font-heading text-sm font-medium min-[1180px]:hidden">
       {navLinks.map((link) => (
         link.menu ? (
           <li>
@@ -137,7 +152,7 @@ const panelLayout = (count: number) =>
       role="region"
       aria-label={link.label}
       data-open="false"
-      class="invisible absolute inset-x-0 top-full hidden border-t border-stone-100 bg-white opacity-0 shadow-lg transition-[opacity,visibility] duration-200 data-[open=true]:visible data-[open=true]:opacity-100 lg:block"
+      class="invisible absolute inset-x-0 top-full hidden border-t border-stone-100 bg-white opacity-0 shadow-lg transition-[opacity,visibility] duration-200 data-[open=true]:visible data-[open=true]:opacity-100 min-[1180px]:block"
     >
       <div class={`mx-auto grid gap-6 px-6 py-8 ${panelLayout(menus[link.menu!].length)}`}>
         {menus[link.menu!].map((item) => (
@@ -161,7 +176,7 @@ const panelLayout = (count: number) =>
 
 <!-- Barra sticky de acción rápida en móvil: llamar / referir siempre a mano,
      porque la mayoría del tráfico local llega con intención inmediata. -->
-<div class="fixed inset-x-0 bottom-0 z-40 flex border-t border-stone-200 bg-white shadow-lg lg:hidden">
+<div data-pagefind-ignore class="fixed inset-x-0 bottom-0 z-40 flex border-t border-stone-200 bg-white shadow-lg lg:hidden">
   <a href="tel:+15196013636" class="flex flex-1 items-center justify-center gap-2 py-3 font-heading text-sm font-semibold text-brand-ink">
     Call Now
   </a>
@@ -236,39 +251,25 @@ const panelLayout = (count: number) =>
     if (!megas.some((m) => m.item.contains(target) || m.panel.contains(target))) closeAll();
   });
 
-  // Expone la altura real del header como variable CSS --header-h, para que
-  // la home pueda calcular "hero + teasers = 100vh restante" con precisión
-  // (la altura del header cambia entre breakpoints: con/sin barra de info).
-  const header = document.querySelector('header');
-  function setHeaderHeightVar() {
-    if (header) document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
-  }
-  setHeaderHeightVar();
-  window.addEventListener('resize', setHeaderHeightVar);
-
-  // Header sticky: colapsa la barra de info (ubicación/horario/teléfono) y
-  // encoge el logo al hacer scroll, para que quede fijo arriba sin ocupar
-  // demasiado alto — el nav principal con los links siempre queda visible.
-  //
-  // Histéresis (dos umbrales distintos para colapsar vs expandir, con una
-  // "zona muerta" entre 20 y 80px) en vez de un único punto de corte: con un
-  // solo umbral, el scroll natural del mouse/trackpad oscila unos pocos
-  // píxeles alrededor de ese punto y el header queda abriendo/cerrando en
-  // bucle — el temblor que se veía cerca del tope.
+  // Header fijo que colapsa la barra de info (ubicación/horario/teléfono) y encoge el
+  // logo al hacer scroll. Como es `fixed`, su cambio de alto NO afecta al documento:
+  // un espaciador reserva siempre el alto del header EXPANDIDO. (Con el header sticky
+  // el colapso reducía el alto del documento, el navegador compensaba el scroll y eso
+  // volvía a cruzar el umbral: el "temblor" cerca del tope.)
+  const header = document.getElementById('site-header') as HTMLElement;
+  const spacer = document.getElementById('header-spacer') as HTMLElement;
   const infoBar = document.getElementById('header-info-bar');
   const logo = document.getElementById('header-logo');
   const navRow = document.getElementById('header-nav')?.firstElementChild as HTMLElement | undefined;
-  // El logo del nav (navLogoLink) por defecto solo se ve en móvil (lg:hidden)
-  // porque en desktop el logo grande de la barra de info ya lo muestra. Ese
-  // logo grande vive DENTRO de header-info-bar, así que al colapsarse la
-  // barra (scroll) el logo desaparecía con ella — no se achicaba, se iba
-  // por completo. Fix: en desktop, cuando colapsa, forzamos visible este
-  // logo del nav (que sí sobrevive siempre) en tamaño chico.
+  // El logo del nav solo se ve por defecto en móvil; en escritorio el logo grande vive
+  // dentro de la barra de info y desaparece al colapsarla, así que al colapsar se
+  // muestra este logo del nav en tamaño chico.
   const navLogoLink = document.getElementById('nav-logo-link');
   const navLogoImg = document.getElementById('nav-logo-img');
+  const animated = [infoBar, logo, navRow].filter(Boolean) as HTMLElement[];
   let collapsed = false;
+
   function applyState(next: boolean) {
-    if (next === collapsed) return;
     collapsed = next;
     if (infoBar) {
       infoBar.style.maxHeight = collapsed ? '0px' : '130px';
@@ -278,21 +279,42 @@ const panelLayout = (count: number) =>
     }
     if (logo) logo.style.height = collapsed ? '42px' : '74px';
     if (navRow) {
-      navRow.style.paddingTop = collapsed ? '1.25rem' : '1rem';
-      navRow.style.paddingBottom = collapsed ? '1.25rem' : '1rem';
-      // El nav de links es casi tan ancho como el header completo (5 links +
-      // botón Contact Us); centrarlo Y mostrar el logo a la izquierda no
-      // caben a la vez — se solapan. Con el logo visible (colapsado), se
-      // pasa a "logo izquierda + nav a la derecha" en vez de nav centrado.
+      navRow.style.paddingTop = collapsed ? '1rem' : '0.75rem';
+      navRow.style.paddingBottom = collapsed ? '1rem' : '0.75rem';
+      // Con el logo visible (colapsado) el nav pasa a "logo a la izquierda + nav a la derecha".
       navRow.style.justifyContent = collapsed ? 'space-between' : '';
     }
     if (navLogoLink) navLogoLink.style.display = collapsed ? 'flex' : '';
-    if (navLogoImg) (navLogoImg as HTMLElement).style.height = collapsed ? '42px' : '';
+    if (navLogoImg) navLogoImg.style.height = collapsed ? '42px' : '';
   }
+
+  // Alto del header expandido: si está colapsado, lo expande al instante (sin
+  // transiciones, dentro del mismo frame) solo para medir y vuelve a colapsar.
+  function measureExpanded() {
+    const wasCollapsed = collapsed;
+    animated.forEach((el) => (el.style.transition = 'none'));
+    if (wasCollapsed) applyState(false);
+    const height = header.offsetHeight;
+    if (wasCollapsed) applyState(true);
+    requestAnimationFrame(() => animated.forEach((el) => (el.style.transition = '')));
+    return height;
+  }
+  function syncSpacer() {
+    const height = measureExpanded();
+    spacer.style.height = height + 'px';
+    // Lo usa la home para calcular "hero + tarjeta = 100vh restante".
+    document.documentElement.style.setProperty('--header-h', height + 'px');
+  }
+
+  // Histéresis: umbrales distintos para colapsar (80px) y expandir (20px).
   function onScroll() {
     if (!collapsed && window.scrollY > 80) applyState(true);
     else if (collapsed && window.scrollY < 20) applyState(false);
   }
+
+  syncSpacer();
+  window.addEventListener('resize', syncSpacer);
+  document.fonts?.ready.then(syncSpacer);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 </script>

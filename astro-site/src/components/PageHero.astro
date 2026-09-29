@@ -3,6 +3,8 @@
 // High Tech Facility, etc.) — un solo componente para que el alto y el
 // tratamiento de la foto queden consistentes en todo el sitio sin tener que
 // repetir/recordar los valores en cada página nueva.
+import SectionBackdrop from './SectionBackdrop.astro';
+
 interface Props {
   title: string;
   image: string;
@@ -10,8 +12,7 @@ interface Props {
 const { title, image } = Astro.props;
 ---
 
-<section class="relative flex min-h-[560px] items-center justify-center overflow-hidden bg-brand-rustDark py-28 text-center text-white">
-  <img src={image} alt="" class="absolute inset-0 h-full w-full object-cover" loading="eager" />
-  <div class="absolute inset-0 bg-gradient-to-b from-brand-rust/60 via-brand-rust/50 to-brand-rustDark/70" aria-hidden="true"></div>
+<section class="relative isolate flex min-h-[560px] items-center justify-center overflow-hidden bg-brand-rustDark py-28 text-center text-white">
+  <SectionBackdrop src={image} variant="hero" eager />
   <h1 class="relative font-heading text-4xl font-light leading-tight sm:text-[43px]">{title}</h1>
 </section>

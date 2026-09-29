@@ -48,11 +48,10 @@ const referralReasons = [
 ];
 
 const faqs = [
-  { q: 'How do I refer a patient with a suspected cracked tooth?', a: 'Referrals may be submitted through the online referral form, by CDANet, by email at info@562endodontics.com, or by phone. Symptomatic cases are typically prioritized based on clinical urgency and scheduling.' },
-  { q: 'Can a cracked tooth always be saved?', a: 'Not always. Prognosis depends on the depth and direction of the crack. Cracks above the crestal bone that do not involve the root may often be managed with root canal treatment and a crown. Cracks extending below the bone or into the root generally have a less favourable prognosis. A clear assessment is provided before treatment begins.' },
-  { q: 'Will a CBCT scan be taken at the consultation?', a: 'If indicated. CBCT imaging is especially useful for suspected vertical root fractures and for determining the extent of cracks in symptomatic teeth when 2D imaging is inconclusive.' },
-  { q: 'Will the referring dentist receive a report?', a: 'If consultation findings significantly change the treatment plan, the endodontist will contact the referring dentist before proceeding.' },
-  { q: 'What if the tooth cannot be saved?', a: 'If extraction is required, our team discusses all options with the patient, including implant referral, and coordinates next steps with your office before proceeding.' },
+  { q: 'Will the referring dentist receive a report after consultation?', a: 'Yes. A report will be sent after the consultation, following treatment, and after any changes to the treatment plan.' },
+  { q: 'Can a cracked tooth always be saved?', a: 'Not always. It depends on how deep and in which direction the crack runs. Cracks above the bone level can often be treated with a root canal and crown. Cracks that extend below the bone tend to have a less favourable outlook.' },
+  { q: 'Will a 3D X-ray (CBCT scan) be taken at my consultation?', a: "Only if needed. A CBCT scan is particularly helpful for cracked teeth when a regular X-ray doesn't give us enough information about the surrounding bone." },
+  { q: 'What if the tooth cannot be saved?', a: 'If the tooth needs to be removed, we will work with your dentist to coordinate the extraction and discuss options for replacing the tooth.' },
 ];
 ---
 
@@ -60,11 +59,11 @@ const faqs = [
   title="Cracked Teeth"
   description="Diagnosis and management of cracked teeth in London, Ontario — microscope and CBCT-guided evaluation, referral guidance for dentists, and what patients should do first."
 >
-  <PageHero title="Cracked Teeth" image="/images/treatments/cracked-teeth/hero.jpg" />
+  <PageHero title="Cracked Teeth" image="/images/clinic/562-endodontics-london-ontario-treatment-room-wide.webp" />
 
   <!-- S2: Intro -->
-  <SplitSection imageSrc="/images/treatments/cracked-teeth/intro-smile.jpg" imageAlt="Close-up smile showing a fractured incisor" imagePosition="right" bg="bg-white" imageAspect="aspect-[4/3]">
-    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Cracked teeth treatment in London, Ontario</h2>
+  <SplitSection imageSrc="/images/treatments/cracked-teeth/cracked-tooth-fractured-incisor-smile.webp" imageAlt="Close-up smile showing a fractured incisor" imagePosition="right" bg="bg-white" imageAspect="aspect-[4/3]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Cracked Teeth treatment in London, ON</h2>
     <p class="mt-5 text-lg text-brand-ink/80">
       <strong class="font-semibold text-brand-ink">Cracked teeth can be difficult to diagnose and treat</strong> because
       symptoms are often inconsistent, and cracks may not be visible on standard radiographs.
@@ -77,7 +76,7 @@ const faqs = [
       We welcome referrals from dentists in London and Middlesex County for evaluation and management of suspected
       cracked teeth.
     </p>
-    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-brand-tan px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
+    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-[#7F6E5D] px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
       Contact Us <span aria-hidden="true">→</span>
     </a>
   </SplitSection>
@@ -103,7 +102,7 @@ const faqs = [
   </section>
 
   <!-- S4 fila 1: Patient guide intro -->
-  <SplitSection imageSrc="/images/treatments/cracked-teeth/patient-consultation.jpg" imageAlt="Patient consultation for a fractured tooth" imagePosition="right" bg="bg-white" imageAspect="aspect-[4/5]" py="pt-16 pb-8 lg:pt-20 lg:pb-10">
+  <SplitSection imageSrc="/images/treatments/cracked-teeth/cracked-tooth-fractured-incisor-patient.webp" imageAlt="Patient consultation for a fractured tooth" imagePosition="right" bg="bg-white" imageAspect="aspect-[4/5]" py="pt-16 pb-8 lg:pt-20 lg:pb-10">
     <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">
       Patient guide: Immediate steps for a cracked or fractured tooth
     </h2>
@@ -115,7 +114,7 @@ const faqs = [
 
   <!-- S4 fila 2: Qué hacer -->
   <SplitSection
-    imageSrc="/images/treatments/cracked-teeth/tooth-render.jpg"
+    imageSrc="/images/treatments/cracked-teeth/cracked-tooth-incisor-diagram.webp"
     imageAlt="Rendering of a cracked incisor"
     imagePosition="left"
     bg="bg-white"
@@ -144,7 +143,7 @@ const faqs = [
 
   <!-- S4 fila 3: Qué esperar -->
   <SplitSection
-    imageSrc="/images/treatments/cracked-teeth/microscope.jpg"
+    imageSrc="/images/technology/dental-operating-microscope.webp"
     imageAlt="Dental operating microscope"
     imagePosition="left"
     bg="bg-white"
@@ -156,19 +155,19 @@ const faqs = [
   >
     <h3 class="font-heading text-2xl font-semibold text-brand-rust">What to expect at your appointment:</h3>
     <p class="mt-4 text-lg text-brand-ink/80">
-      Cracks in teeth can be tricky; they don't always show up on regular or even 3D X-rays. Dentists may do some
+      Cracks in teeth can be tricky, they don't always show up on regular or even 3D X-rays. Dentists may do some
       additional tests or use a microscope to get a closer look, and may refer you to a specialist if needed. A 3D
       X-ray (CBCT scan) might also be taken to check the surrounding bone.
     </p>
     <p class="mt-4 text-lg text-brand-ink/80">
-      Treatment will depend on how severe the crack is. Options can range from a crown to protect the tooth to a
-      root canal if the dental pulp is involved, or, in more serious cases, removal of the tooth if the crack
+      Treatment will depend on how severe the crack is. Options can range from a crown to protect the tooth, to a
+      root canal if the dental pulp is involved, or in more serious cases, removal of the tooth if the crack
       cannot be treated.
     </p>
   </SplitSection>
 
   <!-- S5: Doctors Guide -->
-  <SplitSection imageSrc="/images/treatments/cracked-teeth/doctor-microscope.jpg" imageAlt="Dentist working with an operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-square">
+  <SplitSection imageSrc="/images/clinic/562-endodontics-london-ontario-endodontist-treating-patient-with-microscope.webp" imageAlt="Dentist working with an operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-square">
     <p class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Doctors Guide:</p>
     <h3 class="mt-2 font-heading text-2xl font-semibold text-brand-rust">Clinical Protocol and Co-Management</h3>
     <h3 class="mt-1 font-heading text-2xl font-semibold text-brand-rust">When to refer a cracked tooth to 562 endodontics</h3>
@@ -184,12 +183,9 @@ const faqs = [
       <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Diagnostic protocol at 562 endodontics</h2>
       <p class="mt-4 text-lg text-brand-ink/80">
         Each cracked tooth evaluation starts with a dedicated consultation. During the exam, your dentist will
-        perform a series of tests, including biting tests, shining a light through the tooth, checking the gum
-        health, and assessing temperature sensitivity. If more information is needed, a 3D X-ray (CBCT scan) may
-        also be taken.
-      </p>
-      <p class="mt-4 text-lg text-brand-ink/80">
-        Findings are sent to your office in a written report, including prognosis, and recommended management.
+        perform a series of tests including biting tests, shining a light through the tooth, checking the gum health,
+        and assessing sensitivity to temperature. If more information is needed, a 3D X-ray (CBCT scan) may also be
+        taken. Findings are sent to your office in a written report, including prognosis, and recommended management.
       </p>
 
       <div class="mt-8">

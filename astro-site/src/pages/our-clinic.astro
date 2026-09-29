@@ -2,10 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import LineIcon from '../components/LineIcon.astro';
+import SectionBackdrop from '../components/SectionBackdrop.astro';
 import JustifiedGallery from '../components/JustifiedGallery.astro';
 import ContactCta from '../components/ContactCta.astro';
 
-const G = '/images/gallery';
 
 const equipment = ['Dental CT Scan', 'Surgical Operating Microscopes', 'The GentleWave System', 'Quicksleeper, for profound anesthesia'];
 
@@ -28,16 +28,16 @@ const tone = (i: number) =>
     : { icon: 'text-brand-rust', title: 'text-[#9E8D7C]' };
 
 const gallery = [
-  { src: `${G}/562-endodontics-35.jpg`, alt: 'Detail of the 562 endodontics clinic' },
-  { src: `${G}/562-endodontics-jacqueline-lopez-2.jpg`, alt: 'Dr. Jacqueline Lopez Gross at 562 endodontics' },
-  { src: `${G}/562-endodontics-4.jpg`, alt: 'Interior of the 562 endodontics clinic' },
-  { src: `${G}/562-endodontics-team.jpg`, alt: 'The 562 endodontics team' },
-  { src: `${G}/562-endodontics-explore-our-technology.jpg`, alt: 'Endodontic technology at 562 endodontics' },
-  { src: `${G}/562-endodontics-19.jpg`, alt: 'Inside the 562 endodontics clinic' },
-  { src: `${G}/562-endodontics-jacqueline-lopez.jpg`, alt: 'Dr. Jacqueline Lopez Gross, endodontist' },
-  { src: `${G}/562-endodontics-34.jpg`, alt: 'Treatment room at 562 endodontics' },
-  { src: `${G}/562-endodontics-clinic.jpg`, alt: 'The 562 endodontics clinic building on Waterloo Street' },
-  { src: `${G}/562-endodontics-jacqueline-lopez-3.jpg`, alt: 'Dr. Jacqueline Lopez Gross holding a tooth model' },
+  { src: `/images/clinic/562-endodontics-london-ontario-reception-desk.webp`, alt: 'Reception desk at 562 endodontics in London, Ontario' },
+  { src: `/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-with-fotona-laser.webp`, alt: 'Dr. Jacqueline Lopez Gross standing beside the Fotona laser at 562 endodontics' },
+  { src: `/images/clinic/562-endodontics-london-ontario-treatment-room.webp`, alt: 'Bright treatment room with a dental chair and operating microscope at 562 endodontics' },
+  { src: `/images/team/562-endodontics-london-ontario-team-group-portrait.webp`, alt: 'Group portrait of the 562 endodontics team' },
+  { src: `/images/technology/562-endodontics-london-ontario-gentlewave-system.webp`, alt: 'GentleWave system console in a treatment room at 562 endodontics' },
+  { src: `/images/team/562-endodontics-london-ontario-dr-manfred-friedman-at-microscope.webp`, alt: 'Dr. Manfred Friedman smiling beside the operating microscope' },
+  { src: `/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-treatment-room.webp`, alt: 'Dr. Jacqueline Lopez Gross in a treatment room at 562 endodontics' },
+  { src: `/images/clinic/562-endodontics-london-ontario-reception-wall-sign.webp`, alt: '562 endodontics gold logo sign on the reception wall' },
+  { src: `/images/clinic/562-endodontics-london-ontario-clinic-building.webp`, alt: '562 endodontics clinic building at 562 Waterloo Street, London, Ontario' },
+  { src: `/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-tooth-model.webp`, alt: 'Dr. Jacqueline Lopez Gross holding a tooth model' },
 ];
 ---
 
@@ -45,13 +45,13 @@ const gallery = [
   title="Our Dental Clinic"
   description="Our endodontic clinic at 562 Waterloo St. in downtown London, Ontario: a full range of endodontic services from root canals to apical surgery and dental injuries, with modern technology and private parking."
 >
-  <PageHero title="Our Dental Clinic" image="/images/clinic/hero.jpg" />
+  <PageHero title="Our Dental Clinic" image="/images/clinic/562-endodontics-london-ontario-clinic-reception.webp" />
 
   <!-- S2: Intro + tarjeta High Tech Facility -->
   <section class="bg-white py-16 lg:py-20">
     <div class="mx-auto max-w-6xl px-6">
       <a href="/" class="block text-center">
-        <img src="/images/clinic/logo.png" alt="562 endodontics" class="mx-auto h-24 w-auto sm:h-[120px]" />
+        <img src="/images/clinic/562-endodontics-logo-horizontal.webp" alt="562 endodontics logo" class="mx-auto h-24 w-auto sm:h-[120px]" />
       </a>
       <p class="mt-8 text-center text-lg text-brand-ink/80">
         Our office is located at <strong class="font-semibold text-brand-ink">562 Waterloo St. in downtown London, Ontario.</strong>
@@ -81,7 +81,7 @@ const gallery = [
             ))}
           </ul>
           <div class="md:text-center">
-            <a href="#form" class="inline-flex items-center justify-center rounded-[20px_20px_3px_3px] bg-brand-tan px-12 py-6 font-heading text-lg font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
+            <a href="#form" class="inline-flex items-center justify-center rounded-[20px_20px_3px_3px] bg-white px-12 py-6 font-heading text-lg font-semibold uppercase tracking-wide text-brand-rust transition hover:bg-stone-100">
               Contact Us
             </a>
           </div>
@@ -98,9 +98,8 @@ const gallery = [
   </section>
 
   <!-- S4: Health & Safety -->
-  <section class="relative overflow-hidden bg-brand-rustDark py-20 text-white">
-    <img src={`${G}/562-endodontics-4.jpg`} alt="" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
-    <div class="absolute inset-0 bg-brand-rust/80" aria-hidden="true"></div>
+  <section class="relative isolate overflow-hidden bg-brand-rustDark py-20 text-white">
+    <SectionBackdrop src="/images/clinic/562-endodontics-london-ontario-treatment-room.webp" />
     <div class="relative mx-auto grid max-w-6xl items-center gap-8 px-6 md:grid-cols-[40fr_60fr]">
       <h2 class="font-heading text-3xl font-semibold leading-tight sm:text-[32px]">Health &amp; Safety</h2>
       <div class="space-y-4 text-lg">

@@ -2,33 +2,82 @@
 // Formulario de contacto único del sitio (pre-footer de todas las páginas y
 // página Contact Us). Envía por fetch a /api/contact y muestra el resultado en
 // el mismo lugar. Incluye "Reason for Appointment" y un campo trampa anti-spam.
+// tone="dark" es para usarlo sobre fondo rojo de marca (textos blancos, campos
+// blancos, botón blanco); "light" para fondos claros.
 interface Props {
   id?: string;
   heading?: string;
   class?: string;
+  tone?: 'light' | 'dark';
 }
-const { id = 'contact-form', heading, class: className = '' } = Astro.props;
+const { id = 'contact-form', heading, class: className = '', tone = 'light' } = Astro.props;
 
 const reasons = ['Referred by Dentist', 'Emergency', 'Shadowing opportunity'];
-const input = 'w-full rounded-lg border border-stone-300 px-4 py-2.5 text-base placeholder:text-brand-rust/50';
+
+// Clases completas por tono (no concatenadas) para que Tailwind las detecte.
+const styles = {
+  light: {
+    heading: 'text-brand-ink',
+    input: 'border-stone-300',
+    legend: 'text-brand-rust',
+    reason: 'text-brand-ink/80',
+    consent: 'text-brand-ink/70',
+    link: 'underline',
+    button: 'bg-brand-rust text-white hover:bg-brand-rustDark',
+    ok: 'text-emerald-700',
+    error: 'text-red-600',
+  },
+  dark: {
+    heading: 'text-white',
+    input: 'border-white/30',
+    legend: 'text-white',
+    reason: 'text-white',
+    consent: 'text-white/90',
+    link: 'underline font-semibold',
+    button: 'bg-white text-brand-rust hover:bg-stone-100',
+    ok: 'rounded-lg bg-white px-3 py-2 text-emerald-700',
+    error: 'rounded-lg bg-white px-3 py-2 text-red-600',
+  },
+}[tone];
+const input = `w-full rounded-lg border bg-white px-4 py-2.5 text-base text-brand-ink placeholder:text-brand-rust/50 ${styles.input}`;
 ---
 
-<form id={id} data-async-form class={`space-y-4 ${className}`} action="/api/contact" method="post">
-  {heading && <h3 class="font-heading text-base font-semibold uppercase tracking-wide text-brand-ink">{heading}</h3>}
+<form
+  id={id}
+  data-async-form
+  data-ok-class={styles.ok}
+  data-error-class={styles.error}
+  class={`space-y-4 ${className}`}
+  action="/api/contact"
+  method="post"
+>
+  {heading && <h3 class={`font-heading text-base font-semibold uppercase tracking-wide ${styles.heading}`}>{heading}</h3>}
   <div class="grid gap-4 sm:grid-cols-2">
-    <input type="text" name="first_name" placeholder="First Name" required autocomplete="given-name" class={input} />
-    <input type="text" name="last_name" placeholder="Last Name" required autocomplete="family-name" class={input} />
+    <div>
+      <label for={`${id}-first-name`} class="sr-only">First Name</label>
+      <input id={`${id}-first-name`} type="text" name="first_name" placeholder="First Name" required autocomplete="given-name" class={input} />
+    </div>
+    <div>
+      <label for={`${id}-last-name`} class="sr-only">Last Name</label>
+      <input id={`${id}-last-name`} type="text" name="last_name" placeholder="Last Name" required autocomplete="family-name" class={input} />
+    </div>
   </div>
   <div class="grid gap-4 sm:grid-cols-2">
-    <input type="tel" name="phone" placeholder="Phone" required autocomplete="tel" class={input} />
-    <input type="email" name="email" placeholder="Email" required autocomplete="email" class={input} />
+    <div>
+      <label for={`${id}-phone`} class="sr-only">Phone</label>
+      <input id={`${id}-phone`} type="tel" name="phone" placeholder="Phone" required autocomplete="tel" class={input} />
+    </div>
+    <div>
+      <label for={`${id}-email`} class="sr-only">Email</label>
+      <input id={`${id}-email`} type="email" name="email" placeholder="Email" required autocomplete="email" class={input} />
+    </div>
   </div>
 
   <fieldset>
-    <legend class="font-heading text-base font-semibold text-brand-rust">Reason for Appointment:</legend>
+    <legend class={`font-heading text-base font-semibold ${styles.legend}`}>Reason for Appointment:</legend>
     <div class="mt-2 flex flex-wrap gap-x-6 gap-y-2">
       {reasons.map((reason) => (
-        <label class="flex items-center gap-2 text-base text-brand-ink/80">
+        <label class={`flex items-center gap-2 text-base ${styles.reason}`}>
           <input type="checkbox" name="reason" value={reason} />
           {reason}
         </label>
@@ -36,19 +85,20 @@ const input = 'w-full rounded-lg border border-stone-300 px-4 py-2.5 text-base p
     </div>
   </fieldset>
 
-  <textarea name="message" placeholder="Message" rows="4" class={input}></textarea>
+  <label for={`${id}-message`} class="sr-only">Message</label>
+  <textarea id={`${id}-message`} name="message" placeholder="Message" rows="4" class={input}></textarea>
 
   <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden" />
 
-  <label class="flex items-start gap-2 text-sm text-brand-ink/70">
+  <label class={`flex items-start gap-2 text-sm ${styles.consent}`}>
     <input type="checkbox" name="consent" required class="mt-0.5" />
-    <span>I acknowledge that I agree to the Terms of Use and have read the <a href="/privacy-policy" class="underline">Privacy Policy</a></span>
+    <span>I acknowledge that I agree to the Terms of Use and have read the <a href="/privacy-policy" class={styles.link}>Privacy Policy</a></span>
   </label>
-  <label class="flex items-start gap-2 text-sm text-brand-ink/70">
+  <label class={`flex items-start gap-2 text-sm ${styles.consent}`}>
     <input type="checkbox" name="newsletter" class="mt-0.5" />
     <span>I want to receive by email new features, events, research and relevant information from 562 endodontics.</span>
   </label>
-  <button type="submit" class="w-full rounded-full bg-brand-rust py-3.5 font-heading text-base font-semibold uppercase tracking-wide text-white transition hover:bg-brand-rustDark">
+  <button type="submit" class={`w-full rounded-full py-3.5 font-heading text-base font-semibold uppercase tracking-wide transition ${styles.button}`}>
     Send
   </button>
   <p class="form-status hidden text-sm font-medium" role="status"></p>
@@ -58,22 +108,23 @@ const input = 'w-full rounded-lg border border-stone-300 px-4 py-2.5 text-base p
   document.querySelectorAll<HTMLFormElement>('form[data-async-form]').forEach((form) => {
     const status = form.querySelector<HTMLParagraphElement>('.form-status');
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const okClass = (form.dataset.okClass ?? '').split(' ').filter(Boolean);
+    const errorClass = (form.dataset.errorClass ?? '').split(' ').filter(Boolean);
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!button || !status) return;
       button.disabled = true;
       button.textContent = 'Sending...';
+      status.classList.remove('hidden', ...okClass, ...errorClass);
       try {
         const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
         if (!res.ok) throw new Error('Request failed');
         form.reset();
         status.textContent = "Thanks — we've received your message and will be in touch shortly.";
-        status.classList.remove('hidden', 'text-red-600');
-        status.classList.add('text-emerald-700');
+        status.classList.add(...okClass);
       } catch {
         status.textContent = 'Something went wrong sending your message. Please call us at (519) 601-3636.';
-        status.classList.remove('hidden', 'text-emerald-700');
-        status.classList.add('text-red-600');
+        status.classList.add(...errorClass);
       } finally {
         button.disabled = false;
         button.textContent = 'Send';

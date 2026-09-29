@@ -24,8 +24,8 @@ const { headers, rows, narrow = false } = Astro.props;
         <tr class="border-b border-white bg-[#E3DBD4]/60 odd:bg-[#E3DBD4]">
           {row.map((cell, i) => (
             i === 0
-              ? <td class="px-5 py-4 align-top font-semibold text-brand-ink">{cell}</td>
-              : <td class="px-5 py-4 align-top text-brand-ink/80">{cell}</td>
+              ? <td class="whitespace-pre-line px-5 py-4 align-top font-semibold text-brand-ink">{cell}</td>
+              : <td class="whitespace-pre-line px-5 py-4 align-top text-brand-ink/80">{cell}</td>
           ))}
         </tr>
       ))}

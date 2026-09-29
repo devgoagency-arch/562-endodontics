@@ -1,7 +1,7 @@
 ---
-// Página de tratamiento "Root Canal". Misma plantilla que Cracked Teeth y
-// Dental Trauma. Las tablas del original no tenían títulos de columna; se
-// agregan los sugeridos en la auditoría.
+// Página de tratamiento "Root Canal Treatment". Misma plantilla que Cracked Teeth y
+// Dental Trauma. Textos según las correcciones del cliente (lenguaje claro para el
+// paciente, manteniendo el tono profesional).
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import SplitSection from '../../components/treatments/SplitSection.astro';
@@ -10,39 +10,34 @@ import DataTable from '../../components/treatments/DataTable.astro';
 import TreatmentFaq from '../../components/treatments/TreatmentFaq.astro';
 import ContactCta from '../../components/ContactCta.astro';
 
-const IMG = '/images/treatments/root-canal';
-
 const referralTable = {
-  headers: ['Clinical scenario', 'Why refer'],
+  headers: ['Situation', 'How we help'],
   rows: [
-    ['Calcified or sclerosed canals', 'Requires ultrasonic troughing and microscope-guided access to locate canals without perforation risk'],
-    ['Suspected MB2, middle mesial, or other extra canals', 'In maxillary first molars, MB2 detection rises from 17% without magnification to 63% with loupes and 71% with a microscope; unaided vision identifies significantly fewer canals than either magnification modality (Buhrley et al., J Endod 2002;28:324–7)'],
-    ['Root curvature > 25° or dilaceration', 'Elevated risk of procedural accident without dedicated rotary systems and microscope-guided negotiation'],
-    ['Previous procedural complications', 'Teeth presenting with ledges, canal transportation, or separated instruments often require ultrasonic retrieval techniques and microscope-guided management to complete treatment safely.'],
-    ['Complex Canal Anatomy or developmental anomalies', 'Teeth with complex anatomy may require CBCT imaging to map the canal system accurately before instrumentation.'],
-    ['Persistent Apical Periodontitis', 'When symptoms or infection persist despite previous treatment, CBCT imaging can help determine the cause of the disease and guide retreatment or surgical endodontic management.'],
+    ['Calcified or Sclerosed Canals', 'Over time, canals can narrow or become blocked with mineral deposits, making them difficult to locate and treat. Microscope-guided techniques support precise access while reducing the risk of complications.'],
+    ['Complex Canal Anatomy', 'Some teeth have unusually curved, narrow, or multiple canals that require magnification and 3D imaging for thorough assessment and careful treatment planning.'],
+    ['Dental Trauma', 'Teeth that have experienced a traumatic injury such as a knock, fracture, or displacement require a prompt assessment to determine the extent of damage, establish an appropriate treatment plan, and support proper long-term monitoring.'],
+    ['Previously Treated Teeth with Persistent or Recurring Infection', 'Teeth that have had a prior root canal and develop new or ongoing signs of infection present unique challenges. 3D imaging, enhanced magnification, and advanced disinfection technology support a thorough evaluation to determine whether retreatment is appropriate.'],
+    ['Procedural Complications', 'Complications such as blocked canals or separated instruments can arise during root canal treatment and may require advanced management. Enhanced magnification and specialized techniques support careful assessment and management of these situations.'],
+    ['Dental Anxiety', 'Patients who experience dental anxiety are welcome at our practice. We offer sedation options and take the time to create a calm, comfortable experience so that every patient feels at ease throughout their visit.'],
   ],
 };
 
 const visitTable = {
   headers: ['Topic', 'What to expect'],
   rows: [
-    ['Consultation', 'Includes a CBCT scan. Diagnosis, treatment plan, fees, and questions are addressed before any treatment begins'],
-    ['Appointment length', '60 to 90 min'],
-    ['Anaesthesia', 'Thorough local anaesthesia.'],
-    ['Sedation', 'Minimal conscious sedation using nitrous oxide or oral medication, as well as moderate IV or oral sedation, is available for patients with dental anxiety. Sedation options are reviewed and arranged during the consultation appointment.'],
-    ['Post-operative discomfort', 'Mild in most cases, managed with scheduled ibuprofen/acetaminophen for 24 to 48 hours'],
-    ['Return to work', 'Same day for most patients'],
-    ['Return to referring dentist', 'Final restoration recommended within 4 to 6 weeks of treatment completion'],
+    ['Consultation', 'A thorough clinical examination is performed, radiographs are reviewed, and a CBCT scan is taken when indicated. Diagnosis, prognosis, treatment options, fees, and any questions are addressed before any treatment begins.\nAppointment length: 30 minutes'],
+    ['Treatment Appointment', 'Endodontic treatment may require more than one visit. We aim to complete treatment in a single appointment when clinically appropriate, however some situations may require additional visits.\nAppointment length: 60 to 90 minutes'],
+    ['Sedation', 'For patients who experience dental anxiety, sedation options are available and tailored to individual needs. These include minimal conscious sedation with nitrous oxide or oral medication, as well as moderate sedation through IV or oral routes. Sedation needs are reviewed and arranged during the consultation appointment.'],
+    ['Post-Operative Discomfort', 'Some mild discomfort is common following treatment and can generally be managed with over-the-counter pain relief.'],
+    ['Return to Daily Activities', 'Most patients are able to return to their normal routine the same day.'],
+    ['Return to Your Referring Dentist', 'We recommend completing the final restoration promptly following treatment to protect and seal the tooth. Many teeth that have undergone root canal treatment may require a crown to help restore function and protect the tooth.'],
   ],
 };
 
 const protocolSteps = [
-  { img: 'step-1.jpg', aspect: 'aspect-square', alt: 'Doctor consulting with a patient in front of monitors', title: 'Pre-operative Assessment', text: 'All referrals begin with a dedicated consultation. We perform a clinical examination, review radiographs, and use CBCT imaging when indicated for a three-dimensional assessment. Diagnosis, canal anatomy, and sedation needs are evaluated, and a treatment plan is established before the patient leaves.' },
-  { img: 'step-2.jpg', aspect: 'aspect-[978/1024]', alt: 'Dental operating microscope', title: 'Microscope-Guided Access and Canal Location', text: 'Treatment is performed using an operating microscope for enhanced visualization. This enables precise access preparation and helps identify additional, narrow, or calcified canals when present.' },
-  { img: 'step-3.jpg', aspect: 'aspect-square', alt: 'Chemo-mechanical canal preparation', title: 'Chemo-Mechanical Preparation', text: 'Rotary and reciprocating nickel-titanium systems are chosen based on each case. Canal disinfection is achieved through irrigation, which may be enhanced with passive ultrasonic irrigation (PUI), Fotona SWEEPS®, or GentleWave® technology as needed.' },
-  { img: 'step-4.jpg', aspect: 'aspect-square', alt: 'Root canal obturation', title: 'Obturation', text: 'Canals are filled using techniques and sealer materials tailored to each case.' },
-  { img: 'step-5.jpg', aspect: 'aspect-square', alt: 'Hands typing on a laptop keyboard', title: 'Post-Treatment Communication', text: 'After each appointment, a clinical report is sent to the referring office. Most patients return to their general dentist for final restoration and routine follow-up care. Reassessment is available if concerns arise during or after treatment.' },
+  { img: '/images/treatments/root-canal/root-canal-preoperative-assessment.webp', aspect: 'aspect-square', alt: 'Doctor consulting with a patient in front of monitors', title: 'Pre-operative Assessment', text: 'All referrals begin with a dedicated consultation. We perform a clinical examination, review radiographs, and use CBCT imaging when indicated for a three-dimensional assessment. Diagnosis, prognosis, treatment options, and sedation needs are discussed, and a treatment plan is established in collaboration with the patient before they leave.' },
+  { img: '/images/technology/dental-operating-microscope.webp', aspect: 'aspect-[978/1024]', alt: 'Dental operating microscope', title: 'Microscope-Guided treatment', text: 'All treatment is performed under an operating microscope, providing enhanced magnification and illumination throughout the procedure.' },
+  { img: '/images/treatments/root-canal/root-canal-post-treatment-communication.webp', aspect: 'aspect-square', alt: 'Clinician typing a post-treatment report on a computer', title: 'Post-Treatment Communication', text: 'After each appointment, a clinical report is sent to the referring office. Most patients return to their general dentist for final restoration and routine follow-up care. Reassessment is available if concerns arise during or after treatment.' },
 ];
 
 const faqs = [
@@ -52,27 +47,28 @@ const faqs = [
   { q: 'What if the case is more complex than expected?', a: 'If consultation findings significantly change the treatment plan, the endodontist will contact the referring dentist before proceeding.' },
 ];
 
+// El primer paso arranca justo después de la sección beige, así que lleva más aire arriba.
+const FIRST_PY = 'pt-16 pb-8 lg:pt-20 lg:pb-10';
 const ROW_PY = 'py-8 lg:py-10';
 ---
 
 <BaseLayout
-  title="Root Canal"
-  description="Root canal treatment in London, Ontario: microscope-guided, CBCT-supported endodontic care for referred patients, with clear referral criteria for dentists."
+  title="Root Canal Treatment"
+  description="Root canal treatment in London, Ontario: comprehensive endodontic care with an operating microscope, in-house CBCT imaging and advanced disinfection technology, for referred patients and patients seeking care."
 >
-  <PageHero title="Root Canal" image={`${IMG}/hero.jpg`} />
+  <PageHero title="Root Canal Treatment" image={`/images/team/562-endodontics-london-ontario-endodontist-and-assistants-with-microscope.webp`} />
 
   <!-- S2: Intro -->
-  <SplitSection imageSrc={`${IMG}/intro.jpg`} imageAlt="562 endodontics root canal treatment in London Ontario" imagePosition="right" bg="bg-white" imageAspect="aspect-[1080/1166]">
+  <SplitSection imageSrc={`/images/technology/cbct-scan-patient-positioned.webp`} imageAlt="562 endodontics root canal treatment in London Ontario" imagePosition="right" bg="bg-white" imageAspect="aspect-[1080/1166]">
     <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Root canal treatment in London, Ontario</h2>
     <p class="mt-5 text-lg text-brand-ink/80">
-      At 562 Endodontics, we offer root canal treatment and endodontic care in London, Ontario. We use an operating
-      microscope for enhanced visualization and precision, and in-house CBCT imaging when needed for accurate
-      diagnosis and treatment planning.
+      At 562 endodontics, we offer comprehensive endodontic care in London, Ontario, including root canal treatment and
+      a range of other procedures focused on diagnosing and treating conditions of the dental pulp and surrounding
+      tissues. We use an operating microscope for enhanced visualization and precision, in-house CBCT imaging when
+      needed for accurate diagnosis and treatment planning, advanced disinfection technology, and enhanced local
+      anesthesia techniques to support patient comfort throughout treatment.
     </p>
-    <p class="mt-4 text-lg text-brand-ink/80">
-      For complex cases, referral to a specialized endodontic practice may be recommended.
-    </p>
-    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-brand-tan px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
+    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-[#7F6E5D] px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
       Contact Us <span aria-hidden="true">→</span>
     </a>
   </SplitSection>
@@ -80,61 +76,45 @@ const ROW_PY = 'py-8 lg:py-10';
   <!-- S3: Cuándo referir -->
   <section class="bg-[#E3DBD4] py-16 lg:py-20">
     <div class="mx-auto max-w-6xl px-6">
-      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">When Dentists Refer Patients for Root Canal Treatment</h2>
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">When Dentists Refer Patients for Root Canal Treatment?</h2>
       <p class="mt-4 text-lg text-brand-ink/80">
-        According to the AAE, many clinical scenarios may require referral. Early assessment supports timely diagnosis
-        and treatment planning. Please consider referral in the following situations:
+        Some dental situations benefit from early assessment and timely care. If you or your patient are experiencing
+        any of the following, we welcome a referral or consultation.
       </p>
       <div class="mt-8">
         <DataTable headers={referralTable.headers} rows={referralTable.rows} />
       </div>
-      <p class="mt-8 text-lg text-brand-ink/80">
-        <strong class="font-semibold text-brand-ink">Restorative context:</strong> teeth used as bridge abutments or
-        with full-coverage restorations where high-endodontic quality is critical.
-      </p>
-      <p class="mt-4 text-lg text-brand-ink/80">
-        <strong class="font-semibold text-brand-ink">Patient factors:</strong> high dental anxiety, medically complex
-        cases requiring efficient procedures, or patients who prefer treatment in a referral-based endodontic setting.
-      </p>
     </div>
   </section>
 
-  <!-- S4.1: Protocolo (intro + infografía) -->
-  <SplitSection imageSrc={`${IMG}/infographic.jpg`} imageAlt="Root canal treatment in four stages" imagePosition="right" bg="bg-white" imageAspect="aspect-square" py="pt-16 pb-8 lg:pt-20 lg:pb-10">
-    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Root Canal Treatment Protocol at 562 endodontics</h2>
-    <p class="mt-5 text-lg text-brand-ink/80">
-      At 562 Endodontics, we use advanced technologies to ensure accurate diagnosis and treatment planning for a wide
-      range of cases. Our goal is to provide efficient, safe, and comfortable care for referred patients.
-    </p>
-  </SplitSection>
-
-  <!-- S4.2: Cinco pasos -->
-  {protocolSteps.map((step) => (
-    <ImageRow imageSrc={`${IMG}/${step.img}`} imageAlt={step.alt} imageAspect={step.aspect} py={ROW_PY}>
+  <!-- S4.1: Pasos del tratamiento -->
+  {protocolSteps.map((step, i) => (
+    <ImageRow imageSrc={step.img} imageAlt={step.alt} imageAspect={step.aspect} py={i === 0 ? FIRST_PY : ROW_PY}>
       <h3 class="font-heading text-2xl font-semibold text-brand-rust">{step.title}</h3>
       <p class="mt-4 text-lg text-brand-ink/80">{step.text}</p>
     </ImageRow>
   ))}
 
-  <!-- S4.3: Preservación -->
-  <SplitSection imageSrc={`${IMG}/doctor.jpg`} imageAlt="Dr. Jacqueline Lopez holding a tooth model" imagePosition="right" bg="bg-white" imageAspect="aspect-square" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
-    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Root Canal Treatment and Tooth Preservation</h2>
+  <!-- S4.2: Conservar el diente natural -->
+  <SplitSection imageSrc={`/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-tooth-model.webp`} imageAlt="Dr. Jacqueline Lopez holding a tooth model" imagePosition="right" bg="bg-white" imageAspect="aspect-square" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Root Canal Treatment and Saving Your Natural Tooth</h2>
     <p class="mt-5 text-lg text-brand-ink/80">
-      When a tooth is structurally restorable and periodontal support is adequate, preservation of the natural tooth is
-      often the preferred option. The goal of endodontic treatment is to preserve natural teeth, allowing patients to
-      continue chewing comfortably and maintain normal oral function.
+      Whenever possible, keeping your natural tooth is often a preferred option. Root canal treatment removes infection
+      and addresses the source of pain, allowing your tooth to remain functional.
     </p>
     <p class="mt-4 text-lg text-brand-ink/80">
-      Current evidence supports preserving restorable teeth with endodontic treatment. Extraction and implant placement
-      are considered when a tooth is non-restorable, fractured, or has a poor prognosis.
+      Natural teeth are supported by a ligament that helps absorb pressure and provides feedback when you bite. This is
+      not replicated by an implant or other replacement.
     </p>
     <p class="mt-4 text-lg text-brand-ink/80">
-      The AAE position on tooth retention supports preservation of the natural tooth when it is restorable, and the
-      endodontic prognosis is favourable.
+      When a tooth is healthy enough to be restored, endodontic treatment is generally considered an appropriate
+      approach. Extraction is considered when a tooth is too damaged or broken down to be saved. Replacing a missing
+      tooth with an implant is a viable option in those situations, but it involves surgery, a healing period, and
+      additional costs.
     </p>
     <p class="mt-4 text-lg text-brand-ink/80">
-      Extraction may involve surgical risks, extended healing, implant-related costs, and permanent loss of the natural
-      periodontal ligament and its proprioceptive function.
+      We take the time to assess each tooth carefully and discuss all available options with you, so you can make an
+      informed decision about your care.
     </p>
   </SplitSection>
 

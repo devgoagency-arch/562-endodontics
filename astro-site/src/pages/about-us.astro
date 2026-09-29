@@ -5,8 +5,20 @@ import LineIcon from '../components/LineIcon.astro';
 import JustifiedGallery from '../components/JustifiedGallery.astro';
 import ContactCta from '../components/ContactCta.astro';
 import { doctors } from '../data/doctors';
+import { businessSchema } from '../data/business';
 
-const G = '/images/gallery';
+// Physician (schema.org) por cada doctor, enlazado a la clínica por @id. Ayuda a
+// que Google y los buscadores de IA identifiquen a cada endodoncista como parte
+// del equipo de 562 endodontics.
+const doctorSchemas = doctors.map((doc) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Physician',
+  name: doc.name,
+  image: `https://562endodontics.com${doc.photo}`,
+  description: doc.bio[0],
+  medicalSpecialty: 'Endodontic',
+  worksFor: { '@id': businessSchema['@id'] },
+}));
 
 const values = [
   { icon: 'stethoscope' as const, title: 'Limited to endodontics', text: 'Experts in pain management and treating complex root canal treatments.' },
@@ -16,17 +28,17 @@ const values = [
 ];
 
 const gallery = [
-  { src: `${G}/562-endodontics-jacqueline-lopez-2.jpg`, alt: 'Dr. Jacqueline Lopez Gross at 562 endodontics' },
-  { src: `${G}/562-endodontics-19.jpg`, alt: 'Inside the 562 endodontics clinic' },
-  { src: `${G}/562-endodontics-jacqueline-lopez-3.jpg`, alt: 'Dr. Jacqueline Lopez Gross holding a tooth model' },
-  { src: `${G}/562-endodontics-34.jpg`, alt: 'Treatment room at 562 endodontics' },
-  { src: `${G}/562-endodontics-4.jpg`, alt: 'Interior of the 562 endodontics clinic' },
-  { src: `${G}/562-endodontics-35.jpg`, alt: 'Detail of the 562 endodontics clinic' },
-  { src: `${G}/562-endodontics-clinic.jpg`, alt: 'The 562 endodontics clinic building on Waterloo Street' },
-  { src: `${G}/502-team-shots-7-low.jpg`, alt: 'The 562 endodontics team of doctors' },
-  { src: `${G}/502-team-shots-4-low.jpg`, alt: 'The full 562 endodontics team' },
-  { src: `${G}/562-endodontics-explore-our-technology.jpg`, alt: 'Endodontic technology at 562 endodontics' },
-  { src: `${G}/562-endodontics-jacqueline-lopez.jpg`, alt: 'Dr. Jacqueline Lopez Gross, endodontist' },
+  { src: `/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-with-fotona-laser.webp`, alt: 'Dr. Jacqueline Lopez Gross standing beside the Fotona laser at 562 endodontics' },
+  { src: `/images/team/562-endodontics-london-ontario-dr-manfred-friedman-at-microscope.webp`, alt: 'Dr. Manfred Friedman smiling beside the operating microscope' },
+  { src: `/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-tooth-model.webp`, alt: 'Dr. Jacqueline Lopez Gross holding a tooth model' },
+  { src: `/images/clinic/562-endodontics-london-ontario-reception-wall-sign.webp`, alt: '562 endodontics gold logo sign on the reception wall' },
+  { src: `/images/clinic/562-endodontics-london-ontario-treatment-room.webp`, alt: 'Bright treatment room with a dental chair and operating microscope at 562 endodontics' },
+  { src: `/images/clinic/562-endodontics-london-ontario-reception-desk.webp`, alt: 'Reception desk at 562 endodontics in London, Ontario' },
+  { src: `/images/clinic/562-endodontics-london-ontario-clinic-building.webp`, alt: '562 endodontics clinic building at 562 Waterloo Street, London, Ontario' },
+  { src: `/images/team/562-endodontics-london-ontario-endodontists.webp`, alt: 'The four endodontists of 562 endodontics in black scrubs' },
+  { src: `/images/team/562-endodontics-london-ontario-team.webp`, alt: 'The full 562 endodontics team in black scrubs' },
+  { src: `/images/technology/562-endodontics-london-ontario-gentlewave-system.webp`, alt: 'GentleWave system console in a treatment room at 562 endodontics' },
+  { src: `/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-treatment-room.webp`, alt: 'Dr. Jacqueline Lopez Gross in a treatment room at 562 endodontics' },
 ];
 ---
 
@@ -34,13 +46,16 @@ const gallery = [
   title="About Us"
   description="562 endodontics is one of the largest teams of doctors in London, Ontario dedicated exclusively to endodontic care and root canal treatment. Meet our endodontists."
 >
-  <PageHero title="About Us" image={`${G}/562-endodontics-clinic.jpg`} />
+  {doctorSchemas.map((schema) => (
+    <script slot="head" type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))}
+  <PageHero title="About Us" image={`/images/clinic/562-endodontics-london-ontario-clinic-building.webp`} />
 
   <!-- S2: Intro + valores + collage -->
   <section class="bg-white py-16 lg:py-20">
     <div class="mx-auto grid max-w-6xl items-start gap-12 px-6 md:grid-cols-[57fr_43fr]">
       <div>
-        <p class="font-heading text-lg font-semibold text-brand-tan">562 endodontics</p>
+        <p class="font-heading text-lg font-semibold text-[#7f6e5d]">562 endodontics</p>
         <h2 class="mt-2 font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">We are the place dedicated to root canals.</h2>
         <p class="mt-5 text-lg text-brand-ink/80">
           562 endodontics is proud to be one of the largest teams of doctors in the London, Ontario area dedicated
@@ -69,10 +84,10 @@ const gallery = [
 
       <div class="grid gap-4 md:mt-28">
         <div class="grid grid-cols-2 gap-4">
-          <img src={`${G}/img_5894-1.jpg`} alt="Doctor working at the operating microscope in the 562 endodontics clinic" class="aspect-[208/300] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
-          <img src={`${G}/img_5818-2-e1695851227303.jpg`} alt="Doctor and assistants with the operating microscope" class="aspect-[208/300] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+          <img src={`/images/clinic/562-endodontics-london-ontario-treatment-room-overhead.webp`} alt="Overhead view of a treatment room with the doctor at the operating microscope" class="aspect-[208/300] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+          <img src={`/images/team/562-endodontics-london-ontario-endodontist-and-assistants-with-microscope.webp`} alt="Endodontist and assistants working with the operating microscope" class="aspect-[208/300] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
         </div>
-        <img src={`${G}/502-team-shots-4-low.jpg`} alt="The 562 endodontics team" class="aspect-[447/290] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+        <img src={`/images/team/562-endodontics-london-ontario-team.webp`} alt="The full 562 endodontics team in black scrubs" class="aspect-[447/290] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
       </div>
     </div>
   </section>

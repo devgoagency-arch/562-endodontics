@@ -1,6 +1,7 @@
 ---
 // Portada de video: muestra la miniatura original (la de YouTube, o el poster
-// indicado) con el botón de play y abre el modal de video del sitio
+// indicado) sin taparla: el botón de play es compacto y va abajo a la izquierda,
+// como el de YouTube. Al hacer click abre el modal de video del sitio
 // (VideoModal, incluido en BaseLayout). No carga ningún reproductor hasta el
 // click.
 interface Props {
@@ -23,10 +24,8 @@ const thumb = poster ?? (youtube ? `https://i.ytimg.com/vi/${youtube}/hqdefault.
   data-video-title={title}
   aria-label={`Play video: ${title}`}
 >
-  {thumb && <img src={thumb} alt="" class="h-full w-full object-cover opacity-90 transition group-hover:opacity-70" loading="lazy" />}
-  <span class="absolute inset-0 flex items-center justify-center">
-    <span class="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-lg transition group-hover:scale-110">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="ml-1 text-brand-rust" aria-hidden="true"><path d="M8 5v14l11-7Z" /></svg>
-    </span>
+  {thumb && <img src={thumb} alt="" class="h-full w-full object-cover" loading="lazy" />}
+  <span class="absolute bottom-3 left-3 flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white/95 shadow-lg transition group-hover:scale-110 group-hover:bg-white">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="ml-0.5 text-brand-rust" aria-hidden="true"><path d="M8 5v14l11-7Z" /></svg>
   </span>
 </button>

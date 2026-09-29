@@ -1,7 +1,18 @@
 ---
+// Fuentes propias (sin pedir nada a Google Fonts): solo el subconjunto latino, que
+// cubre inglés, francés y español, y solo los pesos que usa el sitio.
+import '@fontsource/inter/latin-300.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-600.css';
+import '@fontsource/inter/latin-700.css';
+import '@fontsource/heebo/latin-400.css';
+import '@fontsource/heebo/latin-500.css';
+import '@fontsource/heebo/latin-600.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import VideoModal from '../components/VideoModal.astro';
+import SearchModal from '../components/SearchModal.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 
 interface Props {
   title: string;
@@ -10,8 +21,17 @@ interface Props {
   // lo desactiva porque ya marca sus elementos a mano con .reveal (y su
   // hero/teasers dependen de posicionamiento fino que no admite transforms).
   autoReveal?: boolean;
+  // Páginas que no deben indexarse (errores): robots noindex y fuera del buscador.
+  noindex?: boolean;
 }
-const { title, description, autoReveal = true } = Astro.props;
+const { title, description, autoReveal = true, noindex = false } = Astro.props;
+
+const SITE = (Astro.site ?? new URL('https://562endodontics.com')).origin;
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : Astro.url.pathname + '/';
+const canonical = SITE + path;
+const fullTitle = title === 'Home' ? '562 endodontics | Root Canal Specialists in London, Ontario' : `${title} | 562 endodontics`;
+const metaDescription = description ?? '562 endodontics — The place dedicated to root canals. Endodontic specialists in London, Ontario.';
+const ogImage = SITE + '/og-image.jpg';
 ---
 
 <!doctype html>
@@ -19,20 +39,45 @@ const { title, description, autoReveal = true } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description ?? '562 Endodontics — The place dedicated to root canals. London, ON.'} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Heebo:wght@400;500;600&display=swap" rel="stylesheet" />
-    <title>{title} | 562 Endodontics</title>
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="theme-color" content="#B13E25" />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <!-- Open Graph / Twitter: vista previa al compartir el enlace -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="562 endodontics" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="562 endodontics, the place dedicated to root canals in London, Ontario" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <title>{fullTitle}</title>
+    <slot name="head" />
   </head>
-  <body class="font-body text-brand-ink" data-auto-reveal={String(autoReveal)}>
+  <body class="font-body text-brand-ink" data-auto-reveal={String(autoReveal)} data-pagefind-ignore={noindex ? 'all' : undefined}>
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:rounded-full focus:bg-brand-rust focus:px-5 focus:py-3 focus:font-heading focus:text-sm focus:font-semibold focus:text-white">Skip to main content</a>
     <Header />
-    <slot />
+    <main id="main" tabindex="-1" class="outline-none">
+      <slot />
+    </main>
     <Footer />
     <VideoModal />
+    <SearchModal />
+    <CookieConsent />
 
     <!-- Auto-reveal: marca con .reveal los bloques de cada <section> de primer
-         nivel (hijos de su contenedor; o los hijos de un [data-reveal-each], que
+         nivel de <main> (hijos de su contenedor; o los hijos de un [data-reveal-each], que
          además entran escalonados). Va inline y antes del observer para que las
          clases estén puestas antes del primer pintado. Sin JS no se oculta nada. -->
     <script is:inline>
@@ -40,7 +85,7 @@ const { title, description, autoReveal = true } = Astro.props;
         if (document.body.dataset.autoReveal !== 'true') return;
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         var targets = [];
-        document.querySelectorAll('body > section:not([data-no-reveal])').forEach(function (section) {
+        document.querySelectorAll('main > section:not([data-no-reveal])').forEach(function (section) {
           section.querySelectorAll(':scope > div').forEach(function (box) {
             Array.prototype.forEach.call(box.children, function (child) {
               if (child.tagName === 'SCRIPT' || child.tagName === 'STYLE') return;

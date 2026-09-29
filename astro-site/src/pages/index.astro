@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import SectionBackdrop from '../components/SectionBackdrop.astro';
+import { businessSchema, hours } from '../data/business';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import ConsentEmbed from '../components/ConsentEmbed.astro';
 import TreatmentGrid from '../components/blocks/TreatmentGrid.astro';
 import TestimonialsSection from '../components/TestimonialsSection.astro';
 import ContactCta from '../components/ContactCta.astro';
@@ -30,13 +34,19 @@ const techItems = [
     title: 'Experience revolutionary care with the GentleWave® Procedure',
     youtube: 'https://www.youtube.com/embed/fMccTug-11k',
     poster: 'https://img.youtube.com/vi/fMccTug-11k/maxresdefault.jpg',
+    logo: '/images/logos/gentlewave-authorized-practice-logo.webp',
+    logoAlt: 'GentleWave Procedure Authorized Practice',
+    logoClass: 'h-[90px]',
   },
   {
     id: 'fotona',
     eyebrow: 'Skypulse Fotona Laser',
     title: 'Minimally invasive disinfection solution that is highly effective',
-    poster: '/images/tech/fotona-poster.png',
+    poster: '/images/technology/fotona-skypulse-laser-video-poster.webp',
     video: 'https://562endodontics.com/wp-content/uploads/338491871_1417227822442679_7795680675852427648_n.mp4',
+    logo: '/images/logos/fotona-logo.webp',
+    logoAlt: 'Fotona Ultra Performance Lasers',
+    logoClass: 'h-[78px]',
   },
   {
     id: 'quicksleeper',
@@ -44,6 +54,9 @@ const techItems = [
     title: 'Electronic technique for profound and effective anesthesia',
     youtube: 'https://www.youtube.com/embed/cx_-pYKf5KA',
     poster: 'https://img.youtube.com/vi/cx_-pYKf5KA/hqdefault.jpg',
+    logo: '/images/logos/quicksleeper-5-logo.webp',
+    logoAlt: 'QuickSleeper 5',
+    logoClass: 'h-[78px]',
   },
 ];
 
@@ -59,26 +72,54 @@ const referralReasons = [
   { text: 'Surgical Endodontics treatment.', icon: 'Dentist-Chair', card: 'rust' },
   { text: 'Symptoms of anxiety and nervousness.', icon: 'patient', card: 'white' },
 ];
+
+// Colores de las tarjetas por breakpoint. En 3 y 5 columnas (sm+) rige el color
+// definido en `referralReasons`; en 2 columnas (móvil) esa alternancia cae en
+// columnas enteras del mismo color, así que ahí se usa un ajedrez propio
+// (blanca/roja/roja/blanca/blanca). Las clases van completas para que Tailwind
+// las detecte.
+const MOBILE_PATTERN = ['white', 'rust', 'rust', 'white', 'white'];
+const COLORS = {
+  white: {
+    base: 'bg-white text-brand-rust shadow-lg border-transparent',
+    sm: 'sm:bg-white sm:text-brand-rust sm:shadow-lg sm:border-transparent',
+    icon: 'bg-brand-rust/15',
+    iconSm: 'sm:bg-brand-rust/15',
+  },
+  rust: {
+    base: 'bg-brand-rust text-white shadow-none border-white/25',
+    sm: 'sm:bg-brand-rust sm:text-white sm:shadow-none sm:border-white/25',
+    icon: 'bg-white/30',
+    iconSm: 'sm:bg-white/30',
+  },
+} as const;
+function cardColors(color: 'white' | 'rust', index: number) {
+  const mobile = MOBILE_PATTERN[index % MOBILE_PATTERN.length] as 'white' | 'rust';
+  const base = COLORS[mobile];
+  const wide = COLORS[color];
+  return mobile === color
+    ? { card: base.base, icon: base.icon }
+    : { card: `${base.base} ${wide.sm}`, icon: `${base.icon} ${wide.iconSm}` };
+}
 ---
 
-<BaseLayout title="Home" description="562 Endodontics — The place dedicated to root canals. London, ON." autoReveal={false}>
+<BaseLayout title="Home" description="562 endodontics — The place dedicated to root canals. London, ON." autoReveal={false}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
 
   <!-- HERO: en el primer vistazo (sin scroll) debe caber el hero completo Y
        la tarjeta de los 3 accesos COMPLETA (no solo su mitad) — recién
        después de eso empieza a asomar "Saving a natural tooth". Por eso el
        alto del hero descuenta también la mitad de la tarjeta (--card-half-h,
        medida real por JS más abajo), no solo el header. -->
-  <section class="relative flex min-h-[70vh] items-center overflow-hidden bg-brand-rustDark text-white lg:min-h-[calc(100vh-var(--header-h,205px)-var(--card-half-h,100px))]">
-    <img
-      src="/images/hero-clinic.jpg"
-      alt="562 Endodontics clinic building"
-      class="absolute inset-0 h-full w-full object-cover"
-      loading="eager"
+  <section class="relative isolate flex min-h-[70vh] items-center overflow-hidden bg-brand-rustDark text-white lg:min-h-[calc(100vh-var(--header-h,205px)-var(--card-half-h,100px))]">
+    <!-- Overlay replica el original: rojo fuerte arriba-izquierda, desvaneciendo
+         a transparente abajo-derecha para que la foto real del edificio se vea. -->
+    <SectionBackdrop
+      src="/images/clinic/562-endodontics-london-ontario-clinic-building.webp"
+      alt="562 endodontics clinic building in London, Ontario"
+      variant="gradient"
+      eager
     />
-    <!-- Overlay replica el original: rojo fuerte arriba-izquierda,
-         desvaneciendo a transparente abajo-derecha para que la foto real
-         del edificio se vea (no un lavado parejo de color). -->
-    <div class="absolute inset-0 bg-gradient-to-br from-brand-rust/90 via-brand-rust/50 to-transparent" aria-hidden="true"></div>
 
     <div class="relative mx-auto max-w-4xl px-6 pb-[calc(var(--card-h,500px)*0.333+2rem)] pt-24 text-center sm:py-24">
       <p class="reveal font-heading text-base font-semibold uppercase tracking-[0.2em] text-white/80">We are</p>
@@ -143,17 +184,17 @@ const referralReasons = [
 
           <div class="reveal mt-10 flex flex-wrap items-center gap-8">
             <a href="https://www.ratemds.com/doctor-ratings/dr-jacqueline-lopez-gross-london-on-ca/" target="_blank" rel="noopener" class="rounded-lg bg-white/95 p-2 transition hover:opacity-90">
-              <img src="/images/reviews/ratemds.svg" alt="RateMDs" class="h-10 w-auto" />
+              <img src="/images/logos/ratemds-reviews-logo.svg" alt="RateMDs reviews for 562 endodontics" class="h-10 w-auto" />
             </a>
             <a href="https://www.google.com/maps/place/562+endodontics/@42.9909536,-81.2447238,17z" target="_blank" rel="noopener" class="rounded-lg bg-white/95 p-2 transition hover:opacity-90">
-              <img src="/images/reviews/google.svg" alt="Google Reviews" class="h-10 w-auto" />
+              <img src="/images/logos/google-reviews-logo.svg" alt="Google reviews for 562 endodontics" class="h-10 w-auto" />
             </a>
           </div>
         </div>
       </div>
 
       <div class="relative min-h-[360px]">
-        <img src="/images/reviews-banner.jpg" alt="Inside the 562 Endodontics office" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+        <img src="/images/clinic/562-endodontics-london-ontario-treatment-room.webp" alt="Treatment room at the 562 endodontics office in London, Ontario" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
       </div>
     </div>
   </section>
@@ -183,33 +224,18 @@ const referralReasons = [
       <h2 class="reveal text-center font-heading text-4xl font-light leading-tight text-brand-ink sm:text-[43px]">
         A <span class="font-semibold text-brand-rust">High Tech</span> Facility
       </h2>
-      <div class="mt-12 grid gap-8 md:grid-cols-3">
+      <div class="mt-14 grid gap-14 md:grid-cols-3 md:gap-8">
         {techItems.map((item) => (
-          <div class="reveal overflow-hidden rounded-2xl bg-white shadow-sm">
-            <button
-              type="button"
-              class="group relative block aspect-video w-full cursor-pointer bg-black"
-              data-video-trigger
-              data-video-id={item.id}
-              data-video-youtube={item.youtube ?? ''}
-              data-video-mp4={item.video ?? ''}
-              data-video-title={item.title}
-              aria-label={`Play video: ${item.title}`}
-            >
-              <img src={item.poster} alt={item.title} class="h-full w-full object-cover opacity-90 transition group-hover:opacity-70" loading="lazy" />
-              <span class="absolute inset-0 flex items-center justify-center">
-                <span class="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-lg transition group-hover:scale-110">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="ml-1 text-brand-rust"><path d="M8 5v14l11-7Z" /></svg>
-                </span>
-              </span>
-            </button>
-            <div class="p-6">
-              <p class="font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">{item.eyebrow}</p>
-              <h3 class="mt-2 font-heading text-lg font-semibold leading-snug text-brand-ink">{item.title}</h3>
-              <a href="/high-tech-facility" class="mt-3 inline-block text-sm font-semibold uppercase tracking-wide text-brand-rust hover:underline">
-                Learn More →
-              </a>
+          <div class="reveal flex flex-col items-center text-center">
+            <p class="font-heading text-sm font-medium uppercase tracking-[0.2em] text-brand-rust">{item.eyebrow}</p>
+            <h3 class="mt-4 font-heading text-2xl font-medium leading-snug text-brand-rust md:min-h-[8.5rem]">{item.title}</h3>
+            <VideoEmbed youtube={item.youtube} mp4={item.video} poster={item.poster} title={item.title} class="mt-6" />
+            <div class="mt-6 flex h-[134px] w-[269px] items-center justify-center rounded-xl bg-white shadow-md ring-1 ring-stone-100">
+              <img src={item.logo} alt={item.logoAlt} class={`${item.logoClass} w-auto max-w-[202px] object-contain`} loading="lazy" />
             </div>
+            <a href={`/high-tech-facility/#${item.id}`} class="mt-6 inline-flex items-center rounded-[20px_20px_3px_3px] bg-brand-rust px-8 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-brand-rustDark">
+              Learn More
+            </a>
           </div>
         ))}
       </div>
@@ -219,7 +245,7 @@ const referralReasons = [
   <!-- ABOUT 562 -->
   <section class="bg-[#f2eeea] py-24">
     <div class="mx-auto max-w-5xl px-6 text-center">
-    <p class="reveal font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">About 562</p>
+    <p class="reveal font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">Who we are</p>
     <h2 class="reveal mt-2 font-heading text-4xl font-light leading-tight text-brand-ink sm:text-[43px]">About <span class="font-semibold text-brand-rust">562</span></h2>
     <p class="reveal mx-auto mt-5 max-w-2xl text-lg text-brand-ink/70">
       We provide specialized care for protecting and preserving natural teeth with the highest
@@ -229,8 +255,8 @@ const referralReasons = [
     </p>
 
     <div class="reveal mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-      <img src="/images/about/img-5218.jpg" alt="562 Endodontics" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
-      <img src="/images/about/team-shots.jpg" alt="562 Endodontics team" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
+      <img src="/images/clinic/562-endodontics-london-ontario-clinic-reception.webp" alt="Reception of the 562 endodontics clinic in London, Ontario" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
+      <img src="/images/team/562-endodontics-london-ontario-team.webp" alt="The 562 endodontics team in London, Ontario" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
     </div>
 
     <ul class="reveal mx-auto mt-10 grid max-w-3xl grid-cols-1 gap-x-8 gap-y-4 text-left sm:grid-cols-3">
@@ -247,18 +273,18 @@ const referralReasons = [
     </div>
   </section>
 
-  <!-- WHY WOULD A DENTIST REFER YOU TO US: rojo sólido (como el original),
-       no una foto con overlay — eso se reserva para el hero. -->
-  <section class="bg-brand-rust py-28 text-white">
-    <div class="mx-auto max-w-3xl px-6 text-center">
+  <!-- WHY WOULD A DENTIST REFER YOU TO US: foto de fondo teñida con el rojo de marca. -->
+  <section class="relative isolate overflow-hidden bg-brand-rust py-28 text-white">
+    <SectionBackdrop src="/images/clinic/562-endodontics-london-ontario-endodontic-treatment-patient-and-assistants.webp" />
+    <div class="relative mx-auto max-w-5xl px-6 text-center">
       <p class="reveal font-heading text-sm font-semibold uppercase tracking-wide text-white/70">Best Dental Care</p>
       <h2 class="reveal mt-2 font-heading text-3xl font-light leading-tight sm:text-[43px]">
-        Why would a dentist refer you to us
+        Why would a <span class="font-semibold">dentist refer you to us</span>
       </h2>
-      <p class="reveal mt-5 text-lg text-white/90">
+      <p class="reveal mx-auto mt-5 max-w-3xl text-lg text-white/90">
         Saving a natural tooth, whenever possible, is always the best option for our patients.
       </p>
-      <p class="reveal mt-4 text-lg text-white/90">
+      <p class="reveal mx-auto mt-4 max-w-3xl text-lg text-white/90">
         Occasionally, dentists who routinely perform root canals refer their patients to root canal
         experts for complex clinical procedures or challenging diagnostics.
       </p>
@@ -270,15 +296,9 @@ const referralReasons = [
     <div class="relative mx-auto mt-16 max-w-6xl px-6">
       <h3 class="reveal text-center font-heading text-2xl font-light leading-snug sm:text-3xl">Most dentists refer patients to us for:</h3>
       <div class="reveal mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        {referralReasons.map((reason) => (
-          <div class={`group rounded-3xl p-6 transition duration-300 hover:-translate-y-1 hover:shadow-xl ${
-            reason.card === 'white' ? 'bg-white text-brand-rust shadow-lg' :
-            reason.card === 'tan' ? 'bg-brand-tan text-white shadow-lg' :
-            'border border-white/25 bg-brand-rust text-white'
-          }`}>
-            <span class={`flex h-16 w-16 items-center justify-center rounded-full transition group-hover:scale-110 ${
-              reason.card === 'white' ? 'bg-brand-rust/15' : 'bg-white/30'
-            }`}>
+        {referralReasons.map((reason, i) => (
+          <div class={`group rounded-3xl border p-6 transition duration-300 hover:-translate-y-1 hover:shadow-xl ${cardColors(reason.card, i).card}`}>
+            <span class={`flex h-16 w-16 items-center justify-center rounded-full transition group-hover:scale-110 ${cardColors(reason.card, i).icon}`}>
               <Icon name={reason.icon} class="h-8 w-8" />
             </span>
             <p class="mt-4 font-heading text-base font-semibold leading-snug">{reason.text}</p>
@@ -300,10 +320,10 @@ const referralReasons = [
       We are proudly associated with the following organizations
     </h2>
     <div class="mx-auto mt-10 flex max-w-5xl flex-wrap items-center justify-center gap-x-14 gap-y-10 px-6">
-      <a href="https://www.aae.org/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/associations/aae.png" alt="American Association of Endodontists" class="h-24 w-auto object-contain" loading="lazy" /></a>
-      <a href="https://www.caendo.ca/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/associations/cae.png" alt="Canadian Academy of Endodontics" class="h-20 w-auto object-contain" loading="lazy" /></a>
-      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/associations/western.webp" alt="Western University" class="h-16 w-auto object-contain" loading="lazy" /></a>
-      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/associations/uoft.webp" alt="University of Toronto" class="h-16 w-auto object-contain" loading="lazy" /></a>
+      <a href="https://www.aae.org/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/american-association-of-endodontists-logo.webp" alt="American Association of Endodontists logo" class="h-24 w-auto object-contain" loading="lazy" /></a>
+      <a href="https://www.caendo.ca/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/canadian-academy-of-endodontics-logo.webp" alt="Canadian Academy of Endodontics logo" class="h-20 w-auto object-contain" loading="lazy" /></a>
+      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/western-university-logo.webp" alt="Western University logo" class="h-16 w-auto object-contain" loading="lazy" /></a>
+      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/university-of-toronto-logo.webp" alt="University of Toronto logo" class="h-16 w-auto object-contain" loading="lazy" /></a>
     </div>
   </section>
 
@@ -317,14 +337,16 @@ const referralReasons = [
        bloque centrado verticalmente y todo el texto alineado a la izquierda. -->
   <section class="bg-white py-24">
     <div class="mx-auto grid max-w-6xl items-stretch gap-10 px-6 md:grid-cols-2">
-      <div class="reveal overflow-hidden rounded-2xl">
-        <iframe
+      <div class="reveal">
+        <ConsentEmbed
           src="https://www.google.com/maps?q=562+Waterloo+St,+London,+ON+N6B+2P9&output=embed"
-          class="h-full min-h-[360px] w-full border-0"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          title="562 Endodontics location"
-        ></iframe>
+          title="562 endodontics location"
+          preview="/images/contact/562-endodontics-london-ontario-map.webp"
+          previewAlt="Map showing 562 endodontics at 562 Waterloo St, London, Ontario"
+          openUrl="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9"
+          openLabel="Open in Google Maps"
+          class="h-full min-h-[360px] rounded-2xl"
+        />
       </div>
 
       <div class="reveal flex flex-col justify-center text-left">
@@ -352,7 +374,7 @@ const referralReasons = [
           </div>
           <div>
             <p class="font-heading text-base font-semibold text-brand-ink">Working Hours</p>
-            <p class="text-base text-brand-ink/70">Monday to Friday 8:30 a.m. to 5:00 p.m</p>
+            <p class="text-base text-brand-ink/70">{hours.weekday}<br />{hours.wednesday}</p>
           </div>
         </div>
       </div>

@@ -50,22 +50,6 @@ export const GET_FAQS = gql`
   }
 `;
 
-export const GET_TESTIMONIALS = gql`
-  query GetTestimonials {
-    testimonials {
-      nodes {
-        title
-        content
-        testimonialFields {
-          author
-          rating
-          sourceUrl
-        }
-      }
-    }
-  }
-`;
-
 // Página flexible por slug -> usada por src/pages/[...slug].astro
 export const GET_FLEXIBLE_PAGE = gql`
   query GetFlexiblePage($slug: ID!) {

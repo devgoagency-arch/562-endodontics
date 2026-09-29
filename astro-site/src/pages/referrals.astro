@@ -10,6 +10,7 @@
 // para que una futura integración/migración de datos no tenga que remapear.
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import SectionBackdrop from '../components/SectionBackdrop.astro';
 
 const referringDoctors = [
   'Dr. Jacqueline Lopez Gross, DDS, MSc, FRCD (C)',
@@ -26,12 +27,12 @@ const steps = [
 ];
 ---
 
-<BaseLayout title="Referrals" description="Refer a patient to 562 Endodontics online in minutes.">
+<BaseLayout title="Referrals" description="Refer a patient to 562 endodontics online in minutes.">
 
   <!-- Banner de título: componente compartido (src/components/PageHero.astro)
        para que el resto de páginas internas (Endodontic Treatments, High
        Tech Facility, etc.) usen el mismo alto y tratamiento de foto. -->
-  <PageHero title="Referrals" image="/images/referrals/hero.jpg" />
+  <PageHero title="Referrals" image="/images/clinic/562-endodontics-london-ontario-clinic-reception.webp" />
 
   <!-- 2. INTRO + CTAs -->
   <section class="bg-white py-20 text-center">
@@ -56,8 +57,8 @@ const steps = [
   </section>
 
   <!-- 3. ONLINE REFERRAL FORM -->
-  <section id="form" class="relative scroll-mt-24 overflow-hidden bg-cover bg-center py-20" style="background-image: url('/images/referrals/form-bg.jpg');">
-    <div class="absolute inset-0 bg-[#f2eeea]/95" aria-hidden="true"></div>
+  <section id="form" class="relative isolate scroll-mt-24 overflow-hidden py-20">
+    <SectionBackdrop src="/images/clinic/562-endodontics-london-ontario-treatment-room.webp" variant="light" />
 
     <div class="relative mx-auto max-w-3xl px-6">
       <div class="text-center">

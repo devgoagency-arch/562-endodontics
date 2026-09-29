@@ -1,0 +1,181 @@
+---
+// Consentimiento de cookies / contenido de terceros (PIPEDA / Ley 25 de Quebec).
+//
+// Cómo funciona:
+//  - Solo se usan cookies esenciales por defecto. Nada opcional se carga antes de
+//    que la persona lo autorice (hoy: el mapa de Google de Contact Us, ver
+//    ConsentEmbed.astro). Los videos de YouTube solo se cargan al presionar play.
+//  - "Aceptar" y "Rechazar" tienen el mismo peso visual (sin patrones oscuros).
+//  - La decisión se guarda en localStorage (`562-consent`) por 12 meses y se puede
+//    cambiar en cualquier momento desde "Cookie settings" en el footer.
+//  - Se respeta la señal Global Privacy Control del navegador (equivale a rechazar).
+//  - Para sumar una categoría nueva (ej. analytics con Google Analytics): agregarla
+//    a CATEGORIES, y cargar el script solo cuando `siteConsent.has('analytics')`
+//    sea true o al escuchar el evento `consent:change`.
+// Sin JavaScript no se muestra nada y tampoco se carga contenido de terceros.
+---
+
+<div
+  id="cookie-consent"
+  data-pagefind-ignore
+  hidden
+  role="dialog"
+  aria-labelledby="cookie-title"
+  aria-describedby="cookie-text"
+  class="fixed inset-x-3 bottom-16 z-[70] mx-auto max-w-3xl rounded-2xl border border-stone-200 bg-white p-5 shadow-2xl sm:p-6 lg:bottom-4"
+>
+  <div data-cookie-view="main">
+    <h2 id="cookie-title" class="font-heading text-lg font-semibold text-brand-rust">Your privacy</h2>
+    <p id="cookie-text" class="mt-2 text-base text-brand-ink/80">
+      We use only the cookies needed to make this site work. With your permission, we also load third-party content such as
+      Google Maps. You can change your choice at any time from "Cookie settings" in the footer. See our
+      <a href="/privacy-policy/" class="font-semibold text-brand-rust underline">Privacy Policy</a>.
+    </p>
+    <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <button type="button" data-cookie-action="reject" class="sm:w-52 rounded-full border border-brand-rust px-6 py-2.5 font-heading text-sm font-semibold text-brand-rust transition hover:bg-brand-rust/5">
+        Reject non-essential
+      </button>
+      <button type="button" data-cookie-action="accept" class="sm:w-52 rounded-full border border-brand-rust bg-brand-rust px-6 py-2.5 font-heading text-sm font-semibold text-white transition hover:bg-brand-rustDark">
+        Accept all
+      </button>
+      <button type="button" data-cookie-action="preferences" class="font-heading text-sm font-semibold text-brand-ink/80 underline sm:ml-auto">
+        Preferences
+      </button>
+    </div>
+  </div>
+
+  <div data-cookie-view="preferences" hidden>
+    <h2 class="font-heading text-lg font-semibold text-brand-rust">Cookie preferences</h2>
+    <ul class="mt-3 divide-y divide-stone-200">
+      <li class="flex items-start justify-between gap-4 py-3">
+        <div>
+          <p class="font-heading text-base font-semibold text-brand-ink">Essential</p>
+          <p class="text-sm text-brand-ink/70">Needed for the site to work and to remember this choice. Always on.</p>
+        </div>
+        <input type="checkbox" checked disabled aria-label="Essential cookies, always on" class="mt-1 h-5 w-5" />
+      </li>
+      <li class="flex items-start justify-between gap-4 py-3">
+        <div>
+          <label for="cookie-media" class="font-heading text-base font-semibold text-brand-ink">Third-party content</label>
+          <p class="text-sm text-brand-ink/70">Embedded maps (Google Maps). Videos only load when you press play.</p>
+        </div>
+        <input id="cookie-media" type="checkbox" data-cookie-category="media" class="mt-1 h-5 w-5" />
+      </li>
+    </ul>
+    <div class="mt-4 flex flex-col gap-3 sm:flex-row">
+      <button type="button" data-cookie-action="save" class="rounded-full border border-brand-rust bg-brand-rust px-6 py-2.5 font-heading text-sm font-semibold text-white transition hover:bg-brand-rustDark">
+        Save preferences
+      </button>
+      <button type="button" data-cookie-action="back" class="rounded-full border border-brand-rust px-6 py-2.5 font-heading text-sm font-semibold text-brand-rust transition hover:bg-brand-rust/5">
+        Back
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const KEY = '562-consent';
+  const MAX_AGE_MS = 365 * 24 * 60 * 60 * 1000;
+  const CATEGORIES = ['media'] as const;
+  type Category = (typeof CATEGORIES)[number];
+  type Consent = { v: 1; ts: number } & Record<Category, boolean>;
+
+  function read(): Consent | null {
+    try {
+      const c = JSON.parse(localStorage.getItem(KEY) ?? 'null');
+      if (c && c.v === 1 && Date.now() - c.ts < MAX_AGE_MS) return c;
+    } catch {}
+    return null;
+  }
+  function save(values: Record<Category, boolean>) {
+    const consent: Consent = { v: 1, ts: Date.now(), ...values };
+    try {
+      localStorage.setItem(KEY, JSON.stringify(consent));
+    } catch {}
+    document.dispatchEvent(new CustomEvent('consent:change', { detail: consent }));
+    syncEmbeds();
+  }
+
+  const root = document.getElementById('cookie-consent') as HTMLElement;
+  const views = {
+    main: root.querySelector<HTMLElement>('[data-cookie-view="main"]')!,
+    preferences: root.querySelector<HTMLElement>('[data-cookie-view="preferences"]')!,
+  };
+  const boxes = [...root.querySelectorAll<HTMLInputElement>('[data-cookie-category]')];
+
+  function show(view: 'main' | 'preferences') {
+    views.main.hidden = view !== 'main';
+    views.preferences.hidden = view !== 'preferences';
+    const current = read();
+    boxes.forEach((b) => (b.checked = Boolean(current?.[b.dataset.cookieCategory as Category])));
+    root.hidden = false;
+    (view === 'main' ? views.main : views.preferences).querySelector<HTMLElement>('button')?.focus({ preventScroll: true });
+  }
+  function hide() {
+    root.hidden = true;
+  }
+  const all = (value: boolean) => Object.fromEntries(CATEGORIES.map((c) => [c, value])) as Record<Category, boolean>;
+
+  root.addEventListener('click', (e) => {
+    const action = (e.target as HTMLElement).closest<HTMLElement>('[data-cookie-action]')?.dataset.cookieAction;
+    if (!action) return;
+    if (action === 'accept') { save(all(true)); hide(); }
+    if (action === 'reject') { save(all(false)); hide(); }
+    if (action === 'preferences') show('preferences');
+    if (action === 'back') show('main');
+    if (action === 'save') {
+      const values = all(false);
+      boxes.forEach((b) => (values[b.dataset.cookieCategory as Category] = b.checked));
+      save(values);
+      hide();
+    }
+  });
+
+  // --- Contenido de terceros bloqueado hasta autorizar (ver ConsentEmbed.astro) ---
+  function syncEmbeds() {
+    const allowed = Boolean(read()?.media);
+    document.querySelectorAll<HTMLElement>('[data-consent-embed="media"]').forEach((box) => {
+      const placeholder = box.querySelector<HTMLElement>('[data-consent-placeholder]');
+      const existing = box.querySelector('iframe');
+      if (allowed && !existing) {
+        const frame = document.createElement('iframe');
+        frame.src = box.dataset.src ?? '';
+        frame.title = box.dataset.title ?? 'Embedded content';
+        frame.loading = 'lazy';
+        frame.referrerPolicy = 'no-referrer-when-downgrade';
+        frame.allowFullscreen = true;
+        frame.className = 'block h-full w-full border-0';
+        box.append(frame);
+        placeholder?.classList.add('hidden');
+      } else if (!allowed && existing) {
+        existing.remove();
+        placeholder?.classList.remove('hidden');
+      }
+    });
+  }
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('[data-consent-allow]')) {
+      const current = read();
+      const values = all(false);
+      CATEGORIES.forEach((c) => (values[c] = Boolean(current?.[c])));
+      values.media = true;
+      save(values);
+    }
+    if (target.closest('[data-cookie-settings]')) show('preferences');
+  });
+
+  // API mínima para otros scripts (ej. cargar analytics solo con permiso)
+  (window as any).siteConsent = {
+    has: (category: Category) => Boolean(read()?.[category]),
+    open: () => show('preferences'),
+  };
+
+  // Primera visita: sin decisión guardada. Si el navegador envía Global Privacy
+  // Control se toma como rechazo y no se molesta con el banner.
+  if (!read()) {
+    if ((navigator as any).globalPrivacyControl === true) save(all(false));
+    else show('main');
+  }
+  syncEmbeds();
+</script>

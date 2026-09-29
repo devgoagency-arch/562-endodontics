@@ -7,7 +7,7 @@
 import ContactForm from './ContactForm.astro';
 ---
 
-<section id="form" class="scroll-mt-24 bg-[#f2eeea] py-24">
+<section id="form" data-pagefind-ignore class="scroll-mt-24 bg-[#f2eeea] py-24">
   <div class="mx-auto grid max-w-6xl gap-10 px-6 md:grid-cols-2">
     <div class="reveal">
       <h2 class="reveal font-heading text-3xl font-light leading-tight text-brand-ink sm:text-[43px]">
@@ -35,6 +35,6 @@ import ContactForm from './ContactForm.astro';
       </p>
     </div>
 
-    <ContactForm heading="Send us a message" class="reveal rounded-2xl border border-stone-200 p-7" />
+    <ContactForm heading="Send us a message" tone="dark" class="reveal rounded-2xl bg-brand-rust p-7 shadow-xl sm:p-9" />
   </div>
 </section>

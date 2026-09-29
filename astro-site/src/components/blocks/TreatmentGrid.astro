@@ -16,7 +16,7 @@ const { heading, intro } = Astro.props;
 // broken tooth), el resto es la asignación más semánticamente cercana del
 // mismo set — ajustar si el cliente confirma otra asociación.
 const FALLBACK_TREATMENTS = [
-  { slug: 'root-canal', title: 'Root Canal Therapy', summary: 'Removing infected pulp to relieve pain and save your natural tooth.', icon: 'nerve' },
+  { slug: 'root-canal', title: 'Root Canal Treatment', summary: 'Removing infected pulp to relieve pain and save your natural tooth.', icon: 'nerve' },
   { slug: 'endodontic-retreatment', title: 'Endodontic Retreatment', summary: "A second chance for a tooth when an earlier root canal hasn't healed properly.", icon: 'tools' },
   { slug: 'apical-surgery', title: 'Apical Surgery', summary: "A precise surgical option when conventional retreatment isn't enough.", icon: 'Dentist-Chair' },
   { slug: 'cracked-teeth', title: 'Cracked Teeth', summary: 'Diagnosis and treatment to save a fractured tooth whenever possible.', icon: 'broken-tooth' },
@@ -43,14 +43,14 @@ const items = treatments.length > 0
     {intro && <p class="reveal mx-auto mt-4 max-w-2xl text-center text-lg text-brand-ink/70">{intro}</p>}
     <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((t) => (
-        <a href={`/endodontic-treatments/${t.slug}`} class="reveal group rounded-2xl border border-stone-200 p-7 transition hover:border-brand-rust hover:shadow-md">
+        <a href={`/endodontic-treatments/${t.slug}`} class="reveal group rounded-2xl border border-stone-200 p-7 !transition-[background-color,border-color,box-shadow,opacity,transform] !duration-300 hover:border-brand-rust hover:bg-brand-rust hover:shadow-lg">
           {t.icon && t.icon.startsWith('http') ? (
             <img src={t.icon} alt="" class="h-12 w-12 transition group-hover:scale-110" />
           ) : (
-            <Icon name={t.icon ?? 'Tooth'} class="h-12 w-12 text-brand-rust transition group-hover:scale-110" />
+            <Icon name={t.icon ?? 'Tooth'} class="h-12 w-12 text-brand-rust transition duration-300 group-hover:scale-110 group-hover:text-white" />
           )}
-          <h3 class="mt-4 font-heading text-lg font-semibold text-brand-ink">{t.title}</h3>
-          <p class="mt-2 text-base text-brand-ink/70">{t.summary}</p>
+          <h3 class="mt-4 font-heading text-lg font-semibold text-brand-ink transition-colors duration-300 group-hover:text-white">{t.title}</h3>
+          <p class="mt-2 text-base text-brand-ink/70 transition-colors duration-300 group-hover:text-white/85">{t.summary}</p>
         </a>
       ))}
     </div>

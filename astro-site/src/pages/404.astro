@@ -1,0 +1,39 @@
+---
+// Página 404: se sirve para cualquier ruta inexistente. Ofrece salidas útiles
+// (inicio, tratamientos, referir, contacto, buscador) en vez de un callejón sin salida.
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const links = [
+  { label: 'Endodontic Treatments', href: '/endodontic-treatments/', text: 'Root canal, cracked teeth and dental trauma.' },
+  { label: 'Refer a Patient', href: '/referrals/', text: 'Send a referral online in minutes.' },
+  { label: 'About Us', href: '/about-us/', text: 'Meet our endodontists and our team.' },
+  { label: 'Contact Us', href: '/contact-us/', text: 'Call, email or send us a message.' },
+];
+---
+
+<BaseLayout title="Page not found" description="The page you are looking for could not be found." noindex>
+  <section class="bg-[#f2eeea] py-20 lg:py-28">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <p class="font-heading text-7xl font-semibold text-brand-rust sm:text-8xl" aria-hidden="true">404</p>
+      <h1 class="mt-4 font-heading text-3xl font-semibold leading-tight text-brand-ink sm:text-[38px]">Page not found</h1>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-brand-ink/80">
+        The page you are looking for may have moved or no longer exists. Try one of the links below or search the site.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        <a href="/" class="rounded-full bg-brand-rust px-8 py-3.5 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-brand-rustDark">Back to Home</a>
+        <button type="button" data-search-open class="rounded-full border border-brand-rust px-8 py-3.5 font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust transition hover:bg-brand-rust/5">Search the site</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-16">
+    <div class="mx-auto grid max-w-6xl gap-6 px-6 sm:grid-cols-2 lg:grid-cols-4" data-reveal-each>
+      {links.map((l) => (
+        <a href={l.href} class="group rounded-2xl border border-stone-200 p-6 transition hover:border-brand-rust hover:bg-brand-rust">
+          <h2 class="font-heading text-lg font-semibold text-brand-rust transition-colors group-hover:text-white">{l.label}</h2>
+          <p class="mt-2 text-base text-brand-ink/80 transition-colors group-hover:text-white/90">{l.text}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

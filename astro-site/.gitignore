@@ -4,3 +4,5 @@ dist/
 .env
 .DS_Store
 .astro/
+# Índice de búsqueda local (se genera con npm run search:dev)
+public/pagefind/

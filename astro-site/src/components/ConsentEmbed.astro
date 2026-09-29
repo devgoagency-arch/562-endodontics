@@ -1,0 +1,36 @@
+---
+// Contenido embebido de terceros (hoy: el mapa de Google) que solo se carga cuando la
+// persona lo autoriza en el banner de cookies (CookieConsent.astro inyecta el iframe).
+// Mientras tanto se ve `preview` (una imagen propia del mapa, sin pedir nada a Google)
+// con una tarjeta para cargar el interactivo o abrirlo directamente en Google Maps.
+interface Props {
+  src: string;
+  title: string;
+  preview: string;
+  previewAlt: string;
+  provider?: string;
+  openUrl: string;
+  openLabel: string;
+  class?: string;
+}
+const { src, title, preview, previewAlt, provider = 'Google', openUrl, openLabel, class: className = '' } = Astro.props;
+---
+
+<div data-consent-embed="media" data-src={src} data-title={title} class={`relative overflow-hidden bg-[#f2eeea] ${className}`}>
+  <div data-consent-placeholder class="absolute inset-0">
+    <img src={preview} alt={previewAlt} class="h-full w-full object-cover" loading="lazy" />
+    <div class="absolute inset-x-3 bottom-3 rounded-2xl bg-white/95 p-4 shadow-lg sm:inset-x-auto sm:left-4 sm:bottom-4 sm:max-w-sm">
+      <p class="text-sm text-brand-ink/80">
+        The interactive map is provided by {provider}. Loading it shares your IP address with {provider}, so we ask first.
+      </p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button type="button" data-consent-allow class="rounded-full bg-brand-rust px-5 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-brand-rustDark">
+          Load interactive map
+        </button>
+        <a href={openUrl} target="_blank" rel="noopener" class="rounded-full border border-brand-rust px-5 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-brand-rust transition hover:bg-brand-rust/5">
+          {openLabel}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

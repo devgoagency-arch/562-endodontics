@@ -1,0 +1,22 @@
+---
+// Página 500: la muestra Astro cuando una ruta renderizada en el servidor falla.
+// Evita mostrar un error crudo y deja a mano el teléfono, que es lo que un
+// paciente o dentista con urgencia necesita.
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Something went wrong" description="Something went wrong on our side." noindex>
+  <section class="bg-[#f2eeea] py-20 lg:py-28">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+      <p class="font-heading text-7xl font-semibold text-brand-rust sm:text-8xl" aria-hidden="true">500</p>
+      <h1 class="mt-4 font-heading text-3xl font-semibold leading-tight text-brand-ink sm:text-[38px]">Something went wrong</h1>
+      <p class="mx-auto mt-4 max-w-xl text-lg text-brand-ink/80">
+        We had a problem on our side. Please try again in a moment. If your matter is urgent, call us and we will help right away.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
+        <a href="tel:+15196013636" class="rounded-full bg-brand-rust px-8 py-3.5 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-brand-rustDark">Call (519) 601-3636</a>
+        <a href="/" class="rounded-full border border-brand-rust px-8 py-3.5 font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust transition hover:bg-brand-rust/5">Back to Home</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

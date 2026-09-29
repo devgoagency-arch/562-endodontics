@@ -7,7 +7,6 @@ import ZigzagSection from '../components/ZigzagSection.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import ContactCta from '../components/ContactCta.astro';
 
-const IMG = '/images/tech';
 const FOTONA_VIDEO = 'https://562endodontics.com/wp-content/uploads/338491871_1417227822442679_7795680675852427648_n.mp4';
 ---
 
@@ -15,7 +14,7 @@ const FOTONA_VIDEO = 'https://562endodontics.com/wp-content/uploads/338491871_14
   title="High Tech Facility"
   description="At 562 endodontics we utilize advanced materials and equipment designed to help with accurate diagnosis and make your treatment more comfortable and efficient."
 >
-  <PageHero title="High Tech Facility" image={`${IMG}/hero.jpg`} />
+  <PageHero title="High Tech Facility" image={`/images/clinic/562-endodontics-london-ontario-treatment-room-wide.webp`} />
 
   <!-- S2: Explore our technology -->
   <ZigzagSection gridCols="md:grid-cols-[38fr_62fr]">
@@ -24,7 +23,7 @@ const FOTONA_VIDEO = 'https://562endodontics.com/wp-content/uploads/338491871_14
       At 562 endodontics we utilize advanced materials and equipment designed to help with accurate diagnosis and make
       your treatment more comfortable and efficient
     </p>
-    <img slot="media" src={`${IMG}/explore-technology.jpg`} alt="Endodontic technology at 562 endodontics" class="mx-auto h-auto w-full max-w-[440px] rounded-[20px] shadow-md" loading="lazy" />
+    <img slot="media" src={`/images/technology/562-endodontics-london-ontario-gentlewave-system.webp`} alt="GentleWave system console in a treatment room at 562 endodontics" class="mx-auto h-auto w-full max-w-[440px] rounded-[20px] shadow-md" loading="lazy" />
   </ZigzagSection>
 
   <!-- S3: GentleWave (banda roja) -->
@@ -37,7 +36,7 @@ const FOTONA_VIDEO = 'https://562endodontics.com/wp-content/uploads/338491871_14
       your tooth to eliminate bacteria and biofilm causing infection.
     </p>
     <div class="mt-6 inline-block rounded-[20px] bg-white p-4">
-      <img src={`${IMG}/gentle-wave-logo.webp`} alt="GentleWave" class="h-auto w-[226px]" loading="lazy" />
+      <img src={`/images/technology/gentlewave-logo.webp`} alt="GentleWave System logo" class="h-auto w-[226px]" loading="lazy" />
     </div>
     <div slot="media" class="rounded-[20px] bg-white p-4">
       <VideoEmbed youtube="jG12YTYbnEI" title="The GentleWave Procedure" />
@@ -52,9 +51,9 @@ const FOTONA_VIDEO = 'https://562endodontics.com/wp-content/uploads/338491871_14
       invasive and highly effective
     </p>
     <div class="mt-6 rounded-[20px] bg-white p-3 shadow-md">
-      <VideoEmbed mp4={FOTONA_VIDEO} poster={`${IMG}/fotona-poster.png`} title="Skypulse Fotona Laser" />
+      <VideoEmbed mp4={FOTONA_VIDEO} poster={`/images/technology/fotona-skypulse-laser-video-poster.webp`} title="Skypulse Fotona Laser" />
     </div>
-    <img slot="media" src={`${IMG}/fotona-laser.jpg`} alt="Fotona Skypulse laser in the 562 endodontics clinic" class="mx-auto h-auto w-full max-w-[446px] rounded-[20px] shadow-md" loading="lazy" />
+    <img slot="media" src={`/images/technology/fotona-skypulse-laser.webp`} alt="Fotona Skypulse laser in the 562 endodontics clinic" class="mx-auto h-auto w-full max-w-[446px] rounded-[20px] shadow-md" loading="lazy" />
   </ZigzagSection>
 
   <!-- S5: QuickSleeper -->
@@ -69,7 +68,7 @@ const FOTONA_VIDEO = 'https://562endodontics.com/wp-content/uploads/338491871_14
       risk of not getting profound anesthesia.
     </p>
     <div slot="media" class="space-y-4 rounded-[20px] bg-white p-4 shadow-md">
-      <img src={`${IMG}/quicksleeper-product.png`} alt="The QuickSleeper 5 computer-controlled local anesthesia system" class="h-auto w-full rounded-[12px]" loading="lazy" />
+      <img src={`/images/technology/quicksleeper-5-anesthesia-system.webp`} alt="The QuickSleeper 5 computer-controlled local anesthesia system" class="h-auto w-full rounded-[12px]" loading="lazy" />
       <VideoEmbed youtube="cx_-pYKf5KA" title="QuickSleeper 5" />
     </div>
   </ZigzagSection>
@@ -84,7 +83,7 @@ const FOTONA_VIDEO = 'https://562endodontics.com/wp-content/uploads/338491871_14
       information about your teeth, locate and extend any infection, and assess the surrounding tissues without
       undergoing costly or unnecessary treatment.
     </p>
-    <img slot="media" src="/images/treatments/dental-trauma/cbct.jpg" alt="CBCT imaging unit with touchscreen" class="h-auto w-full rounded-[20px] shadow-md" loading="lazy" />
+    <img slot="media" src="/images/technology/cbct-dental-ct-scanner.webp" alt="CBCT dental scanner with touchscreen at 562 endodontics" class="h-auto w-full rounded-[20px] shadow-md" loading="lazy" />
   </ZigzagSection>
 
   <!-- S7: Microscopios -->
@@ -97,7 +96,7 @@ const FOTONA_VIDEO = 'https://562endodontics.com/wp-content/uploads/338491871_14
       canal anatomy that otherwise would be missed.
     </p>
     <p class="mt-4 text-lg text-brand-ink/80">Research demonstrates better outcomes compared to treatment without magnification.</p>
-    <img slot="media" src="/images/treatments/root-canal/step-2.jpg" alt="Dental operating microscope" class="mx-auto h-auto w-full max-w-[510px] rounded-[20px] shadow-md" loading="lazy" />
+    <img slot="media" src="/images/technology/dental-operating-microscope.webp" alt="Dental operating microscope" class="mx-auto h-auto w-full max-w-[510px] rounded-[20px] shadow-md" loading="lazy" />
   </ZigzagSection>
 
   <ContactCta />

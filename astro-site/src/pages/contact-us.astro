@@ -5,6 +5,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LineIcon from '../components/LineIcon.astro';
 import ContactForm from '../components/ContactForm.astro';
+import { businessSchema, hours } from '../data/business';
+import ConsentEmbed from '../components/ConsentEmbed.astro';
 
 const MAP_SRC = 'https://www.google.com/maps?q=562+Waterloo+St,+London,+ON+N6B+2P9&output=embed';
 
@@ -19,15 +21,18 @@ const contacts = [
   title="Contact Us"
   description="Contact 562 endodontics in downtown London, Ontario to learn more about how we can help you care for your endodontic needs."
 >
-  <section aria-label="Map">
-    <iframe
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
+  <section aria-label="Map" data-no-reveal>
+    <ConsentEmbed
       src={MAP_SRC}
       title="Map showing 562 endodontics at 562 Waterloo St, London, ON"
-      class="block h-[457px] w-full border-0"
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-      allowfullscreen
-    ></iframe>
+      preview="/images/contact/562-endodontics-london-ontario-map.webp"
+      previewAlt="Map showing 562 endodontics at 562 Waterloo St, London, Ontario"
+      provider="Google"
+      openUrl="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9"
+      openLabel="Open in Google Maps"
+      class="h-[457px] w-full"
+    />
   </section>
 
   <section class="bg-white py-16 lg:py-20">
@@ -68,8 +73,8 @@ const contacts = [
             <LineIcon name="clock" class="h-6 w-6" />
           </span>
           <p class="text-lg text-brand-ink/80">
-            Mon, Tue, Thu &amp; Fri 8:30am–5pm<br />
-            Wed 8:30am–4pm
+            {hours.weekday}<br />
+            {hours.wednesday}
           </p>
         </div>
       </div>

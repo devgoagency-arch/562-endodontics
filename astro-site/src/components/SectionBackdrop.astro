@@ -1,0 +1,30 @@
+---
+// Foto de fondo + capa de color para cualquier sección con imagen. Es el único
+// lugar donde se decide cómo se tiñen las fotos, para que todo el sitio se vea
+// igual. Todas las variantes usan mezcla normal (sin multiply):
+//   hero      degradado rojo → rojo oscuro, para los banners de título (PageHero)
+//   gradient  rojo fuerte arriba-izquierda que se desvanece a transparente (hero
+//             de la home, réplica del original)
+//   red       rojo de marca al 80% parejo (bandas con foto, ej. Health & Safety)
+//   light     beige casi opaco, para fondos de formularios donde manda la lectura
+// El contenedor debe llevar `relative isolate overflow-hidden`: `isolate` mantiene
+// las capas (-z-10) dentro de la sección.
+interface Props {
+  src: string;
+  variant?: 'hero' | 'gradient' | 'red' | 'light';
+  eager?: boolean;
+  position?: string; // clase object-position, ej. "object-top"
+  alt?: string; // vacío = decorativa
+}
+const { src, variant = 'red', eager = false, position = 'object-center', alt = '' } = Astro.props;
+
+const overlays = {
+  hero: 'bg-gradient-to-b from-brand-rust/60 via-brand-rust/50 to-brand-rustDark/70',
+  gradient: 'bg-gradient-to-br from-brand-rust/90 via-brand-rust/50 to-transparent',
+  red: 'bg-brand-rust/80',
+  light: 'bg-[#f2eeea]/95',
+};
+---
+
+<img src={src} alt={alt} class={`absolute inset-0 -z-10 h-full w-full object-cover ${position}`} loading={eager ? 'eager' : 'lazy'} />
+<div class={`absolute inset-0 -z-10 ${overlays[variant]}`} aria-hidden="true"></div>
