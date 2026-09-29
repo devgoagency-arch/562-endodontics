@@ -32,19 +32,32 @@ export const POST: APIRoute = async ({ request }) => {
       .map((key) => [key, formData.getAll(key).join(', ')])
   );
 
-  // TODO: mismo proveedor de email transaccional pendiente que /api/referral.
   const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
-  if (RESEND_API_KEY) {
-    await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: 'contact@562endodontics.com',
-        to: ['info@562endodontics.com'],
-        subject: `New contact form message from ${contact.first_name} ${contact.last_name}`,
-        html: `<table>${Object.entries(contact).map(([k, v]) => `<tr><td style="font-weight:600;padding:4px 8px;">${esc(k)}</td><td style="padding:4px 8px;">${esc(v)}</td></tr>`).join('')}</table>`,
-      }),
-    }).catch(() => {});
+  if (!RESEND_API_KEY) {
+    console.error('RESEND_API_KEY is not configured');
+    return new Response(JSON.stringify({ error: 'Email provider not configured' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  const resendResponse = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: 'contact@562endodontics.com',
+      to: ['info@562endodontics.com'],
+      subject: `New contact form message from ${contact.first_name} ${contact.last_name}`,
+      html: `<table>${Object.entries(contact).map(([k, v]) => `<tr><td style="font-weight:600;padding:4px 8px;">${esc(k)}</td><td style="padding:4px 8px;">${esc(v)}</td></tr>`).join('')}</table>`,
+    }),
+  });
+
+  if (!resendResponse.ok) {
+    console.error('Failed to send email via Resend', await resendResponse.text());
+    return new Response(JSON.stringify({ error: 'Failed to send email' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   return new Response(JSON.stringify({ ok: true }), {
