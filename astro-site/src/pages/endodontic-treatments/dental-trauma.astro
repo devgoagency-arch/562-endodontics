@@ -46,8 +46,8 @@ const fractureSteps = [
 ];
 
 const luxationSteps = [
-  { icon: 'warning' as const, text: 'Avoid touching or trying to reposition the tooth yourself unless instructed by a professional.' },
-  { icon: 'search' as const, text: 'Prompt evaluation is recommended to assess the injury and determine next steps.' },
+  { icon: 'warning' as const, text: 'Try to move the tooth/teeth gently to the original position' },
+  { icon: 'glass' as const, text: 'Close the mouth with a piece of clean napkin or gauze between the upper and lower front teeth' },
 ];
 
 const avulsionSteps = [
@@ -62,11 +62,10 @@ const storageOptions = [
   { icon: 'check' as const, text: 'Your own saliva (for short-term transport only)' },
 ];
 
-const sequelae = [
-  { img: '/images/treatments/dental-trauma/pulp-canal-obliteration.webp', aspect: 'aspect-[1024/989]', title: 'Pulp canal obliteration', text: 'This condition presents as a narrowed pulp chamber and yellow discoloration of the crown. Most teeth remain asymptomatic.' },
-  { img: '/images/treatments/dental-trauma/internal-inflammatory-resorption.webp', aspect: 'aspect-[1024/695]', title: 'Internal inflammatory resorption', text: 'This appears as a balloon-shaped enlargement of the pulp space on radiographs.' },
-  { img: '/images/treatments/dental-trauma/external-cervical-resorption.webp', aspect: 'aspect-[1024/695]', title: 'External cervical resorption', text: "Progressive loss of tooth structure at the cervical region, often presenting radiographically as a 'moth-eaten' radiolucency. Early detection and monitoring are critical to prevent extensive structural compromise." },
-  { img: '/images/treatments/dental-trauma/external-replacement-resorption-ankylosis.webp', aspect: 'aspect-[1024/695]', title: 'External replacement resorption (ankylosis)', text: 'This condition results in fusion between the tooth and the surrounding bone. The periodontal ligament space disappears on radiographs, and a metallic percussion sound may be detected clinically.' },
+const cbctFigures = [
+  { src: '/images/treatments/dental-trauma/horizontal-root-fracture-periapical-illustration.webp', caption: 'Illustrative periapical view', alt: 'Illustrative periapical view of upper incisors depicting a transverse root fracture, based on a clinical reference' },
+  { src: '/images/treatments/dental-trauma/horizontal-root-fracture-cbct-sagittal-1-illustration.webp', caption: 'Illustrative CBCT sagittal view 1', alt: 'Illustrative sagittal CBCT view of an upper incisor with a yellow arrow indicating a root fracture, view 1' },
+  { src: '/images/treatments/dental-trauma/horizontal-root-fracture-cbct-sagittal-2-illustration.webp', caption: 'Illustrative CBCT sagittal view 2', alt: 'Illustrative sagittal CBCT view of an upper incisor with a yellow arrow indicating a root fracture, view 2' },
 ];
 
 const faqs = [
@@ -117,7 +116,8 @@ const ROW_PY = 'py-8 lg:py-10';
       </p>
       <p class="mt-4 text-lg text-brand-ink/80">
         We encourage dentists to follow the recommended guidelines established by the
-        <a href="https://onlinelibrary.wiley.com/toc/16009657/2024/40/S1" target="_blank" rel="noopener" class="font-semibold text-brand-rust underline hover:no-underline">International Association of Dental Traumatology</a>.
+        <a href="https://onlinelibrary.wiley.com/toc/16009657/2024/40/S1" target="_blank" rel="noopener" class="font-semibold text-brand-rust underline hover:no-underline">International Association of Dental Traumatology</a>
+        and American Association of Endodontists.
       </p>
       <p class="mt-4 text-lg font-semibold text-brand-ink">
         The following classification summarizes common traumatic dental injuries and their endodontic implications.
@@ -140,13 +140,14 @@ const ROW_PY = 'py-8 lg:py-10';
     </div>
   </section>
 
-  <ImageRow imageSrc={`/images/treatments/cracked-teeth/cracked-tooth-incisor-diagram.webp`} imageAlt="Rendering of a fractured incisor" py={ROW_PY}>
+  <ImageRow imageSrc={`/images/treatments/dental-trauma/fractured-incisor-diagram.webp`} imageAlt="Educational illustration of a chipped upper incisor with a flat solid dentin fracture surface" py={ROW_PY}>
     <h3 class="font-heading text-2xl font-semibold text-brand-rust">Tooth Fractures</h3>
     <p class="mt-4 text-lg text-brand-ink/80">If a tooth chips or breaks, save any pieces and bring them with the patient.</p>
     <IconList items={fractureSteps} />
   </ImageRow>
 
-  <ImageRow imageSrc={`/images/treatments/dental-trauma/tooth-luxation-diagram.webp`} imageAlt="Rendering of a displaced tooth" py={ROW_PY}>
+  <div id="tooth-luxation" class="scroll-mt-28" aria-hidden="true"></div>
+  <ImageRow imageSrc={`/images/treatments/dental-trauma/tooth-luxation-diagram.webp`} imageAlt="Educational illustration of a displaced upper central incisor beside normally aligned neighboring teeth" py={ROW_PY}>
     <h3 class="font-heading text-2xl font-semibold text-brand-rust">Tooth Luxation (Displacement)</h3>
     <p class="mt-4 text-lg text-brand-ink/80">
       A tooth that is pushed out of place, loose, or knocked sideways should be examined immediately by a dentist.
@@ -154,7 +155,7 @@ const ROW_PY = 'py-8 lg:py-10';
     <IconList items={luxationSteps} />
   </ImageRow>
 
-  <ImageRow imageSrc={`/images/treatments/dental-trauma/avulsed-tooth-diagram.webp`} imageAlt="Rendering of a knocked-out tooth" py={ROW_PY}>
+  <ImageRow imageSrc={`/images/treatments/dental-trauma/avulsed-tooth-diagram.webp`} imageAlt="Educational illustration of an empty upper central incisor socket following avulsion, with intact neighboring teeth" py={ROW_PY}>
     <h3 class="font-heading text-2xl font-semibold text-brand-rust">Tooth Avulsion (Knocked-Out Tooth)</h3>
     <p class="mt-4 text-lg text-brand-ink/80">
       A tooth that is completely knocked out is a serious injury. The faster it is treated, the better the chance of
@@ -178,8 +179,7 @@ const ROW_PY = 'py-8 lg:py-10';
   <!-- Doctors Guide -->
   <SplitSection imageSrc={`/images/team/562-endodontics-london-ontario-endodontist-and-assistants-with-microscope.webp`} imageAlt="Doctor working with an operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-[655/540]" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
     <p class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Doctors Guide:</p>
-    <h3 class="mt-2 font-heading text-2xl font-semibold text-brand-rust">Clinical Protocol and Co-Management</h3>
-    <h3 class="mt-1 font-heading text-2xl font-semibold text-brand-rust">Instructions to relay to a parent or patient calling your office</h3>
+    <h3 class="mt-2 font-heading text-2xl font-semibold text-brand-rust">Clinical Protocol &amp; Patient Instructions for Parents/Patients</h3>
     <p class="mt-5 text-lg text-brand-ink/80">
       Instruct the patient to handle the tooth by the crown only if possible. If contaminated, briefly rinse the tooth
       under cool running water without scrubbing the root surface.
@@ -196,7 +196,7 @@ const ROW_PY = 'py-8 lg:py-10';
   <!-- S5: Splinting -->
   <section class="bg-[#E3DBD4] py-16 lg:py-20">
     <div class="mx-auto max-w-6xl px-6">
-      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Luxation injuries and splinting protocol</h2>
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Dental injuries and splinting protocol</h2>
       <p class="mt-4 text-lg text-brand-ink/80">
         We place and remove all splints at 562 endodontics. Splint type and duration depend on the type of injury. The
         table below outlines IADT 2020 durations and clinical notes for co-management.
@@ -207,43 +207,44 @@ const ROW_PY = 'py-8 lg:py-10';
     </div>
   </section>
 
-  <!-- S6: CBCT (banda roja) -->
-  <SplitSection imageSrc={`/images/technology/cbct-dental-ct-scanner.webp`} imageAlt="CBCT imaging unit with touchscreen" imagePosition="left" bg="bg-brand-rust" imageAspect="aspect-[1136/998]">
-    <h2 class="font-heading text-3xl font-semibold leading-tight text-white sm:text-[32px]">Horizontal root fractures and the role of CBCT imaging</h2>
-    <p class="mt-5 text-lg text-white">
-      Horizontal root fractures are often missed on conventional periapical radiographs if the X-ray beam is not
-      aligned with the fracture plane.
-    </p>
-    <p class="mt-4 text-lg text-white">
-      Early CBCT evaluation improves diagnostic accuracy and reduces the risk of missed cervical root fractures, which
-      may otherwise require extraction.
-    </p>
-  </SplitSection>
-
-  <!-- S7: Delayed trauma sequelae -->
-  <section class="bg-white pb-4 pt-16 lg:pt-20">
+  <!-- S6: CBCT (banda roja) con galería de 3 ilustraciones -->
+  <section class="bg-brand-rust py-16 text-white lg:py-20">
     <div class="mx-auto max-w-6xl px-6">
-      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Delayed trauma sequelae</h2>
-      <p class="mt-4 text-lg text-brand-ink/80">
-        After a dental injury, certain changes in the teeth or surrounding tissues can happen over time. These may need
-        to be checked regularly by both the family dentist and our team at 562 endodontics to ensure everything stays
-        healthy.
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-white sm:text-[32px]">Horizontal root fractures and the role of CBCT imaging</h2>
+      <p class="mt-5 max-w-4xl text-lg text-white">
+        Horizontal root fractures are often missed on conventional periapical radiographs if the X-ray beam is not
+        aligned with the fracture plane.
+      </p>
+      <p class="mt-4 max-w-4xl text-lg text-white">
+        Early CBCT evaluation improves diagnostic accuracy and reduces the risk of missed cervical root fractures, which
+        may otherwise require extraction.
+      </p>
+
+      <div class="mt-10 grid gap-8 md:grid-cols-3 md:gap-6" data-reveal-each>
+        {cbctFigures.map((fig) => (
+          <figure>
+            <img src={fig.src} alt={fig.alt} class="aspect-[4/5] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+            <figcaption class="mt-3 text-lg font-semibold text-white">{fig.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
+      <p class="mt-6 text-lg text-white">
+        Educational illustrations based on clinical reference images. These are not patient radiographs or diagnostic scans.
       </p>
     </div>
   </section>
 
-  {sequelae.map((item, i) => (
-    <ImageRow
-      imageSrc={item.img}
-      imageAlt={item.title}
-      imageAspect={item.aspect}
-      size="md"
-      py={i === sequelae.length - 1 ? 'pt-8 pb-16 lg:pt-10 lg:pb-20' : ROW_PY}
-    >
-      <h3 class="font-heading text-2xl font-semibold text-brand-rust">{item.title}</h3>
-      <p class="mt-4 text-lg text-brand-ink/80">{item.text}</p>
-    </ImageRow>
-  ))}
+  <!-- S7: Seguimiento (reemplaza a "Delayed trauma sequelae") -->
+  <section id="follow-up" class="scroll-mt-28 bg-white py-14 lg:py-16">
+    <div class="mx-auto max-w-6xl px-6">
+      <p class="text-lg text-brand-ink/80">
+        It is important for the patient to attend follow-up appointments and maintain regular dental visits, as
+        traumatic dental injuries may develop delayed sequelae over time, including external cervical resorption, pulp
+        canal obliteration, ankylosis, pulpal necrosis, and apical infection. Continued clinical and radiographic
+        monitoring is essential for early detection and management of these complications.
+      </p>
+    </div>
+  </section>
 
   <!-- S8: FAQ -->
   <section class="bg-[#E3DBD4]/50 py-16 lg:py-20">

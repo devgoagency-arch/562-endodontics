@@ -6,3 +6,6 @@ dist/
 .astro/
 # Índice de búsqueda local (se genera con npm run search:dev)
 public/pagefind/
+
+# Candidatas de imágenes en revisión (no se despliegan ni se suben)
+_image-work/
