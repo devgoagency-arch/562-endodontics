@@ -184,6 +184,49 @@ Portrait, ratio about 0.93.
 ```
 - **Alt sugerido:** `Cone-beam CT scanner at 562 endodontics used for 3D dental imaging`
 
+## 4b. Páginas nuevas: Apical Surgery (AS) y Endodontic Retreatment (ER)
+
+**Estado (2 oct 2026):** AS-01 a AS-04, ER-01, ER-02, PH-01 y PH-02 ya están generadas por Codex e integradas en las dos páginas (WebP calidad 82). PH-03 y PH-04 siguen siendo fotos reales existentes. Pendiente: validación clínica de la Dra. Las propuestas RC-01, RC-02 y RC-03 de Codex están en `_image-work/` y no se han publicado: reemplazarían fotos que ya están en Root Canal.
+
+Mismo estilo (bloque STYLE de la sección 3), mismo flujo (sección 2) y misma revisión clínica del doctor.
+
+Cada imagen va a `public/images/treatments/apical-surgery/` o `public/images/treatments/endodontic-retreatment/`, WebP, calidad ~82.
+
+### Ilustraciones (STYLE de la sección 3)
+
+| ID | Dónde | Entregar | Debe mostrar (prompt después del STYLE) | Archivo y alt |
+|---|---|---|---|---|
+| AS-01 | Apical Surgery · "What the procedure involves" (~227 px) | 1:1, 1024 × 1024 | `Side cross-section of a lower molar root in bone. The last 3 mm of the root tip has been cleanly removed, the periapical lesion is gone, and a small retrograde filling in a slightly darker tone seals the root end. A thin #B13E25 line marks the resection level. Calm, clear. Square 1:1.` | `apical-surgery-root-end-resection-diagram.webp` · `Cross-section illustration of a root tip after root-end resection with a small retrograde filling` |
+| AS-02 | Apical Surgery · "What to expect after surgery" (~227 px) | 1:1, 1024 × 1024 | `Side cross-section of the same lower molar root a few months after surgery: the sealed root end is surrounded by new, denser bone, gum tissue is healed and pale pink, no lesion. Soft, hopeful tone, a subtle #B13E25 accent on the filling only. Square 1:1.` | `apical-surgery-healing-diagram.webp` · `Cross-section illustration of healed bone around a sealed root tip after apical surgery` |
+| AS-03 | Apical Surgery · "Anatomical Risk Management" (galería de 2) | 4:5, 1000 × 1250 | `Side cross-section of an upper molar whose root tips sit just below the floor of the maxillary sinus (soft pale-blue-grey cavity, no strong blue). A thin #B13E25 double-headed line shows the short distance between the root apex and the sinus floor. Portrait 4:5.` | `apical-surgery-maxillary-sinus-diagram.webp` · `Cross-section illustration of an upper molar root apex close to the maxillary sinus floor` |
+| AS-04 | Apical Surgery · "Anatomical Risk Management" (galería de 2) | 4:5, 1000 × 1250 | `Side cross-section of a lower molar with the inferior alveolar canal (cream-coloured tube with a pale nerve) running beneath the root tips in the bone. A thin #B13E25 double-headed line shows the distance between the apex and the canal. Portrait 4:5.` | `apical-surgery-inferior-alveolar-nerve-diagram.webp` · `Cross-section illustration of a lower molar root apex near the inferior alveolar nerve canal` |
+| ER-01 | Retreatment · "Common reasons patients return…" (~227 px) | 1:1, 1024 × 1024 | `Side cross-section of a root-filled upper molar. Three small #B13E25 markers: an untreated extra canal beside the filled ones, a gap under the crown where bacteria could leak in, and a dark area of infection at the root tip. No text. Square 1:1.` | `endodontic-retreatment-failure-causes-diagram.webp` · `Cross-section illustration of a root-filled molar showing a missed canal, coronal leakage and periapical infection` |
+| ER-02 | Retreatment · "What to expect" (~227 px) | 1:1, 1024 × 1024 | `Side cross-section of a root-filled lower molar. A fine endodontic file is entering one canal and the old filling material in it is being removed, the other canal still filled. A small #B13E25 arrow follows the file. Square 1:1.` | `endodontic-retreatment-removing-filling-diagram.webp` · `Cross-section illustration of an endodontic file removing old filling material from a root canal` |
+
+Opcional (más adelante): ER-03, tira horizontal de 4 viñetas (retirar obturación → renegociar el conducto → irrigar → obturar de nuevo), 16:9, para acompañar la secuencia de la sección "Retreatment protocol".
+
+### Fotos de apoyo
+
+| ID | Dónde | Cómo se obtiene | Qué mostrar |
+|---|---|---|---|
+| PH-01 | Apical Surgery · "Surgical Protocol" | **Codex** (foto sin personas) o la clínica | Bandeja estéril con instrumental de microcirugía y puntas ultrasónicas, luz cálida, fondo difuso de consultorio. Sin marcas ni texto legible. 4:3, 1200 × 900. |
+| PH-02 | Apical Surgery · "Anatomical Risk Management" y Retreatment · diagnóstico | **Codex** (foto sin rostros) o la clínica | Una mano enguantada señalando un corte CBCT en un monitor, con el consultorio desenfocado al fondo. La pantalla muestra una imagen genérica de CBCT, sin texto legible. 4:3, 1200 × 900. |
+| PH-03 | Apical Surgery y Retreatment · Doctors' Guide | **Solo foto real** de la clínica | La Dra. o el Dr. con el microscopio, campo estéril. Aparecen personas reales, así que no se genera. |
+| PH-04 | Retreatment · intro o consulta | **Solo foto real** de la clínica | El equipo en consulta con el paciente (con consentimiento). |
+
+**Referencia obligatoria para PH-01 y PH-02 (que se parezcan al consultorio real).** Antes de generar, Codex debe abrir y estudiar estas fotos reales, todas dentro de `astro-site/public/images/`, y usarlas como referencia de entorno (no copiarlas ni recortarlas):
+
+- `clinic/562-endodontics-london-ontario-treatment-room.webp`, `…-treatment-room-wide.webp` y `…-treatment-room-overhead.webp`: la sala de tratamiento completa.
+- `clinic/562-endodontics-london-ontario-endodontic-treatment-patient-and-assistants.webp`: cómo se ve un procedimiento real.
+- `technology/dental-operating-microscope.webp`, `technology/cbct-dental-ct-scanner.webp` y `technology/cbct-scan-patient-positioned.webp`: el equipo real.
+- `team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-treatment-room.webp`: la sala con el equipo montado.
+
+Rasgos del entorno que deben verse: paredes blancas, piso de madera clara, ventanales grandes con árboles al fondo, sillones dentales grises, microscopio operatorio de techo y monitores en la pared, uniformes negros o azul quirúrgico, gorros quirúrgicos estampados. Luz natural suave, fotografía documental (no publicitaria, no de banco de imágenes, sin brillo exagerado).
+
+Instrucción para pegar en Codex junto al prompt de PH-01 y PH-02: `Study the attached real photos of 562 endodontics and match the room: white walls, light wood floor, large windows with trees, grey dental chairs, ceiling-mounted operating microscope. Documentary style, natural light. Do not copy any photo; create a new image of the same environment.`
+
+Reglas para PH-01 y PH-02 generadas con IA: sin rostros, sin logotipos ni marcas de equipos, sin texto legible en pantallas, manos con cinco dedos y guantes correctos (descartar la variante si la anatomía de la mano falla), iluminación y paleta cálidas del consultorio real. Se presentan como imágenes de apoyo genéricas, nunca como "nuestro consultorio" ni como un caso real.
+
 ## 5. Preguntas para el Dr. (revisión clínica antes de publicar)
 
 - ¿Las grietas de CT-01 muestran bien la diferencia entre *cracked tooth* y *split tooth*? ¿Dirección (mesio-distal) y recorrido correctos?
@@ -192,9 +235,11 @@ Portrait, ratio about 0.93.
 - DT-03: ¿el diente completo sobre el alvéolo vacío es la representación que prefiere para avulsión?
 - ¿Hay fotos reales (microscopio, equipo CBCT, consulta) que prefieran usar en vez de ilustración para RC-01 y RC-03?
 - ¿Cómo prefieren presentar las ilustraciones: como "ilustración" en el pie de foto o sin leyenda?
+- AS-01 a AS-04 y ER-01, ER-02: ¿la posición del corte de raíz (3 mm), la distancia al seno y al canal alveolar inferior, y la causa de fracaso mostrada son clínicamente correctas?
 
 ## 6. Antes de publicar
 
 - **Cumplimiento de publicidad (RCDSO):** si se usan personas o pacientes generados con IA, confirmar con la clínica que no pueden interpretarse como resultados reales de pacientes. Las ilustraciones anatómicas no tienen ese problema.
 - **Derechos:** las imágenes generadas deben ser originales de este proyecto; no subir ni "mejorar" las de milburndental / sharedentalcare.
-- **Pendiente de contenido:** las páginas Endodontic Retreatment, Apical Surgery y Dental Emergencies aún no existen; sus imágenes se definen cuando llegue el contenido del cliente.
+- **Pendiente de contenido:** Apical Surgery y Endodontic Retreatment ya existen (sección 4b); las imágenes nuevas entran cuando estén aprobadas.
+- **Fotos con IA (PH-01, PH-02):** confirmar con la clínica que está de acuerdo con usar imágenes de apoyo generadas. Si no, se sustituyen por fotos reales.

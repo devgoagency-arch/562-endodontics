@@ -1,7 +1,5 @@
 ---
-// Índice de tratamientos: intro + tarjetas con video. Solo enlazan a los
-// tratamientos que ya tienen página; Retreatment y Apical Surgery no la tienen
-// todavía (se agrega `href` cuando existan).
+// Índice de tratamientos: intro + una tarjeta con video por cada tratamiento.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import SplitSection from '../../components/treatments/SplitSection.astro';
@@ -31,11 +29,13 @@ const cards: Card[] = [
   {
     title: 'Endodontic Retreatment',
     text: 'A dental procedure that is performed when a previous root canal treatment has failed or for patients who have developed new infections after previous root canal treatment',
+    href: '/endodontic-treatments/endodontic-retreatment/',
     videos: [{ id: 'xlYYc7_BFTI', title: 'Endodontic Retreatment Explained' }],
   },
   {
     title: 'Apical Surgery',
     text: 'The goal of apical surgery is to remove infectious lesions associated with the roots of the teeth. Thanks to advances in surgical techniques, technology and anesthesia, this procedure can be performed with minimal discomfort and a quick recovery.',
+    href: '/endodontic-treatments/apical-surgery/',
     videos: [{ id: 'B2zzXiXQbU0', title: 'Endodontic Surgery' }],
   },
   {
@@ -55,7 +55,7 @@ const cards: Card[] = [
 
 <BaseLayout
   title="Endodontic Treatments"
-  description="At 562 endodontics, we specialize in preserving natural teeth through advanced endodontic treatments, offering expert care and innovative techniques for optimal dental health."
+  description="At 562 endodontics in London, Ontario we preserve natural teeth with advanced endodontic treatments: root canals, retreatment, apical surgery and more."
 >
   <PageHero title="Endodontic Treatments" image="/images/clinic/562-endodontics-london-ontario-endodontist-treating-patient-with-microscope.webp" />
 

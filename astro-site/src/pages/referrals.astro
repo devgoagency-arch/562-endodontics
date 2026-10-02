@@ -27,7 +27,7 @@ const steps = [
 ];
 ---
 
-<BaseLayout title="Referrals" description="Refer a patient to 562 endodontics online in minutes.">
+<BaseLayout title="Referrals" description="Refer a patient to 562 endodontics in London, Ontario. Submit the online referral form in minutes or download the printable form.">
 
   <!-- Banner de título: componente compartido (src/components/PageHero.astro)
        para que el resto de páginas internas (Endodontic Treatments, High
@@ -267,7 +267,7 @@ const steps = [
             <textarea name="special_considerations" rows="3" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm"></textarea>
           </label>
 
-          <p class="text-xs text-brand-ink/50">All your data is protected through reCAPTCHA.</p>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden" />
 
           <label class="flex items-start gap-2 text-xs text-brand-ink/70">
             <input type="checkbox" name="terms_conditions" required class="mt-0.5" />

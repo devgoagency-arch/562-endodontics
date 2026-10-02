@@ -1,0 +1,16 @@
+---
+// Lista numerada de pasos de un procedimiento (cirugía apical, secuencia de retratamiento).
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+---
+
+<ol class="mt-5 space-y-4">
+  {items.map((item, i) => (
+    <li class="flex items-start gap-3 text-lg text-brand-ink/80">
+      <span class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-rust font-heading text-sm font-semibold text-white" aria-hidden="true">{i + 1}</span>
+      <span>{item}</span>
+    </li>
+  ))}
+</ol>

@@ -1,0 +1,200 @@
+---
+// Página de tratamiento "Endodontic Retreatment". Misma plantilla que Cracked Teeth y
+// Dental Trauma. Texto del documento del cliente (marzo 2026), pendiente de la
+// revisión de la Dra. Imágenes: ilustraciones y foto de apoyo (ver docs/image-brief.md, grupo ER/PH).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SplitSection from '../../components/treatments/SplitSection.astro';
+import ImageRow from '../../components/treatments/ImageRow.astro';
+import DataTable from '../../components/treatments/DataTable.astro';
+import StepList from '../../components/treatments/StepList.astro';
+import TreatmentFaq from '../../components/treatments/TreatmentFaq.astro';
+import ContactCta from '../../components/ContactCta.astro';
+
+const failureTable = {
+  headers: ['Cause of failure', 'Clinical presentation', 'Management approach'],
+  rows: [
+    ['Missed canal anatomy', 'Persistent periapical pathology; untreated canal visible on CBCT', 'Retreatment with microscope-guided canal location'],
+    ['Coronal leakage', 'Recontamination through a deficient restoration or delayed crown placement', 'Retreatment and prompt definitive restoration'],
+    ['Inadequate debridement', 'Residual pulp tissue or biofilm; persistent symptoms', 'Retreatment with advanced irrigation protocols'],
+    ['Separated instrument', 'Instrument fragment in the canal; may or may not be symptomatic', 'Attempted retrieval under the microscope or bypass'],
+    ['Canal transportation or ledge', 'Procedural error preventing full cleaning and obturation', 'Microscope-guided renegotiation or surgical management'],
+    ['Persistent periapical infection', 'Radiolucency not resolving after adequate treatment', 'Retreatment; apical surgery if retreatment is not feasible'],
+  ],
+};
+
+const commonReasons = [
+  'A new infection has developed due to a crack, a leaking filling, or a delayed crown placement.',
+  'A canal was not treated during the original procedure.',
+  'The first treatment did not fully clear the infection.',
+];
+
+const whatToExpect = [
+  'The procedure is similar to the original root canal treatment.',
+  'Local anesthesia is used, and patient comfort is reviewed throughout the procedure.',
+  'Sedation options may be available when needed.',
+  'The appointment typically takes 60 to 90 minutes.',
+  'After retreatment, your dentist will place a new crown or restoration to protect the tooth.',
+];
+
+const referralReasons = [
+  'A previously treated tooth presents with new or persistent periapical pathology on radiographs',
+  'The patient reports pain, swelling, or a sinus tract associated with a root-filled tooth.',
+  'A separated instrument, missed canal, or inadequate obturation is identified on radiographs or CBCT.',
+  'The tooth has been restored with a crown, and direct access to the canals requires specialist treatment planning.',
+  'It is unclear whether orthograde retreatment or apical surgery is the more appropriate option.',
+];
+
+const retreatmentSequence = [
+  'Removal of existing obturation material',
+  'Microscope-guided canal renegotiation',
+  'Chemo-mechanical preparation with advanced irrigation',
+  'Re-obturation',
+];
+
+const faqs = [
+  { q: 'Is retreatment always possible?', a: "Not in every case. Prognosis depends on the cause of failure, the tooth's restorability, and the extent of periapical disease. We provide a clear assessment during consultation before recommending treatment." },
+  { q: 'Will the crown need to be removed?', a: 'Not always. Access through an existing crown is evaluated individually. If removal is needed, we coordinate timing with the referring office to ensure the tooth remains protected.' },
+  { q: 'What happens if retreatment is not successful?', a: 'If retreatment does not resolve the issue, apical surgery may be considered. We review all treatment options with the patient and coordinate with the referring doctor before proceeding.' },
+  { q: 'Will the referring dentist receive a report?', a: 'Yes. A clinical summary including post-operative radiographs, findings, and restorative recommendations is sent to the referring office after each appointment.' },
+];
+
+const FIRST_PY = 'pt-16 pb-8 lg:pt-20 lg:pb-10';
+const ROW_PY = 'py-8 lg:py-10';
+---
+
+<BaseLayout
+  title="Endodontic retreatment, London Ontario"
+  description="Specialist endodontic retreatment at 562 endodontics, London, Ontario. Microscope-guided care for failed or symptomatic root canals. Same-week referrals accepted."
+>
+  <PageHero title="Endodontic Retreatment" image="/images/clinic/562-endodontics-london-ontario-treatment-room.webp" />
+
+  <!-- S2: Intro -->
+  <SplitSection imageSrc="/images/technology/cbct-dental-ct-scanner.webp" imageAlt="CBCT scanner control screen at 562 endodontics" imagePosition="right" bg="bg-white" imageAspect="aspect-[1136/998]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Endodontic retreatment in London, Ontario</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      A tooth that has already received root canal treatment may develop symptoms again, even years later. Extraction
+      is not always required, as endodontic retreatment can address the underlying cause and help preserve the tooth
+      when suitable.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      At 562 endodontics, we evaluate symptomatic, previously treated teeth using an operating microscope and CBCT
+      imaging when appropriate. We accept retreatment referrals from dentists across London, and same-week appointments
+      may be available based on urgency and scheduling.
+    </p>
+    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-[#7F6E5D] px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
+      Contact Us <span aria-hidden="true">→</span>
+    </a>
+  </SplitSection>
+
+  <!-- S3: Por qué falla un tratamiento de conductos -->
+  <section class="bg-[#E3DBD4] py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Why root canal treatment can fail</h2>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        Endodontic treatment is usually successful, but some factors can lead to persistent or recurrent disease.
+        Identifying the cause of failure guides retreatment and helps determine prognosis.
+      </p>
+      <div class="mt-8">
+        <DataTable headers={failureTable.headers} rows={failureTable.rows} />
+      </div>
+      <p class="mt-8 text-lg text-brand-ink/80">
+        CBCT evaluation during consultation may help identify the likely cause of failure before retreatment and
+        support discussions about prognosis with the patient.
+      </p>
+    </div>
+  </section>
+
+  <!-- S4: Guía del paciente -->
+  <SplitSection imageSrc="/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-treatment-room.webp" imageAlt="Dr. Jacqueline Lopez in the treatment room beside the operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-[4/3]" py={FIRST_PY}>
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Patient guide: What is endodontic retreatment?</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      If a previously treated tooth develops pain, swelling, or sensitivity, extraction is not always necessary.
+      Retreatment involves removing the existing filling, cleaning and disinfecting the canals, and resealing the tooth.
+    </p>
+  </SplitSection>
+
+  <ImageRow imageSrc="/images/treatments/endodontic-retreatment/endodontic-retreatment-failure-causes-diagram.webp" imageAlt="Cross-section illustration of a root-filled molar showing a missed canal, coronal leakage and periapical infection" imageAspect="aspect-square" py={ROW_PY}>
+    <h3 class="font-heading text-2xl font-semibold text-brand-rust">Common reasons patients return with symptoms after root canal treatment:</h3>
+    <ul class="mt-4 list-disc space-y-2 pl-5 text-lg text-brand-ink/80">
+      {commonReasons.map((item) => <li>{item}</li>)}
+    </ul>
+  </ImageRow>
+
+  <ImageRow imageSrc="/images/treatments/endodontic-retreatment/endodontic-retreatment-removing-filling-diagram.webp" imageAlt="Cross-section illustration of an endodontic file removing old filling material from a root canal" imageAspect="aspect-square" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
+    <h3 class="font-heading text-2xl font-semibold text-brand-rust">What to expect:</h3>
+    <ul class="mt-4 list-disc space-y-2 pl-5 text-lg text-brand-ink/80">
+      {whatToExpect.map((item) => <li>{item}</li>)}
+    </ul>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      Retreatment may be an option for previously treated teeth when the tooth remains restorable. We review whether
+      retreatment is appropriate for each case and explain the available options before proceeding.
+    </p>
+  </ImageRow>
+
+  <!-- S5: Doctors' Guide -->
+  <SplitSection imageSrc="/images/clinic/562-endodontics-london-ontario-endodontist-treating-patient-with-microscope.webp" imageAlt="Endodontist working with an operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-square" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
+    <p class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Doctors' Guide:</p>
+    <h3 class="mt-2 font-heading text-2xl font-semibold text-brand-rust">Clinical Protocol and Co-Management</h3>
+    <h3 class="mt-1 font-heading text-2xl font-semibold text-brand-rust">When to refer for endodontic retreatment</h3>
+    <p class="mt-5 text-lg font-medium text-brand-ink">Refer to 562 endodontics if any of the following apply:</p>
+    <ul class="mt-3 list-disc space-y-2 pl-5 text-lg text-brand-ink/80">
+      {referralReasons.map((reason) => <li>{reason}</li>)}
+    </ul>
+  </SplitSection>
+
+  <!-- S6: Protocolo diagnóstico -->
+  <SplitSection imageSrc="/images/technology/cbct-monitor-review-support.webp" imageAlt="AI-generated support image of a gloved hand indicating a generic CBCT view on a monitor" imagePosition="right" bg="bg-[#E3DBD4]" imageAspect="aspect-[4/3]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Diagnostic protocol at 562 endodontics</h2>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      Each retreatment evaluation starts with a dedicated consultation. Our team reviews referring radiographs and,
+      when indicated, obtains a CBCT scan if needed to assess obturation quality, identify missed canals, evaluate
+      periapical status, and confirm restorability. We discuss treatment options with the patient before any
+      procedure. After each appointment, a written report, including post-operative radiographs and restorative
+      recommendations, is sent to the referring office.
+    </p>
+  </SplitSection>
+
+  <!-- S6b: Protocolo de retratamiento -->
+  <section class="bg-white pb-8 pt-16 lg:pb-10 lg:pt-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Retreatment protocol</h2>
+      <p class="mt-3 text-lg text-brand-ink/80">
+        Access through existing restorations is evaluated individually. If crown removal is needed, we coordinate with
+        the referring office in advance.
+      </p>
+      <p class="mt-4 text-lg font-medium text-brand-ink">The retreatment sequence may include:</p>
+      <StepList items={retreatmentSequence} />
+      <p class="mt-6 text-lg text-brand-ink/80">
+        A post-treatment report, including radiographs and restorative recommendations, is sent to the referring office
+        upon completion.
+      </p>
+    </div>
+  </section>
+
+  <!-- S7: Retratamiento vs. cirugía apical -->
+  <SplitSection imageSrc="/images/clinic/562-endodontics-london-ontario-endodontic-treatment-patient-and-assistants.webp" imageAlt="Endodontist and assistant performing a procedure under the operating microscope" imagePosition="left" bg="bg-[#E3DBD4]" imageAspect="aspect-[4/3]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Retreatment vs. apical surgery</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      In some cases, apical surgery may be more appropriate than orthograde retreatment, such as when a post or crown
+      cannot be safely removed, the failure is at the apex with an adequate coronal seal, or orthograde retreatment has
+      already been attempted. We discuss both options with the patient during consultation and coordinate the
+      recommended approach with your office.
+    </p>
+    <a href="/endodontic-treatments/apical-surgery/" class="mt-6 inline-flex items-center gap-1 font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust hover:underline">
+      Learn about apical surgery <span aria-hidden="true">→</span>
+    </a>
+  </SplitSection>
+
+  <!-- S8: FAQ -->
+  <section class="bg-[#E3DBD4]/50 py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="text-center font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Frequently asked questions</h2>
+      <div class="mt-10">
+        <TreatmentFaq items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <ContactCta />
+</BaseLayout>

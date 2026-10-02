@@ -28,6 +28,18 @@ const menus: Record<string, { title: string; href: string; intro: string; image:
       image: '/images/technology/dental-operating-microscope.webp',
     },
     {
+      title: 'Endodontic Retreatment',
+      href: '/endodontic-treatments/endodontic-retreatment/',
+      intro: 'Microscope-guided care for failed or symptomatic root canals, to help preserve the natural tooth.',
+      image: '/images/treatments/endodontic-retreatment/endodontic-retreatment-removing-filling-diagram.webp',
+    },
+    {
+      title: 'Apical Surgery',
+      href: '/endodontic-treatments/apical-surgery/',
+      intro: 'Microscope-guided root-end surgery when retreatment is not enough to resolve an infection.',
+      image: '/images/treatments/apical-surgery/apical-surgery-root-end-resection-diagram.webp',
+    },
+    {
       title: 'Cracked Teeth',
       href: '/endodontic-treatments/cracked-teeth/',
       intro: 'Diagnosis and management of cracked and fractured teeth using a microscope and CBCT imaging.',
@@ -50,9 +62,11 @@ const navLinks: { label: string; href: string; menu?: string }[] = [
   { label: 'Professional Development', href: '/professional-development' },
 ];
 
-// Clases completas (no concatenadas) para que Tailwind las detecte.
+// Clases completas (no concatenadas) para que Tailwind las detecte. Con más de 3
+// ítems la última fila queda centrada (flex) en vez de pegada a la izquierda.
 const panelLayout = (count: number) =>
-  count === 2 ? 'max-w-4xl grid-cols-2' : 'max-w-7xl grid-cols-3';
+  count === 2 ? 'max-w-4xl grid grid-cols-2' : 'max-w-7xl flex flex-wrap justify-center';
+const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem)/3)]');
 ---
 
 <!-- Espaciador: reserva el alto del header expandido (lo mide el script). El header es
@@ -154,9 +168,9 @@ const panelLayout = (count: number) =>
       data-open="false"
       class="invisible absolute inset-x-0 top-full hidden border-t border-stone-100 bg-white opacity-0 shadow-lg transition-[opacity,visibility] duration-200 data-[open=true]:visible data-[open=true]:opacity-100 min-[1180px]:block"
     >
-      <div class={`mx-auto grid gap-6 px-6 py-8 ${panelLayout(menus[link.menu!].length)}`}>
+      <div class={`mx-auto gap-6 px-6 py-8 ${panelLayout(menus[link.menu!].length)}`}>
         {menus[link.menu!].map((item) => (
-          <a href={item.href} class="group flex gap-5 rounded-2xl p-4 transition hover:bg-[#f2eeea]">
+          <a href={item.href} class={`group flex gap-5 rounded-2xl p-4 transition hover:bg-[#f2eeea] ${itemWidth(menus[link.menu!].length)}`}>
             <div class="min-w-0 flex-1 self-center">
               <h3 class="font-heading text-lg font-semibold text-brand-rust">{item.title}</h3>
               <p class="mt-2 text-base text-brand-ink/80">{item.intro}</p>

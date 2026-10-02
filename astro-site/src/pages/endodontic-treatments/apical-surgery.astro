@@ -1,0 +1,244 @@
+---
+// Página de tratamiento "Apical Surgery". Misma plantilla que Cracked Teeth y
+// Dental Trauma. Texto del documento del cliente (marzo 2026), pendiente de la
+// revisión de la Dra. Imágenes: ilustraciones y fotos de apoyo (ver docs/image-brief.md, grupo AS/PH).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SplitSection from '../../components/treatments/SplitSection.astro';
+import ImageRow from '../../components/treatments/ImageRow.astro';
+import DataTable from '../../components/treatments/DataTable.astro';
+import StepList from '../../components/treatments/StepList.astro';
+import TreatmentFaq from '../../components/treatments/TreatmentFaq.astro';
+import ContactCta from '../../components/ContactCta.astro';
+
+const indicationTable = {
+  headers: ['Clinical scenario', 'Preferred approach', 'Rationale'],
+  rows: [
+    ['Missed canal or inadequate obturation with accessible coronal access', 'Orthograde retreatment', 'Coronal access allows full chemo-mechanical re-preparation'],
+    ['Persistent periapical pathology after adequate orthograde retreatment', 'Apical surgery', 'The orthograde approach has been exhausted'],
+    ['Post or crown that cannot be removed without significant restorative risk', 'Apical surgery', 'Surgical access avoids compromising the existing restoration'],
+    ['Calcified canal preventing orthograde access to the apex', 'Apical surgery', 'Canal negotiation is not feasible by conventional means'],
+    ['Biopsy required to rule out non-endodontic pathology', 'Apical surgery', 'Tissue resection allows histopathological analysis'],
+    ['Horizontal root fracture at the apical third', 'Apical surgery — root-end resection', 'The coronal segment can be retained if periodontally sound'],
+    ['Overfilled canal with symptomatic extruded material', 'Apical surgery', 'Surgical retrieval of extruded material at the apex'],
+  ],
+};
+
+const prognosisTable = {
+  headers: ['Clinical scenario', 'Expected outcome'],
+  rows: [
+    ['Tooth with adequate coronal restoration, no periodontal involvement, primary apical surgery', 'Favourable in appropriately selected cases'],
+    ['Tooth with adequate coronal restoration, primary apical surgery, large periapical lesion', 'Favourable, although healing may take longer, and radiographic resolution can extend over time'],
+    ['Tooth with inadequate coronal restoration requiring replacement', 'Dependent on the restorative prognosis, retreatment and new restoration may be preferred'],
+    ['Apical surgery after a previous failed surgical attempt', 'Guarded; case-by-case assessment is required'],
+    ['Vertical root fracture confirmed at surgery', 'Poor. Extraction is generally indicated'],
+  ],
+};
+
+const procedureSteps = [
+  'A small incision is made in the gum near the affected tooth.',
+  'A small amount of bone is removed to access the tip of the root.',
+  'The infected tissue and the very tip of the root are removed.',
+  'The root end is cleaned and sealed with a small filling.',
+  'The gum is sutured closed and heals over the following days.',
+];
+
+const afterSurgery = [
+  'Some swelling and mild discomfort for 2 to 3 days is normal.',
+  'Many patients resume normal activities the next day, depending on the procedure and individual recovery.',
+  'Sutures are typically removed after 1 week.',
+  'Follow-up radiographs are taken at intervals to confirm healing.',
+];
+
+const referralReasons = [
+  'Periapical pathology persists or enlarges after adequate orthograde treatment or retreatment.',
+  'Orthograde retreatment is not possible due to a post, calcification, or restorative risk.',
+  'Non-endodontic pathology cannot be excluded without a surgical biopsy and histopathology.',
+  'A symptomatic overfill or separated instrument at the apex is not retrievable by orthograde means.',
+  'The patient presents with a draining sinus tract associated with a previously treated tooth, and retreatment has already been attempted.',
+];
+
+const faqs = [
+  { q: 'Is apical surgery painful?', a: 'Local anaesthesia is used throughout the procedure, and sedation may be available for patients with dental anxiety. Post-operative discomfort is typically mild and is often managed with over-the-counter medication, depending on the case.' },
+  { q: 'How long does healing take?', a: 'Soft tissue healing often occurs within 1 to 2 weeks. Radiographic evidence of bone healing may appear within the first several months, while complete radiographic resolution can take longer, depending on the case.' },
+  { q: 'Will the referring dentist receive a report?', a: 'Yes. A clinical summary with surgical findings, post-operative radiographs, histopathology results when applicable, and follow-up recommendations is sent to the referring office after each appointment.' },
+];
+
+const anatomyFigures = [
+  {
+    src: '/images/treatments/apical-surgery/apical-surgery-maxillary-sinus-diagram.webp',
+    alt: 'Cross-section illustration of an upper molar root apex close to the maxillary sinus floor',
+    caption: 'Maxillary sinus',
+    text: 'In maxillary posterior teeth, root apices may be close to or extend into the maxillary sinus. CBCT imaging assesses the distance between the root apex and sinus floor, identifies sinus membrane thickening that may suggest sinus involvement, and supports surgical planning aimed at minimizing the risk of sinus perforation. Cases where the apex extends into the sinus may still be managed surgically if the anatomy allows safe access.',
+  },
+  {
+    src: '/images/treatments/apical-surgery/apical-surgery-inferior-alveolar-nerve-diagram.webp',
+    alt: 'Cross-section illustration of a lower molar root apex near the inferior alveolar nerve canal',
+    caption: 'Inferior alveolar nerve',
+    text: 'In mandibular posterior teeth, the proximity of root apices to the inferior alveolar canal is an important surgical consideration. CBCT provides three-dimensional localization of the canal relative to the apex and helps assess surgical risk before consent. This information is included in the pre-surgical report sent to the referring office.',
+  },
+];
+
+const FIRST_PY = 'pt-16 pb-8 lg:pt-20 lg:pb-10';
+const ROW_PY = 'py-8 lg:py-10';
+---
+
+<BaseLayout
+  title="Apical surgery, London Ontario"
+  description="Specialist apical surgery at 562 endodontics, London, Ontario. Microscope-guided root-end resection and retrograde obturation. Same-week referrals accepted."
+>
+  <PageHero title="Apical Surgery" image="/images/clinic/562-endodontics-london-ontario-treatment-room-overhead.webp" />
+
+  <!-- S2: Intro -->
+  <SplitSection imageSrc="/images/clinic/562-endodontics-london-ontario-endodontic-treatment-patient-and-assistants.webp" imageAlt="Endodontist and assistant performing a procedure under the operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-[4/3]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Apical surgery in London, Ontario</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      If symptoms or periapical pathology persist after root canal treatment and cannot be resolved with orthograde
+      retreatment, apical surgery offers a reliable way to preserve the tooth.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      At 562 endodontics, apical surgery is performed with an operating microscope, ultrasonic root-end preparation,
+      and biocompatible retrograde filling materials. We welcome referrals from dentists throughout London and
+      Middlesex County for endodontic evaluation and treatment.
+    </p>
+    <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-[#7F6E5D] px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
+      Contact Us <span aria-hidden="true">→</span>
+    </a>
+  </SplitSection>
+
+  <!-- S3: Retratamiento vs. cirugía -->
+  <section class="bg-[#E3DBD4] py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">When apical surgery is indicated: retreatment vs. surgery</h2>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        Apical surgery is not the initial treatment for a failing root canal. The choice between orthograde
+        retreatment and surgery depends on the cause of failure, the quality of the coronal restoration, and root and
+        bone anatomy. The table below summarizes the clinical criteria for this decision.
+      </p>
+      <div class="mt-8">
+        <DataTable headers={indicationTable.headers} rows={indicationTable.rows} />
+      </div>
+      <p class="mt-8 text-lg text-brand-ink/80">
+        If it is unclear whether retreatment or apical surgery is appropriate, we can arrange a pre-referral phone
+        consultation or shared CBCT review before making a recommendation.
+      </p>
+      <a href="/endodontic-treatments/endodontic-retreatment/" class="mt-4 inline-flex items-center gap-1 font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust hover:underline">
+        Learn about endodontic retreatment <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- S4: Guía del paciente -->
+  <SplitSection imageSrc="/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-treatment-room.webp" imageAlt="Dr. Jacqueline Lopez in the treatment room beside the operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-[4/3]" py={FIRST_PY}>
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Patient guide: What is apical surgery?</h2>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      Apical surgery, or apicoectomy, is a minor procedure performed when a root canal or retreatment does not resolve
+      an infection at the root tip.
+    </p>
+  </SplitSection>
+
+  <ImageRow imageSrc="/images/treatments/apical-surgery/apical-surgery-root-end-resection-diagram.webp" imageAlt="Cross-section illustration of a root tip after root-end resection with a small retrograde filling" imageAspect="aspect-square" py={ROW_PY}>
+    <h3 class="font-heading text-2xl font-semibold text-brand-rust">What the procedure involves:</h3>
+    <StepList items={procedureSteps} />
+    <p class="mt-5 text-lg text-brand-ink/80">
+      The procedure is usually completed under local anesthesia, with sedation available if needed.
+    </p>
+  </ImageRow>
+
+  <ImageRow imageSrc="/images/treatments/apical-surgery/apical-surgery-healing-diagram.webp" imageAlt="Cross-section illustration of healed bone around a sealed root tip after apical surgery" imageAspect="aspect-square" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
+    <h3 class="font-heading text-2xl font-semibold text-brand-rust">What to expect after surgery:</h3>
+    <ul class="mt-4 list-disc space-y-2 pl-5 text-lg text-brand-ink/80">
+      {afterSurgery.map((item) => <li>{item}</li>)}
+    </ul>
+    <p class="mt-5 text-lg text-brand-ink/80">
+      Apical surgery is an alternative for teeth with persistent infections when other treatments are no longer suitable.
+    </p>
+  </ImageRow>
+
+  <!-- S5: Doctors' Guide -->
+  <SplitSection imageSrc="/images/clinic/562-endodontics-london-ontario-endodontist-treating-patient-with-microscope.webp" imageAlt="Endodontist working with an operating microscope" imagePosition="right" bg="bg-white" imageAspect="aspect-square" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
+    <p class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Doctors' Guide:</p>
+    <h3 class="mt-2 font-heading text-2xl font-semibold text-brand-rust">Clinical Protocol and Co-Management</h3>
+    <h3 class="mt-1 font-heading text-2xl font-semibold text-brand-rust">When to refer for apical surgery</h3>
+    <p class="mt-5 text-lg font-medium text-brand-ink">Refer patients to 562 endodontics if any of the following conditions apply:</p>
+    <ul class="mt-3 list-disc space-y-2 pl-5 text-lg text-brand-ink/80">
+      {referralReasons.map((reason) => <li>{reason}</li>)}
+    </ul>
+  </SplitSection>
+
+  <!-- S6: Protocolo quirúrgico -->
+  <SplitSection imageSrc="/images/treatments/apical-surgery/apical-surgery-microsurgical-instruments.webp" imageAlt="AI-generated support image of a sterile microsurgical instrument tray in a dental treatment room" imagePosition="right" bg="bg-[#E3DBD4]" imageAspect="aspect-[4/3]">
+    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Surgical Protocol at 562 endodontics</h2>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      Each apical surgery case begins with a consultation. Our team reviews referring radiographs and, if needed,
+      obtains a CBCT scan to assess root anatomy, bone volume, periapical status, and proximity to anatomical
+      structures. We discuss treatment options with the patient before the procedure. A written report is sent to
+      your office after each appointment.
+    </p>
+    <p class="mt-4 text-lg text-brand-ink/80">
+      The procedure is performed with an operating microscope. Root-end resection typically removes about 3 mm of
+      the apex to address the apical delta and lateral canals. Root-end preparation is completed with ultrasonic tips
+      under magnification, and retrograde obturation is performed with a biocompatible material.
+    </p>
+  </SplitSection>
+
+  <!-- S6b: Riesgo anatómico e histopatología -->
+  <section class="bg-white py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Anatomical Risk Management: Maxillary Sinus and Inferior Alveolar Nerve</h2>
+      <p class="mt-4 text-lg text-brand-ink/80">
+        Two anatomical structures require special pre-surgical planning in upper posterior and lower molar cases.
+      </p>
+
+      <div class="mt-10 grid gap-10 md:grid-cols-2 md:gap-8" data-reveal-each>
+        {anatomyFigures.map((fig) => (
+          <figure>
+            <img src={fig.src} alt={fig.alt} class="mx-auto aspect-[4/5] w-full max-w-sm rounded-[20px] object-cover shadow-md" loading="lazy" />
+            <figcaption class="mt-3 text-center text-lg font-semibold text-brand-rust">{fig.caption}</figcaption>
+            <p class="mt-3 text-lg text-brand-ink/80">{fig.text}</p>
+          </figure>
+        ))}
+      </div>
+      <p class="mt-6 text-lg text-brand-ink/80">
+        Educational illustrations, not to scale. They are not patient radiographs or diagnostic scans.
+      </p>
+
+      <h3 class="mt-12 font-heading text-2xl font-semibold text-brand-rust">Histopathological Analysis</h3>
+      <p class="mt-3 text-lg text-brand-ink/80">
+        Periapical tissue obtained during apical surgery is submitted for histopathological analysis when indicated. At
+        562 endodontics, this is standard protocol for unusually large lesions, atypical radiographic features, or
+        cases where non-endodontic pathology cannot be clinically excluded. Findings are communicated to the referring
+        office and included in the post-operative report.
+      </p>
+    </div>
+  </section>
+
+  <!-- S7: Pronóstico y seguimiento -->
+  <section class="bg-[#E3DBD4] py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Prognosis by clinical scenario</h2>
+      <div class="mt-8">
+        <DataTable headers={prognosisTable.headers} rows={prognosisTable.rows} />
+      </div>
+
+      <h3 class="mt-10 font-heading text-2xl font-semibold text-brand-rust">Post-operative co-management</h3>
+      <p class="mt-3 text-lg text-brand-ink/80">
+        Suture removal is usually performed at 562 endodontics about one week after surgery. Radiographic follow-up at
+        6 and 12 months is recommended to assess periapical healing. Follow-up timing is coordinated with the
+        referring office, and findings are communicated after each visit.
+      </p>
+    </div>
+  </section>
+
+  <!-- S8: FAQ -->
+  <section class="bg-[#E3DBD4]/50 py-16 lg:py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="text-center font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Frequently asked questions</h2>
+      <div class="mt-10">
+        <TreatmentFaq items={faqs} />
+      </div>
+    </div>
+  </section>
+
+  <ContactCta />
+</BaseLayout>
