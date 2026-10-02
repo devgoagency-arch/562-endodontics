@@ -8,6 +8,7 @@ import SplitSection from '../../components/treatments/SplitSection.astro';
 import ImageRow from '../../components/treatments/ImageRow.astro';
 import DataTable from '../../components/treatments/DataTable.astro';
 import TreatmentFaq from '../../components/treatments/TreatmentFaq.astro';
+import ClinicalReview from '../../components/treatments/ClinicalReview.astro';
 import ContactCta from '../../components/ContactCta.astro';
 
 const referralTable = {
@@ -71,6 +72,7 @@ const ROW_PY = 'py-8 lg:py-10';
     <a href="#form" class="mt-7 inline-flex items-center gap-2 rounded-[20px_20px_3px_3px] bg-[#7F6E5D] px-7 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90">
       Contact Us <span aria-hidden="true">→</span>
     </a>
+    <ClinicalReview slug="root-canal" name="Root Canal Treatment" />
   </SplitSection>
 
   <!-- S3: Cuándo referir -->

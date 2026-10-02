@@ -1,0 +1,47 @@
+---
+// Línea "Last updated" (y "Clinically reviewed by" cuando exista) de una página de
+// tratamiento, más el JSON-LD MedicalWebPage con las mismas fechas. Los datos salen de
+// src/data/treatmentReviews.ts.
+import { treatmentReviews } from '../../data/treatmentReviews';
+import { doctors } from '../../data/doctors';
+
+interface Props {
+  slug: string;
+  name: string;
+}
+const { slug, name } = Astro.props;
+const review = treatmentReviews[slug];
+
+const formatDate = (iso: string) =>
+  new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-CA', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' });
+
+const reviewer = review?.reviewedBy ? doctors.find((d) => d.id === review.reviewedBy) : undefined;
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+const schema = review && {
+  '@context': 'https://schema.org',
+  '@type': 'MedicalWebPage',
+  '@id': `${pageUrl}#webpage`,
+  url: pageUrl,
+  name,
+  dateModified: review.updated,
+  publisher: { '@id': 'https://562endodontics.com/#clinic' },
+  ...(reviewer && review.reviewedOn
+    ? { lastReviewed: review.reviewedOn, reviewedBy: { '@id': `https://562endodontics.com/about-us/#${reviewer.id}` } }
+    : {}),
+};
+---
+
+{review && (
+  <>
+    <p class="mt-6 text-lg text-brand-ink/70">
+      Last updated: <time datetime={review.updated}>{formatDate(review.updated)}</time>
+      {reviewer && review.reviewedOn && (
+        <>
+          <span aria-hidden="true"> · </span>Clinically reviewed by {reviewer.name} on <time datetime={review.reviewedOn}>{formatDate(review.reviewedOn)}</time>
+        </>
+      )}
+    </p>
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </>
+)}
