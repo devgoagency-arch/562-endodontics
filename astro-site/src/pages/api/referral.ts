@@ -1,10 +1,10 @@
 import type { APIRoute } from 'astro';
+import { CaptchaNotConfiguredError, TURNSTILE_FIELD, clientIp, verifyTurnstile } from '../../lib/turnstile';
+import { MAIL_FROM, MailNotConfiguredError, escapeHtml, isEmail, sendMail } from '../../lib/mail';
 
 // Se renderiza on-demand (Vercel Function), no en build time — un formulario
 // con datos de paciente nunca debe quedar pre-renderizado como HTML estático.
 export const prerender = false;
-
-const esc = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 // Nombres alineados al formulario original (JetFormBuilder) — ver auditoría
 // del cliente. `refering_doctor[]` (checkboxes) queda fuera a propósito: en
@@ -22,15 +22,11 @@ const json = (body: Record<string, unknown>, status: number) =>
 /**
  * DECISIONES PENDIENTES ANTES DE PRODUCCIÓN (no técnicas, de negocio/cumplimiento):
  *
- * 1. Almacenamiento de adjuntos (radiografías): esto es PHI bajo PIPEDA.
- *    Los Functions de Vercel tienen límite de tamaño de payload (~4.5 MB en
- *    plan Hobby) — el formulario actual permite hasta 10 MB por archivo, así
- *    que archivos grandes deben subirse directo a almacenamiento (ej. S3/R2
- *    con URL pre-firmada) desde el navegador, no pasar por esta función.
- *    Hasta que se decida, los adjuntos se validan pero NO se envían.
- * 2. Proveedor de email transaccional (Resend, Postmark, SES) — falta la
- *    API key y decidir si el hosting de datos debe ser en Canadá.
- * 3. Retención: ¿cuánto tiempo se guardan los adjuntos? ¿quién tiene acceso?
+ * 1. Adjuntos (radiografías): son datos de salud (PHI). Los Functions de Vercel limitan el
+ *    tamaño del payload (~4.5 MB en el plan Hobby) y el formulario permite hasta 10 MB por
+ *    archivo, así que los archivos grandes deben subirse directo a un almacenamiento (ej.
+ *    S3/R2 con URL pre-firmada). Hasta que se decida, los adjuntos se validan pero NO se envían.
+ * 2. Retención: ¿cuánto tiempo se guardan los adjuntos? ¿quién tiene acceso?
  */
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.formData();
@@ -44,9 +40,19 @@ export const POST: APIRoute = async ({ request }) => {
 
   const referral: Record<string, string> = Object.fromEntries(
     [...new Set(formData.keys())]
-      .filter((key) => key !== 'media_field[]' && key !== 'website')
+      .filter((key) => key !== 'media_field[]' && key !== 'website' && key !== TURNSTILE_FIELD)
       .map((key) => [key, formData.getAll(key).join(', ')])
   );
+  if (!isEmail(referral._email)) return json({ error: 'Invalid email', missing: ['_email'] }, 400);
+
+  // Captcha (Cloudflare Turnstile): se verifica antes de mandar cualquier correo.
+  try {
+    const token = String(formData.get(TURNSTILE_FIELD) ?? '');
+    if (!(await verifyTurnstile(token, clientIp(request)))) return json({ error: 'Captcha verification failed' }, 400);
+  } catch (error) {
+    console.error('Captcha verification error', error);
+    return json({ error: error instanceof CaptchaNotConfiguredError ? 'Captcha not configured' : 'Captcha verification unavailable' }, 500);
+  }
 
   const attachments = formData.getAll('media_field[]').filter((f): f is File => f instanceof File && f.size > 0);
   const oversized = attachments.filter((f) => f.size > 10 * 1024 * 1024);
@@ -54,36 +60,42 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: 'File exceeds 10 MB limit', files: oversized.map((f) => f.name) }, 400);
   }
 
-  // Sin proveedor configurado no se finge éxito: el formulario muestra el error
-  // con el teléfono de la clínica en vez de decirle al dentista que todo salió bien.
-  const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
-  if (!RESEND_API_KEY) {
-    console.error('RESEND_API_KEY is not configured');
-    return json({ error: 'Email provider not configured' }, 500);
+  const patient = `${referral.first_name} ${referral.last_name}`;
+  const table = renderTable(referral);
+
+  // Aviso a la clínica. Si falla, no se finge éxito: el formulario muestra el error con
+  // el teléfono de la clínica en vez de decirle al dentista que todo salió bien.
+  try {
+    await sendMail({
+      to: [MAIL_FROM],
+      replyTo: referral._email,
+      subject: `New referral: ${patient}`,
+      html: `<p>New referral from Dr. ${escapeHtml(referral.doctor_name)} ${escapeHtml(referral.doctor_last_name)}.</p>${table}`,
+    });
+  } catch (error) {
+    console.error('Failed to send referral email', error);
+    return json({ error: error instanceof MailNotConfiguredError ? 'Email provider not configured' : 'Failed to send email' }, 500);
   }
 
-  const resendResponse = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: 'referrals@562endodontics.com',
-      to: [referral._email, 'info@562endodontics.com'],
-      subject: `New referral: ${referral.first_name} ${referral.last_name}`,
-      html: renderReferralEmail(referral),
-    }),
-  });
-
-  if (!resendResponse.ok) {
-    console.error('Failed to send referral email via Resend', await resendResponse.text());
-    return json({ error: 'Failed to send email' }, 500);
+  // Copia para el doctor que refiere (la página promete "a copy of the referral form").
+  // El remitente es siempre la clínica; si esta copia falla, la clínica ya tiene el referral.
+  try {
+    await sendMail({
+      to: [referral._email],
+      replyTo: MAIL_FROM,
+      subject: `Copy of your referral to 562 endodontics: ${patient}`,
+      html: `<p>Thank you for your referral. This is a copy for your records; our team will be in touch to confirm the appointment.</p>${table}`,
+    });
+  } catch (error) {
+    console.error('Failed to send referral copy to the referring doctor', error);
   }
 
   return json({ ok: true }, 200);
 };
 
-function renderReferralEmail(referral: Record<string, string>): string {
+function renderTable(referral: Record<string, string>): string {
   const rows = Object.entries(referral)
-    .map(([key, value]) => `<tr><td style="padding:4px 8px;font-weight:600;">${esc(key)}</td><td style="padding:4px 8px;">${esc(value)}</td></tr>`)
+    .map(([key, value]) => `<tr><td style="padding:4px 8px;font-weight:600;">${escapeHtml(key)}</td><td style="padding:4px 8px;">${escapeHtml(value)}</td></tr>`)
     .join('');
   return `<table>${rows}</table>`;
 }

@@ -1,67 +1,57 @@
 import type { APIRoute } from 'astro';
+import { CaptchaNotConfiguredError, TURNSTILE_FIELD, clientIp, verifyTurnstile } from '../../lib/turnstile';
+import { MAIL_FROM, MailNotConfiguredError, escapeHtml, isEmail, sendMail } from '../../lib/mail';
 
-// Formulario de contacto general (ContactCta.astro) — mismo patrón que
-// /api/referral: valida server-side y arma el email; el proveedor real de
-// envío queda pendiente de la misma decisión de negocio (ver referral.ts).
+// Formulario de contacto general (ContactCta.astro) — mismo patrón que /api/referral:
+// valida server-side y envía el aviso a la clínica desde su Microsoft 365 (ver lib/mail.ts).
 export const prerender = false;
 
-const esc = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
 const REQUIRED_FIELDS = ['first_name', 'last_name', 'phone', 'email'];
+
+const json = (body: Record<string, unknown>, status: number) =>
+  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.formData();
 
   // Campo trampa anti-spam: los humanos no lo ven; si viene lleno es un bot.
   // Se responde OK sin enviar nada para no darle pistas.
-  if (formData.get('website')) {
-    return new Response(JSON.stringify({ ok: true }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-  }
+  if (formData.get('website')) return json({ ok: true }, 200);
 
   const missing = REQUIRED_FIELDS.filter((field) => !formData.get(field));
-  if (missing.length > 0) {
-    return new Response(JSON.stringify({ error: 'Missing required fields', missing }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
+  if (missing.length > 0) return json({ error: 'Missing required fields', missing }, 400);
 
   const contact: Record<string, string> = Object.fromEntries(
     [...new Set(formData.keys())]
-      .filter((key) => key !== 'website')
+      .filter((key) => key !== 'website' && key !== TURNSTILE_FIELD)
       .map((key) => [key, formData.getAll(key).join(', ')])
   );
+  if (!isEmail(contact.email)) return json({ error: 'Invalid email', missing: ['email'] }, 400);
 
-  const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
-  if (!RESEND_API_KEY) {
-    console.error('RESEND_API_KEY is not configured');
-    return new Response(JSON.stringify({ error: 'Email provider not configured' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  // Captcha (Cloudflare Turnstile): se verifica antes de mandar cualquier correo.
+  try {
+    const token = String(formData.get(TURNSTILE_FIELD) ?? '');
+    if (!(await verifyTurnstile(token, clientIp(request)))) return json({ error: 'Captcha verification failed' }, 400);
+  } catch (error) {
+    console.error('Captcha verification error', error);
+    return json({ error: error instanceof CaptchaNotConfiguredError ? 'Captcha not configured' : 'Captcha verification unavailable' }, 500);
   }
 
-  const resendResponse = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: 'contact@562endodontics.com',
-      to: ['info@562endodontics.com'],
+  const rows = Object.entries(contact)
+    .map(([k, v]) => `<tr><td style="font-weight:600;padding:4px 8px;">${escapeHtml(k)}</td><td style="padding:4px 8px;">${escapeHtml(v)}</td></tr>`)
+    .join('');
+
+  try {
+    await sendMail({
+      to: [MAIL_FROM],
+      replyTo: contact.email,
       subject: `New contact form message from ${contact.first_name} ${contact.last_name}`,
-      html: `<table>${Object.entries(contact).map(([k, v]) => `<tr><td style="font-weight:600;padding:4px 8px;">${esc(k)}</td><td style="padding:4px 8px;">${esc(v)}</td></tr>`).join('')}</table>`,
-    }),
-  });
-
-  if (!resendResponse.ok) {
-    console.error('Failed to send email via Resend', await resendResponse.text());
-    return new Response(JSON.stringify({ error: 'Failed to send email' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
+      html: `<table>${rows}</table>`,
     });
+  } catch (error) {
+    console.error('Failed to send contact email', error);
+    return json({ error: error instanceof MailNotConfiguredError ? 'Email provider not configured' : 'Failed to send email' }, 500);
   }
 
-  return new Response(JSON.stringify({ ok: true }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return json({ ok: true }, 200);
 };

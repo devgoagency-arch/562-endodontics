@@ -5,8 +5,7 @@
 import { doctors } from './doctors';
 
 export const hours = {
-  weekday: 'Mon, Tue, Thu & Fri 8:30am–5pm',
-  wednesday: 'Wed 8:30am–4pm',
+  weekday: 'Mon - Fri 8:30 am to 5:00 pm',
 };
 
 export const businessSchema = {
@@ -38,8 +37,7 @@ export const businessSchema = {
   geo: { '@type': 'GeoCoordinates', latitude: 42.9903484, longitude: -81.2444725 },
   hasMap: 'https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9',
   openingHoursSpecification: [
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Thursday', 'Friday'], opens: '08:30', closes: '17:00' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Wednesday', opens: '08:30', closes: '16:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:30', closes: '17:00' },
   ],
   areaServed: ['London, Ontario', 'Middlesex County, Ontario'],
   sameAs: [

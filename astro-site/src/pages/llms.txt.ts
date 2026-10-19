@@ -37,7 +37,7 @@ export const GET: APIRoute = ({ site }) => {
 - Address: ${a.streetAddress}, ${a.addressLocality}, ${a.addressRegion} ${a.postalCode}, Canada (patient parking behind the building, marked "DENTAL")
 - Phone: (519) 601-3636
 - Email: ${businessSchema.email}
-- Hours: ${hours.weekday}; ${hours.wednesday}
+- Hours: ${hours.weekday}
 - Area served: ${businessSchema.areaServed.join('; ')}
 
 ## Endodontic treatments

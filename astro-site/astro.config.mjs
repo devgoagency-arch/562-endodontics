@@ -13,9 +13,7 @@ export default defineConfig({
   // URLs del WordPress actual cuyo slug cambió en el sitio nuevo (301 = permanente,
   // conserva el posicionamiento). El resto de slugs coincide con los originales.
   redirects: {
-    '/high-tech-facility-2-2': { status: 301, destination: '/about-us/' },
     '/high-tech-facility-2-2/': { status: 301, destination: '/about-us/' },
-    '/high-tech-facility-2': { status: 301, destination: '/our-clinic/' },
     '/high-tech-facility-2/': { status: 301, destination: '/our-clinic/' },
   },
   adapter: vercel({

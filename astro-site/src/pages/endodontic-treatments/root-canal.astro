@@ -57,7 +57,7 @@ const ROW_PY = 'py-8 lg:py-10';
   title="Root Canal Treatment"
   description="Root canal treatment in London, Ontario with an operating microscope, in-house CBCT imaging and advanced disinfection. Referrals and patients welcome."
 >
-  <PageHero title="Root Canal Treatment" image={`/images/team/562-endodontics-london-ontario-endodontist-and-assistants-with-microscope.webp`} />
+  <PageHero title="Root Canal Treatment" image="/images/clinic/562-endodontics-london-ontario-endodontist-treating-patient-with-microscope.webp" position="object-[50%_66%]" />
 
   <!-- S2: Intro -->
   <SplitSection imageSrc={`/images/technology/cbct-scan-patient-positioned.webp`} imageAlt="562 endodontics root canal treatment in London Ontario" imagePosition="right" bg="bg-white" imageAspect="aspect-[1080/1166]">
@@ -98,27 +98,42 @@ const ROW_PY = 'py-8 lg:py-10';
   ))}
 
   <!-- S4.2: Conservar el diente natural -->
-  <SplitSection imageSrc={`/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-tooth-model.webp`} imageAlt="Dr. Jacqueline Lopez holding a tooth model" imagePosition="right" bg="bg-white" imageAspect="aspect-square" py="pt-8 pb-16 lg:pt-10 lg:pb-20">
-    <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Root Canal Treatment and Saving Your Natural Tooth</h2>
-    <p class="mt-5 text-lg text-brand-ink/80">
-      Whenever possible, keeping your natural tooth is often a preferred option. Root canal treatment removes infection
-      and addresses the source of pain, allowing your tooth to remain functional.
-    </p>
-    <p class="mt-4 text-lg text-brand-ink/80">
-      Natural teeth are supported by a ligament that helps absorb pressure and provides feedback when you bite. This is
-      not replicated by an implant or other replacement.
-    </p>
-    <p class="mt-4 text-lg text-brand-ink/80">
-      When a tooth is healthy enough to be restored, endodontic treatment is generally considered an appropriate
-      approach. Extraction is considered when a tooth is too damaged or broken down to be saved. Replacing a missing
-      tooth with an implant is a viable option in those situations, but it involves surgery, a healing period, and
-      additional costs.
-    </p>
-    <p class="mt-4 text-lg text-brand-ink/80">
-      We take the time to assess each tooth carefully and discuss all available options with you, so you can make an
-      informed decision about your care.
-    </p>
-  </SplitSection>
+  <section class="bg-white pb-16 pt-8 lg:pb-20 lg:pt-10">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-6 md:grid-cols-5">
+      <div class="md:col-span-3">
+        <h2 class="font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Root Canal Treatment and Saving Your Natural Tooth</h2>
+        <p class="mt-5 text-lg text-brand-ink/80">
+          Whenever possible, keeping your natural tooth is often a preferred option. Root canal treatment removes infection
+          and addresses the source of pain, allowing your tooth to remain functional.
+        </p>
+        <p class="mt-4 text-lg text-brand-ink/80">
+          Natural teeth are supported by a ligament that helps absorb pressure and provides feedback when you bite. This is
+          not replicated by an implant or other replacement.
+        </p>
+        <p class="mt-4 text-lg text-brand-ink/80">
+          When a tooth is healthy enough to be restored, endodontic treatment is generally considered an appropriate
+          approach. Extraction is considered when a tooth is too damaged or broken down to be saved. Replacing a missing
+          tooth with an implant is a viable option in those situations, but it involves surgery, a healing period, and
+          additional costs.
+        </p>
+        <p class="mt-4 text-lg text-brand-ink/80">
+          We take the time to assess each tooth carefully and discuss all available options with you, so you can make an
+          informed decision about your care.
+        </p>
+      </div>
+      <div class="flex flex-col gap-5 md:col-span-2">
+        <img src="/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-tooth-model.webp" alt="Dr. Jacqueline Lopez holding a tooth model" class="aspect-[4/3] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+        <figure>
+          <img src="/images/treatments/root-canal/root-canal-before-during-after-diagram.webp" alt="Cross-section illustrations of the same molar before root canal treatment with inflamed pulp, during treatment with a fine file in the canal, and after treatment with the canals filled and sealed" class="aspect-[2/1] w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+          <figcaption class="mt-3 grid grid-cols-3 gap-2 text-center font-heading text-lg font-semibold text-brand-rust">
+            <span>Before</span>
+            <span>During</span>
+            <span>After</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
 
   <!-- S5: Guía de la visita -->
   <section class="bg-[#E3DBD4] py-16 lg:py-20">

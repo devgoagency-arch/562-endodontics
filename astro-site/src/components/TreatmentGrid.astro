@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  heading?: string;
+  intro?: string;
+}
+const { heading, intro } = Astro.props;
+
+// Los 5 tratamientos del sitio (los que tienen página). Íconos del set de
+// public/icons; "Dentist-Chair" y "broken-tooth" están confirmados contra el
+// original, el resto es la asignación más cercana del mismo set.
+const treatments = [
+  { slug: 'root-canal', title: 'Root Canal Treatment', summary: 'Removing infected pulp to relieve pain and save your natural tooth.', icon: 'nerve' },
+  { slug: 'endodontic-retreatment', title: 'Endodontic Retreatment', summary: "A second chance for a tooth when an earlier root canal hasn't healed properly.", icon: 'tools' },
+  { slug: 'apical-surgery', title: 'Apical Surgery', summary: "A precise surgical option when conventional retreatment isn't enough.", icon: 'Dentist-Chair' },
+  { slug: 'cracked-teeth', title: 'Cracked Teeth', summary: 'Diagnosis and treatment to save a fractured tooth whenever possible.', icon: 'broken-tooth' },
+  { slug: 'dental-trauma', title: 'Dental Trauma', summary: 'Prompt care for injured teeth to maximize the chance of long-term survival.', icon: 'Tooth' },
+];
+---
+
+<section class="bg-[#f2eeea] py-24">
+  <div class="mx-auto max-w-6xl px-6">
+    {heading && <h2 class="reveal text-center font-heading text-4xl font-light leading-tight text-brand-ink sm:text-[43px]">{heading}</h2>}
+    {intro && <p class="reveal mx-auto mt-4 max-w-2xl text-center text-lg text-brand-ink/70">{intro}</p>}
+    <div class="mt-12 flex flex-wrap justify-center gap-6">
+      {treatments.map((t) => (
+        <a href={`/endodontic-treatments/${t.slug}/`} class="reveal group w-full rounded-2xl border border-stone-200 p-7 !transition-[background-color,border-color,box-shadow,opacity,transform] !duration-300 hover:border-brand-rust hover:bg-brand-rust hover:shadow-lg sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]">
+          <Icon name={t.icon} class="h-12 w-12 text-brand-rust transition duration-300 group-hover:scale-110 group-hover:text-white" />
+          <h3 class="mt-4 font-heading text-lg font-semibold text-brand-ink transition-colors duration-300 group-hover:text-white">{t.title}</h3>
+          <p class="mt-2 text-base text-brand-ink/70 transition-colors duration-300 group-hover:text-white/85">{t.summary}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

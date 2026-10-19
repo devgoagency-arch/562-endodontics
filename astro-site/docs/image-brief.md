@@ -186,6 +186,25 @@ Portrait, ratio about 0.93.
 
 ## 4b. Páginas nuevas: Apical Surgery (AS) y Endodontic Retreatment (ER)
 
+**Cambios del 13 oct 2026 (revisión de la Dra.):** AS-03 y AS-04 se retiraron de Apical Surgery (se quitó la sección de riesgo anatómico) y sus archivos se borraron del sitio; ER-01 se sustituyó por la foto real del microscopio en Retreatment y su archivo también se borró. Los originales siguen en la carpeta de Codex. Nueva petición: HUB-01 (abajo).
+
+### HUB-01 · Megamenú, tarjeta Root Canal Treatment (integrada el 19 oct 2026)
+- La Dra. pidió cambiar la foto del microscopio **del megamenú**, no la de dentro del hub. Se usa `root-canal-treated-tooth-diagram.webp` (variante 3 de Codex, 1280 × 726; en la tarjeta se recorta al centro). La versión "durante y después" quedó en `_image-work/RC-DURING-AFTER/`, sin usar.
+- **Archivo nuevo:** `public/images/treatments/root-canal/root-canal-treated-tooth-diagram.webp`
+- **Dónde:** foto grande junto a "Explore our Endodontic Treatments", en lugar de la foto del microscopio (~640 × 363 px en pantalla).
+- **Proporción / entregar:** horizontal 16:9 → **1280 × 726**. Diente centrado, con margen amplio a los lados (la imagen se recorta con `object-cover`).
+- **Debe mostrar:** un diente con el tratamiento de conductos **terminado**: conductos obturados hasta el ápice con material sólido de tono crema-gris, una restauración o corona pequeña encima, hueso sano y sin lesión, encía en coral suave.
+- **Evitar:** limas, flechas, marcas rojas de problema, lesiones, texto.
+- **Prompt (después del bloque STYLE):**
+```
+Side cross-section of a single lower molar with a completed root canal treatment, standing
+in gum and bone. Both root canals are filled all the way to the root tips with a solid,
+smooth cream-grey filling material; a small neat restoration seals the top of the crown.
+Healthy surrounding bone, no lesion, no instruments, no arrows, no red markers. Calm,
+reassuring, educational. Tooth centered with wide empty margins, landscape 16:9.
+```
+- **Alt sugerido:** `Cross-section illustration of a molar after root canal treatment with the canals filled and sealed`
+
 **Estado (2 oct 2026):** AS-01 a AS-04, ER-01, ER-02, PH-01 y PH-02 ya están generadas por Codex e integradas en las dos páginas (WebP calidad 82). PH-03 y PH-04 siguen siendo fotos reales existentes. Pendiente: validación clínica de la Dra. Las propuestas RC-01, RC-02 y RC-03 de Codex están en `_image-work/` y no se han publicado: reemplazarían fotos que ya están en Root Canal.
 
 Mismo estilo (bloque STYLE de la sección 3), mismo flujo (sección 2) y misma revisión clínica del doctor.

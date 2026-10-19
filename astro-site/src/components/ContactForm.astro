@@ -4,6 +4,8 @@
 // el mismo lugar. Incluye "Reason for Appointment" y un campo trampa anti-spam.
 // tone="dark" es para usarlo sobre fondo rojo de marca (textos blancos, campos
 // blancos, botón blanco); "light" para fondos claros.
+import TurnstileField from './TurnstileField.astro';
+
 interface Props {
   id?: string;
   heading?: string;
@@ -89,6 +91,7 @@ const input = `w-full rounded-lg border bg-white px-4 py-2.5 text-base text-bran
   <textarea id={`${id}-message`} name="message" placeholder="Message" rows="4" class={input}></textarea>
 
   <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden" />
+  <TurnstileField />
 
   <label class={`flex items-start gap-2 text-sm ${styles.consent}`}>
     <input type="checkbox" name="consent" required class="mt-0.5" />
@@ -105,6 +108,11 @@ const input = `w-full rounded-lg border bg-white px-4 py-2.5 text-base text-bran
 </form>
 
 <script>
+  const w = window as unknown as {
+    turnstileReady?: (form: HTMLFormElement) => Promise<void>;
+    resetTurnstile?: (form: HTMLFormElement) => void;
+  };
+
   document.querySelectorAll<HTMLFormElement>('form[data-async-form]').forEach((form) => {
     const status = form.querySelector<HTMLParagraphElement>('.form-status');
     const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
@@ -117,6 +125,7 @@ const input = `w-full rounded-lg border bg-white px-4 py-2.5 text-base text-bran
       button.textContent = 'Sending...';
       status.classList.remove('hidden', ...okClass, ...errorClass);
       try {
+        await w.turnstileReady?.(form);
         const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
         if (!res.ok) throw new Error('Request failed');
         form.reset();
@@ -126,6 +135,7 @@ const input = `w-full rounded-lg border bg-white px-4 py-2.5 text-base text-bran
         status.textContent = 'Something went wrong sending your message. Please call us at (519) 601-3636.';
         status.classList.add(...errorClass);
       } finally {
+        w.resetTurnstile?.(form);
         button.disabled = false;
         button.textContent = 'Send';
       }

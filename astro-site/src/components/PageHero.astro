@@ -8,11 +8,12 @@ import SectionBackdrop from './SectionBackdrop.astro';
 interface Props {
   title: string;
   image: string;
+  position?: string; // clase object-position: qué franja de la foto queda visible
 }
-const { title, image } = Astro.props;
+const { title, image, position } = Astro.props;
 ---
 
 <section class="relative isolate flex min-h-[560px] items-center justify-center overflow-hidden bg-brand-rustDark py-28 text-center text-white">
-  <SectionBackdrop src={image} variant="hero" eager />
+  <SectionBackdrop src={image} variant="hero" position={position} eager />
   <h1 class="relative font-heading text-4xl font-light leading-tight sm:text-[43px]">{title}</h1>
 </section>

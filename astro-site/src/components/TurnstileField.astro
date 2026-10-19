@@ -1,0 +1,80 @@
+---
+// Campo de Cloudflare Turnstile para los formularios (contacto y referral). Va dentro del
+// <form>: el widget agrega por sí solo el token `cf-turnstile-response`, que viaja en el
+// FormData y verifica /api (ver lib/turnstile.ts).
+//
+// El script de Cloudflare NO se carga con la página: se pide cuando alguien interactúa con
+// el formulario (o justo antes de enviarlo), así que los visitantes que no lo usan no
+// descargan nada ni contactan a Cloudflare. `interaction-only`: el widget solo se muestra
+// si Cloudflare necesita que la persona haga algo.
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+{siteKey && <div data-turnstile data-sitekey={siteKey}></div>}
+
+<script>
+  type TurnstileApi = {
+    render: (el: HTMLElement, options: Record<string, unknown>) => string;
+    reset: (widgetId?: string) => void;
+  };
+  const w = window as unknown as {
+    turnstile?: TurnstileApi;
+    turnstileReady?: (form: HTMLFormElement) => Promise<void>;
+    resetTurnstile?: (form: HTMLFormElement) => void;
+  };
+
+  let apiLoaded: Promise<void> | undefined;
+  const loadApi = () =>
+    (apiLoaded ??= new Promise<void>((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Turnstile failed to load'));
+      document.head.appendChild(script);
+    }));
+
+  const widgetIds = new WeakMap<HTMLElement, string>();
+  const starters = new WeakMap<HTMLFormElement, () => void>();
+
+  document.querySelectorAll<HTMLElement>('[data-turnstile]').forEach((el) => {
+    const form = el.closest('form');
+    if (!form) return;
+
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      loadApi()
+        .then(() => {
+          const id = w.turnstile?.render(el, { sitekey: el.dataset.sitekey, appearance: 'interaction-only' });
+          if (id) widgetIds.set(el, id);
+        })
+        .catch(() => {
+          // Sin captcha el servidor rechaza el envío y el formulario muestra el error con el teléfono.
+        });
+    };
+    starters.set(form, start);
+    for (const type of ['focusin', 'pointerenter', 'touchstart']) {
+      form.addEventListener(type, start, { once: true, passive: true });
+    }
+  });
+
+  // Antes de enviar: arranca el widget si aún no lo hizo y espera (máx. 8 s) a que haya token.
+  w.turnstileReady = async (form) => {
+    const el = form.querySelector<HTMLElement>('[data-turnstile]');
+    if (!el) return;
+    starters.get(form)?.();
+    for (let waited = 0; waited < 8000; waited += 100) {
+      if (form.querySelector<HTMLInputElement>('input[name="cf-turnstile-response"]')?.value) return;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+  };
+
+  // Cada token sirve una sola vez: se renueva después de cada intento de envío.
+  w.resetTurnstile = (form) => {
+    const el = form.querySelector<HTMLElement>('[data-turnstile]');
+    const id = el && widgetIds.get(el);
+    if (id) w.turnstile?.reset(id);
+  };
+</script>

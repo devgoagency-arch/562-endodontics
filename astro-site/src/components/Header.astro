@@ -25,7 +25,7 @@ const menus: Record<string, { title: string; href: string; intro: string; image:
       title: 'Root Canal Treatment',
       href: '/endodontic-treatments/root-canal/',
       intro: 'Microscope-guided root canal treatment with in-house CBCT imaging for accurate diagnosis and planning.',
-      image: '/images/technology/dental-operating-microscope.webp',
+      image: '/images/treatments/root-canal/root-canal-treated-tooth-diagram.webp',
     },
     {
       title: 'Endodontic Retreatment',
@@ -83,7 +83,7 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
 
     <div class="flex items-center gap-8 text-base">
       <InfoItem label="Location" text="562 Waterloo st, London, ON, N6B 2P9" icon="pin" href="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9" />
-      <InfoItem label="Our Hours" text={`${hours.weekday}\n${hours.wednesday}`} icon="clock" />
+      <InfoItem label="Our Hours" text={hours.weekday} icon="clock" />
       <InfoItem label="Contact us" text="(519) 601-3636" icon="phone" href="tel:+15196013636" />
     </div>
   </div>

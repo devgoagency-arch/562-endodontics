@@ -5,7 +5,7 @@ import SectionBackdrop from '../components/SectionBackdrop.astro';
 import { businessSchema, hours } from '../data/business';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import ConsentEmbed from '../components/ConsentEmbed.astro';
-import TreatmentGrid from '../components/blocks/TreatmentGrid.astro';
+import TreatmentGrid from '../components/TreatmentGrid.astro';
 import TestimonialsSection from '../components/TestimonialsSection.astro';
 import ContactCta from '../components/ContactCta.astro';
 
@@ -52,8 +52,8 @@ const techItems = [
     id: 'quicksleeper',
     eyebrow: 'Quicksleeper 5',
     title: 'Electronic technique for profound and effective anesthesia',
-    youtube: 'https://www.youtube.com/embed/cx_-pYKf5KA',
-    poster: 'https://img.youtube.com/vi/cx_-pYKf5KA/hqdefault.jpg',
+    youtube: 'https://www.youtube.com/embed/72wAbcc792g',
+    poster: 'https://img.youtube.com/vi/72wAbcc792g/hqdefault.jpg',
     logo: '/images/logos/quicksleeper-5-logo.webp',
     logoAlt: 'QuickSleeper 5',
     logoClass: 'h-[78px]',
@@ -123,10 +123,12 @@ function cardColors(color: 'white' | 'rust', index: number) {
 
     <div class="relative mx-auto max-w-4xl px-6 pb-[calc(var(--card-h,500px)*0.333+2rem)] pt-24 text-center sm:py-24">
       <p class="reveal font-heading text-base font-semibold uppercase tracking-[0.2em] text-white/80">We are</p>
-      <h1 class="reveal mt-3 font-heading text-5xl font-light leading-tight sm:text-7xl">562 <span class="font-semibold">endodontics</span></h1>
-      <p class="reveal mt-5 text-xl text-white/90">The place dedicated to root canals.</p>
+      <h1 class="reveal mt-4 flex justify-center">
+        <img src="/logo/562-endodontics-center-gray.svg" alt="562 endodontics" width="821" height="407" class="h-auto w-60 brightness-0 invert sm:w-72" />
+      </h1>
+      <p class="reveal mt-4 text-xl text-white/90">The place dedicated to root canals.</p>
 
-      <div class="reveal mt-10 flex flex-wrap justify-center gap-4">
+      <div class="reveal mt-8 flex flex-wrap justify-center gap-4">
         <a href="#form" class="rounded-full bg-white px-9 py-3.5 font-heading text-base font-semibold text-brand-rust transition hover:bg-stone-100">
           Contact Us
         </a>
@@ -246,7 +248,9 @@ function cardColors(color: 'white' | 'rust', index: number) {
   <section class="bg-[#f2eeea] py-24">
     <div class="mx-auto max-w-5xl px-6 text-center">
     <p class="reveal font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">Who we are</p>
-    <h2 class="reveal mt-2 font-heading text-4xl font-light leading-tight text-brand-ink sm:text-[43px]">About <span class="font-semibold text-brand-rust">562</span></h2>
+    <h2 class="reveal mt-2 font-heading text-4xl font-light leading-tight text-brand-ink sm:text-[43px]"><span class="block">About</span>
+      <img src="/logo/562-endodontics-center-gray.svg" alt="562 endodontics" width="821" height="407" class="mx-auto mt-3 block h-[2.3em] w-auto" />
+    </h2>
     <p class="reveal mx-auto mt-5 max-w-2xl text-lg text-brand-ink/70">
       We provide specialized care for protecting and preserving natural teeth with the highest
       standards while giving back to the community. Our staff is committed to staying up-to-date on
@@ -308,7 +312,7 @@ function cardColors(color: 'white' | 'rust', index: number) {
     </div>
   </section>
 
-  <!-- TRATAMIENTOS: dinámico desde WordPress (CPT `treatment`) -->
+  <!-- TRATAMIENTOS -->
   <TreatmentGrid
     heading="Endodontic Treatments"
     intro="Having a clear understanding of your choices and how they will affect you is important for your tooth and your future dental health."
@@ -327,7 +331,7 @@ function cardColors(color: 'white' | 'rust', index: number) {
     </div>
   </section>
 
-  <!-- TESTIMONIOS: dinámico desde WordPress (CPT `testimonial`) -->
+  <!-- TESTIMONIOS: reseñas de Google mantenidas a mano en src/data/reviews.ts -->
   <TestimonialsSection />
 
   <!-- CTA FINAL + FORMULARIO DE CONTACTO (compartido con páginas internas) -->
@@ -374,7 +378,7 @@ function cardColors(color: 'white' | 'rust', index: number) {
           </div>
           <div>
             <p class="font-heading text-base font-semibold text-brand-ink">Working Hours</p>
-            <p class="text-base text-brand-ink/70">{hours.weekday}<br />{hours.wednesday}</p>
+            <p class="text-base text-brand-ink/70">{hours.weekday}</p>
           </div>
         </div>
       </div>
