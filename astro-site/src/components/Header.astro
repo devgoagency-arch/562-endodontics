@@ -62,6 +62,12 @@ const navLinks: { label: string; href: string; menu?: string }[] = [
   { label: 'Professional Development', href: '/professional-development' },
 ];
 
+// El botón "Contact Us" baja al formulario de contacto de la misma página (#form). Estas páginas no lo
+// tienen (en Referrals el #form es el del referral), así que ahí lleva a la página de contacto.
+const PAGES_WITHOUT_CONTACT_FORM = ['/referrals', '/privacy-policy', '/404', '/500'];
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const contactHref = PAGES_WITHOUT_CONTACT_FORM.includes(currentPath) ? '/contact-us/' : '#form';
+
 // Clases completas (no concatenadas) para que Tailwind las detecte. Con más de 3
 // ítems la última fila queda centrada (flex) en vez de pegada a la izquierda.
 const panelLayout = (count: number) =>
@@ -114,7 +120,7 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
             <li><a href={link.href} class="transition hover:text-brand-rust">{link.label}</a></li>
           )
         ))}
-        <li><a href="#form" class="rounded-full bg-brand-rust px-5 py-2.5 text-white transition hover:bg-brand-rustDark min-[1360px]:px-6">Contact Us</a></li>
+        <li><a href={contactHref} class="rounded-full bg-brand-rust px-5 py-2.5 text-white transition hover:bg-brand-rustDark min-[1360px]:px-6">Contact Us</a></li>
         <li>
           <button type="button" data-search-open aria-label="Search the site" class="flex h-10 w-10 items-center justify-center rounded-full text-brand-ink transition hover:bg-brand-rust/10 hover:text-brand-rust">
             <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
@@ -153,7 +159,7 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
           <li><a href={link.href} class="block py-2">{link.label}</a></li>
         )
       ))}
-      <li><a href="#form" class="mt-2 block rounded-full bg-brand-rust px-5 py-2 text-center text-white">Contact Us</a></li>
+      <li><a href={contactHref} class="mt-2 block rounded-full bg-brand-rust px-5 py-2 text-center text-white">Contact Us</a></li>
     </ul>
   </nav>
 

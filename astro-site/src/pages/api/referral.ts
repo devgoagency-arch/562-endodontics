@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { CaptchaNotConfiguredError, TURNSTILE_FIELD, clientIp, verifyTurnstile } from '../../lib/turnstile';
-import { MAIL_FROM, MailNotConfiguredError, escapeHtml, isEmail, sendMail } from '../../lib/mail';
+import { MAIL_FROM, MailNotConfiguredError, isEmail, sendMail } from '../../lib/mail';
+import { clinicEmail, doctorEmail, patientEmail } from '../../lib/referralEmail';
 
 // Se renderiza on-demand (Vercel Function), no en build time — un formulario
 // con datos de paciente nunca debe quedar pre-renderizado como HTML estático.
@@ -60,42 +61,34 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: 'File exceeds 10 MB limit', files: oversized.map((f) => f.name) }, 400);
   }
 
-  const patient = `${referral.first_name} ${referral.last_name}`;
-  const table = renderTable(referral);
-
   // Aviso a la clínica. Si falla, no se finge éxito: el formulario muestra el error con
   // el teléfono de la clínica en vez de decirle al dentista que todo salió bien.
   try {
-    await sendMail({
-      to: [MAIL_FROM],
-      replyTo: referral._email,
-      subject: `New referral: ${patient}`,
-      html: `<p>New referral from Dr. ${escapeHtml(referral.doctor_name)} ${escapeHtml(referral.doctor_last_name)}.</p>${table}`,
-    });
+    const mail = clinicEmail(referral);
+    await sendMail({ to: [MAIL_FROM], replyTo: referral._email, ...mail });
   } catch (error) {
     console.error('Failed to send referral email', error);
     return json({ error: error instanceof MailNotConfiguredError ? 'Email provider not configured' : 'Failed to send email' }, 500);
   }
 
-  // Copia para el doctor que refiere (la página promete "a copy of the referral form").
-  // El remitente es siempre la clínica; si esta copia falla, la clínica ya tiene el referral.
+  // Confirmación para el dentista que refiere. El remitente es siempre la clínica; si falla, la
+  // clínica ya tiene el referral.
   try {
-    await sendMail({
-      to: [referral._email],
-      replyTo: MAIL_FROM,
-      subject: `Copy of your referral to 562 endodontics: ${patient}`,
-      html: `<p>Thank you for your referral. This is a copy for your records; our team will be in touch to confirm the appointment.</p>${table}`,
-    });
+    await sendMail({ to: [referral._email], replyTo: MAIL_FROM, ...doctorEmail(referral) });
   } catch (error) {
     console.error('Failed to send referral copy to the referring doctor', error);
+  }
+
+  // Aviso al paciente: solo si la clínica lo activó (REFERRAL_NOTIFY_PATIENT=true) y el
+  // dentista dejó un correo válido. Lleva únicamente datos de contacto de la clínica.
+  if (import.meta.env.REFERRAL_NOTIFY_PATIENT === 'true' && referral._patient_email && isEmail(referral._patient_email)) {
+    try {
+      await sendMail({ to: [referral._patient_email], replyTo: MAIL_FROM, ...patientEmail(referral) });
+    } catch (error) {
+      console.error('Failed to send referral notice to the patient', error);
+    }
   }
 
   return json({ ok: true }, 200);
 };
 
-function renderTable(referral: Record<string, string>): string {
-  const rows = Object.entries(referral)
-    .map(([key, value]) => `<tr><td style="padding:4px 8px;font-weight:600;">${escapeHtml(key)}</td><td style="padding:4px 8px;">${escapeHtml(value)}</td></tr>`)
-    .join('');
-  return `<table>${rows}</table>`;
-}
