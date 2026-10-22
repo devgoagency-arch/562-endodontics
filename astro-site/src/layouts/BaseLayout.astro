@@ -1,6 +1,7 @@
 ---
 // Fuentes propias (sin pedir nada a Google Fonts): solo el subconjunto latino, que
 // cubre inglés, francés y español, y solo los pesos que usa el sitio.
+import '../styles/global.css';
 import '@fontsource/inter/latin-300.css';
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-600.css';
@@ -76,9 +77,9 @@ const ogImage = SITE + '/og-image.jpg';
     <slot name="head" />
   </head>
   <body class="font-body text-brand-ink" data-auto-reveal={String(autoReveal)} data-pagefind-ignore={noindex ? 'all' : undefined}>
-    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:rounded-full focus:bg-brand-rust focus:px-5 focus:py-3 focus:font-heading focus:text-sm focus:font-semibold focus:text-white">Skip to main content</a>
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-80 focus:rounded-full focus:bg-brand-rust focus:px-5 focus:py-3 focus:font-heading focus:text-sm focus:font-semibold focus:text-white">Skip to main content</a>
     <Header />
-    <main id="main" tabindex="-1" class="outline-none">
+    <main id="main" tabindex="-1" class="outline-hidden">
       <slot />
     </main>
     <Footer />

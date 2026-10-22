@@ -9,15 +9,15 @@
     "search:dev": "pagefind --site .vercel/output/static --output-path public/pagefind"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.2.1",
-    "@astrojs/tailwind": "^6.0.2",
-    "@astrojs/vercel": "^9.0.5",
+    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/vercel": "^11.0.16",
     "@fontsource/heebo": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.3",
     "@vercel/blob": "^2.8.2",
-    "astro": "^5.18.2",
-    "sharp": "^0.33.5",
-    "tailwindcss": "^3.4.0"
+    "astro": "^7.4.2",
+    "sharp": "^0.35.5",
+    "tailwindcss": "^4.3.3"
   },
   "engines": {
     "node": "24.x"

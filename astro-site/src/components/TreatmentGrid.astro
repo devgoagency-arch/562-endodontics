@@ -25,7 +25,7 @@ const treatments = [
     {intro && <p class="reveal mx-auto mt-4 max-w-2xl text-center text-lg text-brand-ink/70">{intro}</p>}
     <div class="mt-12 flex flex-wrap justify-center gap-6">
       {treatments.map((t) => (
-        <a href={`/endodontic-treatments/${t.slug}/`} class="reveal group w-full rounded-2xl border border-stone-200 p-7 !transition-[background-color,border-color,box-shadow,opacity,transform] !duration-300 hover:border-brand-rust hover:bg-brand-rust hover:shadow-lg sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]">
+        <a href={`/endodontic-treatments/${t.slug}/`} class="reveal group w-full rounded-2xl border border-stone-200 p-7 transition-[background-color,border-color,box-shadow,opacity,transform]! duration-300! hover:border-brand-rust hover:bg-brand-rust hover:shadow-lg sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]">
           <Icon name={t.icon} class="h-12 w-12 text-brand-rust transition duration-300 group-hover:scale-110 group-hover:text-white" />
           <h3 class="mt-4 font-heading text-lg font-semibold text-brand-ink transition-colors duration-300 group-hover:text-white">{t.title}</h3>
           <p class="mt-2 text-base text-brand-ink/70 transition-colors duration-300 group-hover:text-white/85">{t.summary}</p>
