@@ -180,6 +180,23 @@ Los cambios pueden tardar **entre 30 minutos y 2 horas** en aplicarse. Si al pro
 
 ---
 
+## 5B. Archivos adjuntos del referral (Vercel Blob privado)
+
+El formulario permite hasta **10 archivos de 10 MB cada uno** (JPG, PNG, HEIC, PDF, Word, Excel y texto), como el de WordPress. Los archivos van directo del navegador a un almacenamiento **privado** de Vercel; el correo de la clínica trae la lista con los nombres originales y un enlace de descarga por archivo (el dentista recibe solo los nombres). Los archivos y sus enlaces duran **12 meses**; después se **borran solos**.
+
+**Crear el almacenamiento (una sola vez):**
+1. Vercel → proyecto → **Storage** → **Create Storage** → **Blob**.
+2. En el acceso elige **Private** (no Public).
+3. Conéctalo al proyecto en **Production** y **Preview**. Vercel agrega solo la variable `BLOB_READ_WRITE_TOKEN`.
+4. **Redeploy**.
+
+**Notas:**
+- Los archivos quedan en servidores de Vercel (no necesariamente en Canadá): la clínica debe aceptarlo.
+- **Borrado automático a los 12 meses:** una tarea semanal (`vercel.json`) lo hace. Hay que cargar en Vercel la variable `CRON_SECRET` (cualquier texto largo y aleatorio) y hacer Redeploy. Después de publicar, comprobar en Vercel → proyecto → **Settings → Cron Jobs** que aparece `/api/cleanup-files`.
+- ZIP y DICOM (CBCT) no se aceptan, igual que en WordPress. Para CBCT conviene un enlace de OneDrive.
+
+---
+
 ## 6. Probar
 
 Con el sitio en el dominio temporal:

@@ -192,9 +192,11 @@ const steps = [
             <p class="mt-1 text-xs text-brand-ink/60">Please send the most recent periapical and bitewing if available.</p>
             <label class="mt-2 block text-sm font-medium text-brand-ink">
               Add your file here
-              <input type="file" name="media_field[]" multiple accept="image/*,.pdf" class="mt-1 w-full rounded-lg border border-dashed border-stone-300 px-4 py-3 text-sm" />
-              <span class="mt-1 block text-xs font-normal text-brand-ink/50">Maximum file size: 10 MB per file.</span>
+              <input type="file" name="media_field[]" multiple accept=".jpg,.jpeg,.png,.heic,.pdf,.txt,.doc,.docx,.xls,.xlsx" class="mt-1 w-full rounded-lg border border-dashed border-stone-300 px-4 py-3 text-sm" />
+              <span class="mt-1 block text-xs font-normal text-brand-ink/50">Up to 10 files. Maximum file size: 10 MB per file. JPG, PNG, HEIC, PDF, Word, Excel or text.</span>
             </label>
+            <ul id="file-list" class="mt-2 space-y-1 text-sm text-brand-ink/80" aria-live="polite"></ul>
+            <p id="file-error" class="mt-2 hidden text-sm font-medium text-red-600" role="alert"></p>
           </div>
 
           <div class="grid gap-4 sm:grid-cols-2">
@@ -311,6 +313,8 @@ const steps = [
   </section>
 
   <script>
+    import { upload } from '@vercel/blob/client';
+
     const w = window as unknown as {
       turnstileReady?: (form: HTMLFormElement) => Promise<void>;
       resetTurnstile?: (form: HTMLFormElement) => void;
@@ -371,7 +375,91 @@ const steps = [
       errorEl.classList.add('hidden');
     }
 
+    // --- Archivos adjuntos: 10 archivos como máximo, 10 MB cada uno. Se suben directo al Blob privado
+    // (la función del sitio solo recibe 4.5 MB), con un ticket firmado que se pide tras el captcha.
+    const MAX_FILES = 10;
+    const MAX_BYTES = 10 * 1024 * 1024;
+    const FILE_TYPES: Record<string, string> = {
+      jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', heic: 'image/heic', pdf: 'application/pdf',
+      txt: 'text/plain', doc: 'application/msword', xls: 'application/vnd.ms-excel',
+      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    };
+    const fileInput = form.querySelector<HTMLInputElement>('input[name="media_field[]"]')!;
+    const fileListEl = document.getElementById('file-list') as HTMLUListElement;
+    const fileErrorEl = document.getElementById('file-error') as HTMLParagraphElement;
+    const extOf = (name: string) => (name.split('.').pop() ?? '').toLowerCase();
+    const sizeLabel = (bytes: number) => (bytes >= 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
+    class FileUploadError extends Error {}
+
+    function fileProblem(): string | null {
+      const files = [...(fileInput.files ?? [])];
+      if (files.length > MAX_FILES) return `You can attach up to ${MAX_FILES} files.`;
+      for (const file of files) {
+        if (!(extOf(file.name) in FILE_TYPES)) return `"${file.name}" is not an allowed file type (JPG, PNG, HEIC, PDF, Word, Excel or text).`;
+        if (file.size > MAX_BYTES) return `"${file.name}" is larger than 10 MB. Maximum file size: 10 MB.`;
+      }
+      return null;
+    }
+
+    function showFiles() {
+      fileListEl.replaceChildren(...[...(fileInput.files ?? [])].map((file) => {
+        const li = document.createElement('li');
+        li.textContent = `${file.name} (${sizeLabel(file.size)})`;
+        return li;
+      }));
+      const problem = fileProblem();
+      fileErrorEl.textContent = problem ?? '';
+      fileErrorEl.classList.toggle('hidden', !problem);
+    }
+    fileInput.addEventListener('change', showFiles);
+
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    const tokenValue = () => form.querySelector<HTMLInputElement>('input[name="cf-turnstile-response"]')?.value ?? '';
+
+    // Sube los archivos al Blob privado. Devuelve el ticket y la lista (o null si no hay archivos).
+    async function uploadFiles(): Promise<{ ticket: string; manifest: string } | null> {
+      const files = [...(fileInput.files ?? [])];
+      if (files.length === 0) return null;
+
+      await w.turnstileReady?.(form);
+      const session = await fetch('/api/upload-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ turnstile: tokenValue() }),
+      }).catch(() => null);
+      if (!session?.ok) throw new FileUploadError('session');
+      const { ticket, folder } = (await session.json()) as { ticket: string; folder: string };
+      w.resetTurnstile?.(form); // cada token del captcha sirve una sola vez
+
+      const manifest: { name: string; size: number; pathname: string }[] = [];
+      for (const [index, file] of files.entries()) {
+        submitBtn.textContent = `Uploading ${index + 1} of ${files.length}...`;
+        const safeName = (file.name.normalize('NFKD').replace(/[^\w.\- ]+/g, '').trim().replace(/\s+/g, '_').replace(/^\.+/, '') || 'file').slice(-120);
+        try {
+          const blob = await upload(`referrals/${folder}/${safeName}`, file, {
+            access: 'private',
+            handleUploadUrl: '/api/upload',
+            clientPayload: ticket,
+            contentType: FILE_TYPES[extOf(file.name)],
+          });
+          manifest.push({ name: file.name, size: file.size, pathname: blob.pathname });
+        } catch {
+          throw new FileUploadError(file.name);
+        }
+      }
+      submitBtn.textContent = 'Sending...';
+      await sleep(600);
+      return { ticket, manifest: JSON.stringify(manifest) };
+    }
+
     function currentStepIsValid(): boolean {
+      const problem = fileProblem();
+      if (problem) {
+        showFiles();
+        fileErrorEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return false;
+      }
       const step = stepsEls[current];
       const fields = [...step.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('input, select, textarea')];
       for (const field of fields) {
@@ -401,14 +489,24 @@ const steps = [
       errorEl.classList.add('hidden');
 
       try {
+        const uploaded = await uploadFiles();
         await w.turnstileReady?.(form);
-        const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+        const data = new FormData(form);
+        data.delete('media_field[]'); // los archivos ya están en el Blob; no pasan por este envío
+        if (uploaded) {
+          data.set('file_ticket', uploaded.ticket);
+          data.set('file_manifest', uploaded.manifest);
+        }
+        const res = await fetch(form.action, { method: 'POST', body: data });
         if (!res.ok) throw new Error('Request failed');
         form.classList.add('hidden');
         document.querySelector('.relative.mb-12')?.classList.add('hidden');
         document.getElementById('form-success')?.classList.remove('hidden');
-      } catch {
-        errorEl.textContent = 'Something went wrong sending your referral. Please call us at (519) 601-3636 or try again.';
+      } catch (error) {
+        errorEl.textContent =
+          error instanceof FileUploadError
+            ? "We couldn't upload your files. Please try again, or email them to info@562endodontics.com. You can also call us at (519) 601-3636."
+            : 'Something went wrong sending your referral. Please call us at (519) 601-3636 or try again.';
         errorEl.classList.remove('hidden');
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit';

@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { CaptchaNotConfiguredError, TURNSTILE_FIELD, clientIp, verifyTurnstile } from '../../lib/turnstile';
 import { MAIL_FROM, MailNotConfiguredError, isEmail, sendMail } from '../../lib/mail';
 import { clinicEmail, doctorEmail, patientEmail } from '../../lib/referralEmail';
+import { parseManifest, signedLink, verifyTicket, type FileEntry } from '../../lib/referralFiles';
 
 // Se renderiza on-demand (Vercel Function), no en build time — un formulario
 // con datos de paciente nunca debe quedar pre-renderizado como HTML estático.
@@ -23,11 +24,10 @@ const json = (body: Record<string, unknown>, status: number) =>
 /**
  * DECISIONES PENDIENTES ANTES DE PRODUCCIÓN (no técnicas, de negocio/cumplimiento):
  *
- * 1. Adjuntos (radiografías): son datos de salud (PHI). Los Functions de Vercel limitan el
- *    tamaño del payload (~4.5 MB en el plan Hobby) y el formulario permite hasta 10 MB por
- *    archivo, así que los archivos grandes deben subirse directo a un almacenamiento (ej.
- *    S3/R2 con URL pre-firmada). Hasta que se decida, los adjuntos se validan pero NO se envían.
- * 2. Retención: ¿cuánto tiempo se guardan los adjuntos? ¿quién tiene acceso?
+ * 1. Adjuntos (radiografías): son datos de salud (PHI). Se guardan en un Vercel Blob PRIVADO (servidores
+ *    de Vercel, no necesariamente en Canadá). La clínica debe aceptarlo.
+ * 2. Retención: los enlaces del correo y los archivos duran 12 meses; luego se borran solos
+ *    (api/cleanup-files, tarea programada de vercel.json).
  */
 export const POST: APIRoute = async ({ request }) => {
   const formData = await request.formData();
@@ -41,7 +41,7 @@ export const POST: APIRoute = async ({ request }) => {
 
   const referral: Record<string, string> = Object.fromEntries(
     [...new Set(formData.keys())]
-      .filter((key) => key !== 'media_field[]' && key !== 'website' && key !== TURNSTILE_FIELD)
+      .filter((key) => !['media_field[]', 'website', 'file_ticket', 'file_manifest', TURNSTILE_FIELD].includes(key))
       .map((key) => [key, formData.getAll(key).join(', ')])
   );
   if (!isEmail(referral._email)) return json({ error: 'Invalid email', missing: ['_email'] }, 400);
@@ -55,16 +55,33 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: error instanceof CaptchaNotConfiguredError ? 'Captcha not configured' : 'Captcha verification unavailable' }, 500);
   }
 
-  const attachments = formData.getAll('media_field[]').filter((f): f is File => f instanceof File && f.size > 0);
-  const oversized = attachments.filter((f) => f.size > 10 * 1024 * 1024);
-  if (oversized.length > 0) {
-    return json({ error: 'File exceeds 10 MB limit', files: oversized.map((f) => f.name) }, 400);
+  // Los archivos NO viajan en este envío (la función solo recibe 4.5 MB): el navegador ya los subió al
+  // Blob privado y manda su lista junto con el ticket firmado. Se aceptan solo rutas dentro de su carpeta.
+  if (formData.getAll('media_field[]').some((f) => f instanceof File && f.size > 0)) {
+    return json({ error: 'Files must be uploaded before submitting' }, 400);
   }
+  let files: FileEntry[] = [];
+  const manifest = String(formData.get('file_manifest') ?? '');
+  if (manifest) {
+    try {
+      const ticket = verifyTicket(String(formData.get('file_ticket') ?? ''));
+      if (!ticket) return json({ error: 'Invalid or expired upload ticket' }, 400);
+      const parsed = parseManifest(manifest, ticket.folder);
+      if (!parsed) return json({ error: 'Invalid file list' }, 400);
+      files = parsed;
+    } catch (error) {
+      console.error('File ticket error', error);
+      return json({ error: 'File storage not configured' }, 500);
+    }
+  }
+  const origin = new URL(request.url).origin;
+  const clinicFiles = files.map((f) => ({ name: f.name, size: f.size, url: signedLink(origin, f) }));
+  const doctorFiles = files.map((f) => ({ name: f.name, size: f.size }));
 
   // Aviso a la clínica. Si falla, no se finge éxito: el formulario muestra el error con
   // el teléfono de la clínica en vez de decirle al dentista que todo salió bien.
   try {
-    const mail = clinicEmail(referral);
+    const mail = clinicEmail(referral, clinicFiles);
     await sendMail({ to: [MAIL_FROM], replyTo: referral._email, ...mail });
   } catch (error) {
     console.error('Failed to send referral email', error);
@@ -74,7 +91,7 @@ export const POST: APIRoute = async ({ request }) => {
   // Confirmación para el dentista que refiere. El remitente es siempre la clínica; si falla, la
   // clínica ya tiene el referral.
   try {
-    await sendMail({ to: [referral._email], replyTo: MAIL_FROM, ...doctorEmail(referral) });
+    await sendMail({ to: [referral._email], replyTo: MAIL_FROM, ...doctorEmail(referral, doctorFiles) });
   } catch (error) {
     console.error('Failed to send referral copy to the referring doctor', error);
   }

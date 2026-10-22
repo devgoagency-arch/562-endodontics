@@ -4,9 +4,17 @@
 // no soporta WebP y las imágenes remotas suelen bloquearse.
 import { hours } from '../data/business';
 import { escapeHtml } from './mail';
+import { formatBytes, LINK_TTL_SECONDS } from './referralFiles';
 
 type Referral = Record<string, string>;
 type Row = [label: string, value: string | undefined];
+
+// Archivo adjunto para mostrar en el correo: con enlace de descarga (clínica) o solo el nombre (dentista).
+export interface EmailFile {
+  name: string;
+  size: number;
+  url?: string;
+}
 
 export interface BuiltEmail {
   subject: string;
@@ -89,6 +97,20 @@ function renderSections(r: Referral): string {
     .join('');
 }
 
+function renderFiles(files: EmailFile[] = []): string {
+  if (files.length === 0) return '';
+  const rows = files
+    .map((f) => {
+      const name = escapeHtml(f.name);
+      const label = f.url ? `<a href="${escapeHtml(f.url)}" style="color:${BRAND};font-weight:bold;">${name}</a>` : name;
+      return `<tr><td style="padding:6px 12px 6px 0;font-size:15px;color:${INK};">${label}</td><td style="padding:6px 0;font-size:13px;color:#777;white-space:nowrap;" align="right">${escapeHtml(formatBytes(f.size))}</td></tr>`;
+    })
+    .join('');
+  const expires = new Date(Date.now() + LINK_TTL_SECONDS * 1000).toLocaleDateString('en-CA', { timeZone: 'America/Toronto', year: 'numeric', month: 'long', day: 'numeric' });
+  const note = files.some((f) => f.url) ? `Download links work until ${expires}. Please save the files to your system.` : 'These files were sent to the clinic.';
+  return `<tr><td style="padding:18px 0 4px;"><div style="font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:${BRAND};border-bottom:2px solid ${BEIGE};padding-bottom:6px;">Attached files (${files.length})</div></td></tr><tr><td><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table><div style="padding-top:6px;font-size:12px;color:#777;">${note}</div></td></tr>`;
+}
+
 const isEmergency = (r: Referral) => r.referred_for === 'Emergency Appointment';
 const wantsSedation = (r: Referral) => clean(r.dental_anxiety_sedation) !== '';
 
@@ -120,12 +142,13 @@ const intro = (html: string) => `<tr><td style="padding:18px 0 0;font-size:16px;
 const submittedAt = () =>
   new Date().toLocaleString('en-CA', { timeZone: 'America/Toronto', dateStyle: 'medium', timeStyle: 'short' });
 
-export function clinicEmail(r: Referral): BuiltEmail {
+export function clinicEmail(r: Referral, files: EmailFile[] = []): BuiltEmail {
   const patient = `${clean(r.first_name)} ${clean(r.last_name)}`;
   const doctor = `Dr. ${clean(r.doctor_name)} ${clean(r.doctor_last_name)}`;
   const inner =
     intro(`New referral from <strong>${escapeHtml(doctor)}</strong> (${escapeHtml(clean(r.office_name))}) for <strong>${escapeHtml(patient)}</strong>.<br><span style="font-size:13px;color:#777;">Received ${escapeHtml(submittedAt())} (Eastern time). Reply to this email to answer the referring dentist.</span>`) +
     badges(r) +
+    renderFiles(files) +
     renderSections(r);
   return {
     subject: `${isEmergency(r) ? 'URGENT - ' : ''}New referral: ${patient} (${clean(r.referred_for)})`,
@@ -133,7 +156,7 @@ export function clinicEmail(r: Referral): BuiltEmail {
   };
 }
 
-export function doctorEmail(r: Referral): BuiltEmail {
+export function doctorEmail(r: Referral, files: EmailFile[] = []): BuiltEmail {
   const patient = `${clean(r.first_name)} ${clean(r.last_name)}`;
   const next = [
     'Our team reviews the referral and your notes.',
@@ -151,6 +174,7 @@ export function doctorEmail(r: Referral): BuiltEmail {
     `<tr><td style="padding:18px 0 4px;"><div style="font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:${BRAND};border-bottom:2px solid ${BEIGE};padding-bottom:6px;">What happens next</div></td></tr>` +
     next +
     badges(r) +
+    renderFiles(files) +
     renderSections(r) +
     `<tr><td style="padding:20px 0 0;font-size:14px;color:#777;">Questions or changes? Reply to this email or call us at ${PHONE}.</td></tr>`;
   return { subject: `Referral received: ${patient} | 562 endodontics`, html: layout('We received your referral', inner) };
