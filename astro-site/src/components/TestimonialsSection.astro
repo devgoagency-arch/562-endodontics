@@ -18,7 +18,7 @@ const monthYear = (value?: string) =>
       href={GOOGLE_REVIEWS_URL}
       target="_blank"
       rel="noopener"
-      class="reveal mx-auto mt-8 inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-2 rounded-2xl border border-stone-200 bg-white px-6 py-4 shadow-sm transition hover:shadow-md"
+      class="reveal mx-auto mt-8 inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-2 rounded-2xl border border-stone-200 bg-white px-6 py-4 shadow-xs transition hover:shadow-md"
     >
       <img src="/images/logos/google-reviews-logo.svg" alt="Google Reviews" class="h-10 w-auto" />
       <span class="flex items-center gap-2">
@@ -32,7 +32,7 @@ const monthYear = (value?: string) =>
          sea cual sea el total de reseñas. -->
     <div class="mt-12 flex flex-wrap justify-center gap-6">
       {items.map((t) => (
-        <article class="reveal flex w-full flex-col rounded-2xl border border-stone-200 p-7 text-left shadow-sm md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+        <article class="reveal flex w-full flex-col rounded-2xl border border-stone-200 p-7 text-left shadow-xs md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
           <div class="flex items-center gap-3">
             {t.avatar ? (
               <img src={t.avatar} alt="" class="h-10 w-10 rounded-full object-cover" loading="lazy" />

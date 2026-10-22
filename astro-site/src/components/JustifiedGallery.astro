@@ -55,7 +55,7 @@ for (let row = 1; row <= rows; row++) {
     <ul class="flex flex-wrap gap-2 md:flex-nowrap">
       {group.map((img) => (
         <li
-          class="min-w-0 [flex:var(--r)_1_calc(var(--r)*110px)] md:[flex:var(--r)_1_0%]"
+          class="min-w-0 flex-[var(--r)_1_calc(var(--r)*110px)] md:flex-[var(--r)_1_0%]"
           style={`--r:${img.ratio.toFixed(3)}`}
         >
           <button type="button" data-gallery-item={img.index} class="block w-full cursor-zoom-in" aria-label={`Open photo: ${img.alt}`}>

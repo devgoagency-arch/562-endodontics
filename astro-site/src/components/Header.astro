@@ -79,7 +79,7 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
      fixed, así que colapsar la barra de info no mueve el contenido ni el scroll. -->
 <div id="header-spacer" aria-hidden="true" class="h-[73px] lg:h-[187px]"></div>
 
-<header id="site-header" data-pagefind-ignore class="fixed inset-x-0 top-0 z-50 bg-white shadow-sm transition-shadow">
+<header id="site-header" data-pagefind-ignore class="fixed inset-x-0 top-0 z-50 bg-white shadow-xs transition-shadow">
   <!-- Barra de info superior: se colapsa al hacer scroll (ver script) para
        que el header sticky no ocupe demasiado alto una vez fijo arriba. -->
   <div id="header-info-bar" class="mx-auto hidden max-w-7xl items-center justify-between overflow-hidden px-6 transition-[max-height,opacity,padding] duration-300 lg:flex" style="max-height: 130px; padding-top: 1.5rem; padding-bottom: 1.5rem;">
@@ -184,7 +184,7 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
                 Learn more <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
               </span>
             </div>
-            <div class="relative min-h-[9rem] w-[38%] shrink-0">
+            <div class="relative min-h-36 w-[38%] shrink-0">
               <img src={item.image} alt="" class="absolute inset-0 h-full w-full rounded-[20px] object-cover" loading="lazy" />
             </div>
           </a>

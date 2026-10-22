@@ -230,7 +230,7 @@ function cardColors(color: 'white' | 'rust', index: number) {
         {techItems.map((item) => (
           <div class="reveal flex flex-col items-center text-center">
             <p class="font-heading text-sm font-medium uppercase tracking-[0.2em] text-brand-rust">{item.eyebrow}</p>
-            <h3 class="mt-4 font-heading text-2xl font-medium leading-snug text-brand-rust md:min-h-[8.5rem]">{item.title}</h3>
+            <h3 class="mt-4 font-heading text-2xl font-medium leading-snug text-brand-rust md:min-h-34">{item.title}</h3>
             <VideoEmbed youtube={item.youtube} mp4={item.video} poster={item.poster} title={item.title} class="mt-6" />
             <div class="mt-6 flex h-[134px] w-[269px] items-center justify-center rounded-xl bg-white shadow-md ring-1 ring-stone-100">
               <img src={item.logo} alt={item.logoAlt} class={`${item.logoClass} w-auto max-w-[202px] object-contain`} loading="lazy" />

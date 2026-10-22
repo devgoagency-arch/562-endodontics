@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 import vercel from '@astrojs/vercel';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
 // output: 'static' + adaptador -> las páginas son estáticas por defecto (rápidas,
@@ -10,6 +10,9 @@ export default defineConfig({
   // Dominio de producción: lo usan el sitemap, las URLs canónicas y las etiquetas Open Graph.
   site: 'https://562endodontics.com',
   output: 'static',
+  // Astro 7 cambió el valor por defecto a 'jsx' (reglas de espacios de React), que pega palabras
+  // separadas por saltos de línea junto a enlaces/negritas. true = comportamiento de Astro 5.
+  compressHTML: true,
   // Dominios desde los que se sirve el sitio. Astro 5 solo confía en el nombre del sitio que manda
   // Vercel (x-forwarded-host) si está en esta lista; sin ella toma "localhost" y su protección contra
   // envíos de otros sitios (checkOrigin) rechaza con 403 TODOS los formularios (/api/contact y
@@ -30,5 +33,8 @@ export default defineConfig({
   adapter: vercel({
     webAnalytics: { enabled: true },
   }),
-  integrations: [tailwind(), sitemap({ filter: (page) => !/\/(404|500)\/?$/.test(page) })],
+  integrations: [sitemap({ filter: (page) => !/\/(404|500)\/?$/.test(page) })],
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });

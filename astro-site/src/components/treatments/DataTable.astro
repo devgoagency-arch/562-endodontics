@@ -21,7 +21,7 @@ const { headers, rows, narrow = false } = Astro.props;
     </thead>
     <tbody>
       {rows.map((row) => (
-        <tr class="border-b border-white bg-[#E3DBD4]/60 odd:bg-[#E3DBD4]">
+        <tr class="border-b border-white bg-brand-beige/60 odd:bg-brand-beige">
           {row.map((cell, i) => (
             i === 0
               ? <td class="whitespace-pre-line px-5 py-4 align-top font-semibold text-brand-ink">{cell}</td>
