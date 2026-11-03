@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build && pagefind --site .vercel/output/static",
     "preview": "astro preview",
-    "search:dev": "pagefind --site .vercel/output/static --output-path public/pagefind"
+    "search:dev": "pagefind --site .vercel/output/static --output-path public/pagefind",
+    "sync-settings": "node scripts/sync-settings.mjs",
+    "prebuild": "node scripts/sync-settings.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

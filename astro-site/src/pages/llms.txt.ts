@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { hours, businessSchema } from '../data/business';
+import { hours, businessSchema, phone } from '../data/business';
 import { doctors } from '../data/doctors';
 
 // /llms.txt: resumen en Markdown del sitio para asistentes de IA (propuesta
@@ -35,7 +35,7 @@ export const GET: APIRoute = ({ site }) => {
 > Endodontic specialists in London, Ontario, dedicated exclusively to root canal treatment, retreatment, apical surgery, cracked teeth and dental trauma. Dentists refer patients to the clinic, and patients can also seek care directly.
 
 - Address: ${a.streetAddress}, ${a.addressLocality}, ${a.addressRegion} ${a.postalCode}, Canada (patient parking behind the building, marked "DENTAL")
-- Phone: (519) 601-3636
+- Phone: ${phone}
 - Email: ${businessSchema.email}
 - Hours: ${hours.weekday}
 - Area served: ${businessSchema.areaServed.join('; ')}

@@ -5,6 +5,7 @@ import LineIcon from '../components/LineIcon.astro';
 import SectionBackdrop from '../components/SectionBackdrop.astro';
 import JustifiedGallery from '../components/JustifiedGallery.astro';
 import ContactCta from '../components/ContactCta.astro';
+import { address } from '../data/business';
 
 
 const equipment = ['Dental CT Scan', 'Surgical Operating Microscopes', 'The GentleWave System', 'Quicksleeper, for profound anesthesia'];
@@ -36,14 +37,14 @@ const gallery = [
   { src: `/images/team/562-endodontics-london-ontario-dr-manfred-friedman-at-microscope.webp`, alt: 'Dr. Manfred Friedman smiling beside the operating microscope' },
   { src: `/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-treatment-room.webp`, alt: 'Dr. Jacqueline Lopez Gross in a treatment room at 562 endodontics' },
   { src: `/images/clinic/562-endodontics-london-ontario-reception-wall-sign.webp`, alt: '562 endodontics gold logo sign on the reception wall' },
-  { src: `/images/clinic/562-endodontics-london-ontario-clinic-building.webp`, alt: '562 endodontics clinic building at 562 Waterloo Street, London, Ontario' },
+  { src: `/images/clinic/562-endodontics-london-ontario-clinic-building.webp`, alt: `562 endodontics clinic building at ${address.street}, ${address.cityProvince}` },
   { src: `/images/team/562-endodontics-london-ontario-dr-jacqueline-lopez-gross-tooth-model.webp`, alt: 'Dr. Jacqueline Lopez Gross holding a tooth model' },
 ];
 ---
 
 <BaseLayout
   title="Our Dental Clinic"
-  description="Visit 562 endodontics at 562 Waterloo St. in downtown London, Ontario: modern technology, a full range of endodontic services and private parking."
+  description={`Visit 562 endodontics at ${address.streetShort}. in downtown London, Ontario: modern technology, a full range of endodontic services and private parking.`}
 >
   <PageHero title="Our Dental Clinic" image="/images/clinic/562-endodontics-london-ontario-clinic-reception.webp" />
 
@@ -54,7 +55,7 @@ const gallery = [
         <img src="/images/clinic/562-endodontics-logo-horizontal.webp" alt="562 endodontics logo" class="mx-auto h-24 w-auto sm:h-[120px]" />
       </a>
       <p class="mt-8 text-center text-lg text-brand-ink/80">
-        Our office is located at <strong class="font-semibold text-brand-ink">562 Waterloo St. in downtown London, Ontario.</strong>
+        Our office is located at <strong class="font-semibold text-brand-ink">{address.streetShort}. in downtown London, Ontario.</strong>
         Our building is a beautiful Victorian house that combines spacious operatory areas with functional
         architecture, natural light, and modern accents. There is a private parking lot on the property for your
         convenience. Our staff is trained to use the latest technology to provide expert patient care. Our clinic

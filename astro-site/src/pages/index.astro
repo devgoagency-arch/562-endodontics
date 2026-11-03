@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import SectionBackdrop from '../components/SectionBackdrop.astro';
-import { businessSchema, hours } from '../data/business';
+import { address, businessSchema, hours, phoneHref, phoneVanity } from '../data/business';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import ConsentEmbed from '../components/ConsentEmbed.astro';
 import TreatmentGrid from '../components/TreatmentGrid.astro';
@@ -343,11 +343,11 @@ function cardColors(color: 'white' | 'rust', index: number) {
     <div class="mx-auto grid max-w-6xl items-stretch gap-10 px-6 md:grid-cols-2">
       <div class="reveal">
         <ConsentEmbed
-          src="https://www.google.com/maps?q=562+Waterloo+St,+London,+ON+N6B+2P9&output=embed"
+          src={address.mapsEmbedUrl}
           title="562 endodontics location"
           preview="/images/contact/562-endodontics-london-ontario-map.webp"
-          previewAlt="Map showing 562 endodontics at 562 Waterloo St, London, Ontario"
-          openUrl="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9"
+          previewAlt={`Map showing 562 endodontics at ${address.streetShort}, ${address.cityProvince}`}
+          openUrl={address.mapsUrl}
           openLabel="Open in Google Maps"
           class="h-full min-h-[360px] rounded-2xl"
         />
@@ -370,11 +370,11 @@ function cardColors(color: 'white' | 'rust', index: number) {
               rel="noopener"
               class="font-heading text-base font-semibold text-brand-rust hover:underline"
             >Location</a>
-            <p class="text-base text-brand-ink/70">562 Waterloo st, London, ON, N6B 2P9</p>
+            <p class="text-base text-brand-ink/70">{address.oneLine}</p>
           </div>
           <div>
-            <a href="tel:+15196013636" class="font-heading text-base font-semibold text-brand-rust hover:underline">Call Us</a>
-            <p class="text-base text-brand-ink/70">(519) 601-ENDO (3636)</p>
+            <a href={phoneHref} class="font-heading text-base font-semibold text-brand-rust hover:underline">Call Us</a>
+            <p class="text-base text-brand-ink/70">{phoneVanity}</p>
           </div>
           <div>
             <p class="font-heading text-base font-semibold text-brand-ink">Working Hours</p>

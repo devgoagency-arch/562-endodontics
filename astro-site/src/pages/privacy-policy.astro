@@ -4,6 +4,7 @@
 // legal en sí no se modificó: conviene que la clínica lo revise (menciona fax
 // y no menciona PIPEDA).
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { address, email, emailHref, phoneVanity } from '../data/business';
 
 const intro = [
   'Copyright© 2023 562 endodontics. All rights reserved.',
@@ -34,7 +35,7 @@ const sections = [
     title: 'E-mail Communications, Newsletters, and Related Services',
     paragraphs: [
       "We may occasionally send you informational e-mails or surveys. These e-mails will often include links to 562 endodontics's website or the websites of other organizations. To enable 562 endodontics to tailor our communications to your interests, we may track the web links that you click on. This tracked information will only be used to analyze your interest in our communications and, in keeping with 562 endodontics's main Privacy Policy, will not be shared with other organizations. Alternatively, if you wish to remain anonymous, you can access the web pages referenced in those e-mails by visiting 562 endodontics's website, and your visit will not be tracked.",
-      "To stop receiving e-mail communications, e-mail your request to unsubscribe from 562 endodontics's electronic news service to info@562endodontics.com.",
+      `To stop receiving e-mail communications, e-mail your request to unsubscribe from 562 endodontics's electronic news service to ${email}.`,
     ],
   },
   {
@@ -103,10 +104,10 @@ const sections = [
 
       <address class="text-lg not-italic text-brand-ink/80">
         562 endodontics<br />
-        562 Waterloo Street, Office. 101, London, Ontario, Canada, N6B 2P9<br />
+        {address.street}, Office. 101, {address.city}, {address.provinceName}, Canada, {address.postal}<br />
         Attention: Director Officer<br />
-        Tel: +1 (519) 601-ENDO (3636)<br />
-        E-mail: <a href="mailto:info@562endodontics.com" class="font-semibold text-brand-rust hover:underline">info@562endodontics.com</a>
+        Tel: +1 {phoneVanity}<br />
+        E-mail: <a href={emailHref} class="font-semibold text-brand-rust hover:underline">{email}</a>
       </address>
 
       <p class="text-lg text-brand-ink/60">562 endodontics website Privacy Policy April 8, 2023</p>

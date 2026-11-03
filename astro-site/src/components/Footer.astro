@@ -1,5 +1,5 @@
 ---
-import { hours } from '../data/business';
+import { address, email, emailHref, hours, phoneHref, phoneVanityWide } from '../data/business';
 
 const quickLinks = [
   { label: 'Home', href: '/' },
@@ -72,9 +72,9 @@ const quickLinks = [
     <div>
       <h3 class="font-heading text-base font-semibold uppercase tracking-wide text-white">Contact Details</h3>
       <ul class="mt-4 space-y-2 text-base">
-        <li><a href="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9" target="_blank" rel="noopener" class="transition hover:text-white hover:underline">562 Waterloo st, London, ON, N6B 2P9</a></li>
-        <li><a href="mailto:info@562endodontics.com" class="transition hover:text-white hover:underline">info@562endodontics.com</a></li>
-        <li><a href="tel:+15196013636" class="transition hover:text-white hover:underline">(519) 601 - ENDO (3636)</a></li>
+        <li><a href={address.mapsUrl} target="_blank" rel="noopener" class="transition hover:text-white hover:underline">{address.oneLine}</a></li>
+        <li><a href={emailHref} class="transition hover:text-white hover:underline">{email}</a></li>
+        <li><a href={phoneHref} class="transition hover:text-white hover:underline">{phoneVanityWide}</a></li>
       </ul>
     </div>
 

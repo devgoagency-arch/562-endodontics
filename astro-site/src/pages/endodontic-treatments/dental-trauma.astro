@@ -3,6 +3,7 @@
 // Cracked Teeth (PageHero, SplitSection, ImageRow, DataTable, TreatmentFaq)
 // más IconList para las listas con íconos.
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { phone, phoneHref } from '../../data/business';
 import PageHero from '../../components/PageHero.astro';
 import SplitSection from '../../components/treatments/SplitSection.astro';
 import ImageRow from '../../components/treatments/ImageRow.astro';
@@ -71,7 +72,7 @@ const cbctFigures = [
 ];
 
 const faqs = [
-  { q: 'How quickly can 562 endodontics see a trauma emergency?', a: 'Same-day appointments are available for acute trauma. Call <a href="tel:+15196013636" class="font-semibold text-brand-rust hover:underline">(519) 601-3636</a>. For avulsion cases, our team provides phone guidance to patients during transit to our office.' },
+  { q: 'How quickly can 562 endodontics see a trauma emergency?', a: `Same-day appointments are available for acute trauma. Call <a href="${phoneHref}" class="font-semibold text-brand-rust hover:underline">${phone}</a>. For avulsion cases, our team provides phone guidance to patients during transit to our office.` },
   { q: 'Does the consultation include CBCT imaging?', a: 'Yes. The consultation fee includes a CBCT scan, which is particularly valuable in trauma cases where 2D imaging may miss root fractures or underestimate the extent of injury.' },
   { q: 'Can a tooth infection occur months after trauma?', a: 'Yes. Infection may develop months or even years after the initial injury. Referral is advised if symptoms or radiographic changes appear.' },
   { q: 'Does 562 endodontics manage trauma in immature teeth?', a: 'Yes. Treatment options include vital pulp therapy, regenerative endodontic procedures, and apexification for teeth with open apices.' },

@@ -1,8 +1,9 @@
 import type { APIRoute } from 'astro';
 import { CaptchaNotConfiguredError, TURNSTILE_FIELD, clientIp, verifyTurnstile } from '../../lib/turnstile';
-import { MAIL_FROM, MailNotConfiguredError, isEmail, sendMail } from '../../lib/mail';
+import { get } from '@vercel/blob';
+import { INLINE_ATTACHMENTS_MAX, MAIL_FROM, MailNotConfiguredError, MailSendError, isEmail, sendMail, sendMailWithAttachments, type MailAttachment } from '../../lib/mail';
 import { clinicEmail, doctorEmail, patientEmail } from '../../lib/referralEmail';
-import { parseManifest, signedLink, verifyTicket, type FileEntry } from '../../lib/referralFiles';
+import { ALLOWED_TYPES, extensionOf, parseManifest, signedLink, verifyTicket, type FileEntry } from '../../lib/referralFiles';
 
 // Se renderiza on-demand (Vercel Function), no en build time — un formulario
 // con datos de paciente nunca debe quedar pre-renderizado como HTML estático.
@@ -17,6 +18,21 @@ const REQUIRED_FIELDS = [
   'tooth_number', 'referred_for', 'tooth_status', 'restorative_treatment_planned',
   'restoration_after_treatment', '_company', 'terms_conditions',
 ];
+
+// Baja del Blob privado los archivos del referral para adjuntarlos al correo (de uno en uno).
+async function loadAttachments(files: FileEntry[]): Promise<MailAttachment[]> {
+  const attachments: MailAttachment[] = [];
+  for (const file of files) {
+    const result = await get(file.pathname, { access: 'private' });
+    if (!result || result.statusCode !== 200) throw new Error(`Blob not found: ${file.pathname}`);
+    attachments.push({
+      name: file.name,
+      contentType: ALLOWED_TYPES[extensionOf(file.name)] ?? 'application/octet-stream',
+      data: new Uint8Array(await new Response(result.stream).arrayBuffer()),
+    });
+  }
+  return attachments;
+}
 
 const json = (body: Record<string, unknown>, status: number) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
@@ -81,8 +97,24 @@ export const POST: APIRoute = async ({ request }) => {
   // Aviso a la clínica. Si falla, no se finge éxito: el formulario muestra el error con
   // el teléfono de la clínica en vez de decirle al dentista que todo salió bien.
   try {
-    const mail = clinicEmail(referral, clinicFiles);
-    await sendMail({ to: [MAIL_FROM], replyTo: referral._email, ...mail });
+    // Con archivos, primero se intenta adjuntarlos al correo (como hacía WordPress): hasta ~2.8 MB en total
+    // va directo; más que eso necesita el permiso Mail.ReadWrite en Azure. Si no se puede, sale el correo
+    // normal con los enlaces de descarga.
+    let sent = false;
+    if (files.length > 0) {
+      try {
+        const attachments = await loadAttachments(files);
+        const total = attachments.reduce((sum, file) => sum + file.data.byteLength, 0);
+        const mail = { to: [MAIL_FROM], replyTo: referral._email, ...clinicEmail(referral, clinicFiles, true) };
+        if (total <= INLINE_ATTACHMENTS_MAX) await sendMail({ ...mail, attachments });
+        else await sendMailWithAttachments(mail, attachments);
+        sent = true;
+      } catch (error) {
+        if (error instanceof MailSendError) throw error;
+        console.error('Could not attach the files; sending the email with download links only', error);
+      }
+    }
+    if (!sent) await sendMail({ to: [MAIL_FROM], replyTo: referral._email, ...clinicEmail(referral, clinicFiles) });
   } catch (error) {
     console.error('Failed to send referral email', error);
     return json({ error: error instanceof MailNotConfiguredError ? 'Email provider not configured' : 'Failed to send email' }, 500);
@@ -98,7 +130,8 @@ export const POST: APIRoute = async ({ request }) => {
 
   // Aviso al paciente: solo si la clínica lo activó (REFERRAL_NOTIFY_PATIENT=true) y el
   // dentista dejó un correo válido. Lleva únicamente datos de contacto de la clínica.
-  if (import.meta.env.REFERRAL_NOTIFY_PATIENT === 'true' && referral._patient_email && isEmail(referral._patient_email)) {
+  const notifyPatient = ['true', '1', 'yes'].includes(String(import.meta.env.REFERRAL_NOTIFY_PATIENT ?? '').trim().toLowerCase());
+  if (notifyPatient && referral._patient_email && isEmail(referral._patient_email)) {
     try {
       await sendMail({ to: [referral._patient_email], replyTo: MAIL_FROM, ...patientEmail(referral) });
     } catch (error) {

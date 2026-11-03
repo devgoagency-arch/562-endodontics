@@ -5,15 +5,15 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import LineIcon from '../components/LineIcon.astro';
 import ContactForm from '../components/ContactForm.astro';
-import { businessSchema, hours } from '../data/business';
+import { address, businessSchema, email, emailHref, hours, phoneHref, phoneVanity } from '../data/business';
 import ConsentEmbed from '../components/ConsentEmbed.astro';
 
-const MAP_SRC = 'https://www.google.com/maps?q=562+Waterloo+St,+London,+ON+N6B+2P9&output=embed';
+const MAP_SRC = address.mapsEmbedUrl;
 
 const contacts = [
-  { icon: 'pin' as const, title: 'Location', text: '562 Waterloo st, London, ON, N6B 2P9', href: 'https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9', external: true },
-  { icon: 'phone' as const, title: 'Call Us', text: '(519) 601-ENDO (3636)', href: 'tel:+15196013636', external: false },
-  { icon: 'mail' as const, title: 'Email', text: 'info@562endodontics.com', href: 'mailto:info@562endodontics.com', external: false },
+  { icon: 'pin' as const, title: 'Location', text: address.oneLine, href: address.mapsUrl, external: true },
+  { icon: 'phone' as const, title: 'Call Us', text: phoneVanity, href: phoneHref, external: false },
+  { icon: 'mail' as const, title: 'Email', text: email, href: emailHref, external: false },
 ];
 ---
 
@@ -25,11 +25,11 @@ const contacts = [
   <section aria-label="Map" data-no-reveal>
     <ConsentEmbed
       src={MAP_SRC}
-      title="Map showing 562 endodontics at 562 Waterloo St, London, ON"
+      title={`Map showing 562 endodontics at ${address.streetShort}, ${address.city}, ${address.province}`}
       preview="/images/contact/562-endodontics-london-ontario-map.webp"
-      previewAlt="Map showing 562 endodontics at 562 Waterloo St, London, Ontario"
+      previewAlt={`Map showing 562 endodontics at ${address.streetShort}, ${address.cityProvince}`}
       provider="Google"
-      openUrl="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9"
+      openUrl={address.mapsUrl}
       openLabel="Open in Google Maps"
       class="h-[457px] w-full"
     />

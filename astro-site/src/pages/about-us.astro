@@ -5,7 +5,7 @@ import LineIcon from '../components/LineIcon.astro';
 import JustifiedGallery from '../components/JustifiedGallery.astro';
 import ContactCta from '../components/ContactCta.astro';
 import { doctors } from '../data/doctors';
-import { businessSchema } from '../data/business';
+import { address, businessSchema } from '../data/business';
 
 // Cada doctor es una Person (no un Physician: en schema.org ese tipo es un
 // negocio médico, no un profesional individual), enlazada a la clínica por
@@ -37,7 +37,7 @@ const gallery = [
   { src: `/images/clinic/562-endodontics-london-ontario-reception-wall-sign.webp`, alt: '562 endodontics gold logo sign on the reception wall' },
   { src: `/images/clinic/562-endodontics-london-ontario-treatment-room.webp`, alt: 'Bright treatment room with a dental chair and operating microscope at 562 endodontics' },
   { src: `/images/clinic/562-endodontics-london-ontario-reception-desk.webp`, alt: 'Reception desk at 562 endodontics in London, Ontario' },
-  { src: `/images/clinic/562-endodontics-london-ontario-clinic-building.webp`, alt: '562 endodontics clinic building at 562 Waterloo Street, London, Ontario' },
+  { src: `/images/clinic/562-endodontics-london-ontario-clinic-building.webp`, alt: `562 endodontics clinic building at ${address.street}, ${address.cityProvince}` },
   { src: `/images/team/562-endodontics-london-ontario-endodontists.webp`, alt: 'The four endodontists of 562 endodontics in black scrubs' },
   { src: `/images/team/562-endodontics-london-ontario-team.webp`, alt: 'The full 562 endodontics team in black scrubs' },
   { src: `/images/technology/562-endodontics-london-ontario-gentlewave-system.webp`, alt: 'GentleWave system console in a treatment room at 562 endodontics' },

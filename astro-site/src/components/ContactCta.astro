@@ -5,6 +5,7 @@
 // vez de código repetido. El ancla #form es a donde apuntan los botones
 // "Contact Us" de otras páginas.
 import ContactForm from './ContactForm.astro';
+import { address, email, emailHref, phone, phoneHref } from '../data/business';
 ---
 
 <section id="form" data-pagefind-ignore class="scroll-mt-24 bg-[#f2eeea] py-24">
@@ -21,13 +22,13 @@ import ContactForm from './ContactForm.astro';
       <div class="mt-7 rounded-xl border border-brand-rust/20 bg-brand-rust/5 p-6 text-base">
         <p class="font-heading font-semibold text-brand-rust">For urgent dental trauma:</p>
         <ul class="mt-3 space-y-1.5 text-brand-ink/80">
-          <li>Call 562 endodontics at <a href="tel:+15196013636" class="font-semibold hover:underline">(519) 601-3636</a></li>
-          <li>Email: <a href="mailto:info@562endodontics.com" class="font-semibold hover:underline">info@562endodontics.com</a></li>
+          <li>Call 562 endodontics at <a href={phoneHref} class="font-semibold hover:underline">{phone}</a></li>
+          <li>Email: <a href={emailHref} class="font-semibold hover:underline">{email}</a></li>
           <li>Online referral form at <a href="/referrals" class="font-semibold hover:underline">562endodontics.com/referrals</a></li>
         </ul>
       </div>
       <p class="mt-6 text-base text-brand-ink/70">
-        We are located at <a href="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9" target="_blank" rel="noopener" class="font-semibold hover:underline">562 Waterloo Street, London, Ontario</a>.
+        We are located at <a href={address.mapsUrl} target="_blank" rel="noopener" class="font-semibold hover:underline">{address.street}, {address.cityProvince}</a>.
         Dedicated patient parking is available behind the building, marked "DENTAL."
       </p>
       <p class="mt-2 text-base text-brand-ink/70">

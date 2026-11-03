@@ -52,10 +52,15 @@ interface Mail {
   subject: string;
   html: string;
   replyTo?: string;
+  attachments?: MailAttachment[]; // solo en sendMail, y hasta INLINE_ATTACHMENTS_MAX en total
 }
 
+// sendMail acepta ~4 MB por petición y los adjuntos viajan en base64 (+33 %): hasta 2.8 MB de archivos
+// en total caben sin permisos extra. Más que eso necesita sendMailWithAttachments.
+export const INLINE_ATTACHMENTS_MAX = 2.8 * 1024 * 1024;
+
 // Envía como MAIL_FROM y lo guarda en Enviados. Graph responde 202 cuando acepta el mensaje.
-export async function sendMail({ to, subject, html, replyTo }: Mail): Promise<void> {
+export async function sendMail({ to, subject, html, replyTo, attachments = [] }: Mail): Promise<void> {
   const token = await getAccessToken();
   const response = await fetch(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(MAIL_FROM)}/sendMail`, {
     method: 'POST',
@@ -66,9 +71,117 @@ export async function sendMail({ to, subject, html, replyTo }: Mail): Promise<vo
         body: { contentType: 'HTML', content: html },
         toRecipients: to.map((address) => ({ emailAddress: { address } })),
         ...(replyTo ? { replyTo: [{ emailAddress: { address: replyTo } }] } : {}),
+        ...(attachments.length > 0
+          ? {
+              attachments: attachments.map((file) => ({
+                '@odata.type': '#microsoft.graph.fileAttachment',
+                name: file.name,
+                contentType: file.contentType,
+                contentBytes: Buffer.from(file.data).toString('base64'),
+              })),
+            }
+          : {}),
       },
       saveToSentItems: true,
     }),
   });
   if (!response.ok) throw new Error(`Microsoft Graph sendMail failed (${response.status}): ${await response.text()}`);
+}
+
+export interface MailAttachment {
+  name: string;
+  contentType: string;
+  data: Uint8Array;
+}
+
+// El último paso (enviar el borrador) falló: no se debe reintentar por otra vía, el mensaje pudo salir.
+export class MailSendError extends Error {}
+
+const GRAPH = 'https://graph.microsoft.com/v1.0';
+const INLINE_ATTACHMENT_MAX = 3 * 1024 * 1024; // hasta 3 MB va en una sola petición
+const UPLOAD_CHUNK = 12 * 320 * 1024; // las sesiones de carga piden múltiplos de 320 KiB (máx. 4 MB)
+
+// Envía el correo con archivos adjuntos de cualquier tamaño: crea un borrador, le sube los adjuntos
+// (los grandes por sesión de carga) y lo envía. sendMail directo solo admite ~4 MB en total.
+// Requiere además el permiso de aplicación Mail.ReadWrite (sin él Graph responde 403 al crear el borrador).
+export async function sendMailWithAttachments({ to, subject, html, replyTo }: Mail, attachments: MailAttachment[]): Promise<void> {
+  const token = await getAccessToken();
+  const auth = { Authorization: `Bearer ${token}` };
+  const jsonHeaders = { ...auth, 'Content-Type': 'application/json' };
+  const call = async (url: string, init: RequestInit, label: string) => {
+    const response = await fetch(url, init);
+    if (!response.ok) throw new Error(`Microsoft Graph ${label} failed (${response.status}): ${await response.text()}`);
+    return response;
+  };
+
+  const user = `${GRAPH}/users/${encodeURIComponent(MAIL_FROM)}`;
+  const draft = (await (
+    await call(
+      `${user}/messages`,
+      {
+        method: 'POST',
+        headers: jsonHeaders,
+        body: JSON.stringify({
+          subject: cleanSubject(subject),
+          body: { contentType: 'HTML', content: html },
+          toRecipients: to.map((address) => ({ emailAddress: { address } })),
+          ...(replyTo ? { replyTo: [{ emailAddress: { address: replyTo } }] } : {}),
+        }),
+      },
+      'create draft'
+    )
+  ).json()) as { id: string };
+  const messageUrl = `${user}/messages/${encodeURIComponent(draft.id)}`;
+
+  try {
+    for (const file of attachments) {
+      const size = file.data.byteLength;
+      if (size <= INLINE_ATTACHMENT_MAX) {
+        await call(
+          `${messageUrl}/attachments`,
+          {
+            method: 'POST',
+            headers: jsonHeaders,
+            body: JSON.stringify({
+              '@odata.type': '#microsoft.graph.fileAttachment',
+              name: file.name,
+              contentType: file.contentType,
+              contentBytes: Buffer.from(file.data).toString('base64'),
+            }),
+          },
+          'add attachment'
+        );
+        continue;
+      }
+      const session = (await (
+        await call(
+          `${messageUrl}/attachments/createUploadSession`,
+          {
+            method: 'POST',
+            headers: jsonHeaders,
+            body: JSON.stringify({ AttachmentItem: { attachmentType: 'file', name: file.name, size, contentType: file.contentType } }),
+          },
+          'create upload session'
+        )
+      ).json()) as { uploadUrl: string };
+      for (let start = 0; start < size; start += UPLOAD_CHUNK) {
+        const end = Math.min(start + UPLOAD_CHUNK, size);
+        // La URL de la sesión ya trae su propia autorización: no lleva el encabezado Authorization.
+        await call(
+          session.uploadUrl,
+          { method: 'PUT', headers: { 'Content-Range': `bytes ${start}-${end - 1}/${size}` }, body: file.data.subarray(start, end) },
+          'upload attachment chunk'
+        );
+      }
+    }
+  } catch (error) {
+    await fetch(messageUrl, { method: 'DELETE', headers: auth }).catch(() => {});
+    throw error;
+  }
+
+  try {
+    await call(`${messageUrl}/send`, { method: 'POST', headers: auth }, 'send draft');
+  } catch (error) {
+    throw new MailSendError((error as Error).message);
+  }
 }

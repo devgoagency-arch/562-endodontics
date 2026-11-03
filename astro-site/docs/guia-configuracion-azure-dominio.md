@@ -184,6 +184,14 @@ Los cambios pueden tardar **entre 30 minutos y 2 horas** en aplicarse. Si al pro
 
 El formulario permite hasta **10 archivos de 10 MB cada uno** (JPG, PNG, HEIC, PDF, Word, Excel y texto), como el de WordPress. Los archivos van directo del navegador a un almacenamiento **privado** de Vercel; el correo de la clínica trae la lista con los nombres originales y un enlace de descarga por archivo (el dentista recibe solo los nombres). Los archivos y sus enlaces duran **12 meses**; después se **borran solos**.
 
+**Archivos realmente adjuntos al correo de la clínica (como en WordPress):** el sitio adjunta los archivos al correo de `info@` y deja los enlaces como respaldo. Si el total pesa hasta unos **2.8 MB** (lo normal: imágenes de ~150 KB), se adjuntan **sin ningún permiso extra**. Si pesa más, Microsoft exige crear un borrador, y eso necesita un permiso más para la misma app y el mismo buzón (opcional); sin él, el correo sale con enlaces de descarga. Si se quiere adjuntar también lo pesado, se le pide a IT:
+
+```powershell
+New-ManagementRoleAssignment -App <Object ID de Enterprise applications> -Role "Application Mail.ReadWrite" -CustomResourceScope "562 buzon info"
+```
+
+Es el mismo procedimiento del permiso de envío (sección 3), limitado al buzón `info@`. Sin este permiso el sitio **sigue funcionando**: envía el correo con los enlaces de descarga, como antes.
+
 **Crear el almacenamiento (una sola vez):**
 1. Vercel → proyecto → **Storage** → **Create Storage** → **Blob**.
 2. En el acceso elige **Private** (no Public).

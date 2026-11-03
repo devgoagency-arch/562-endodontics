@@ -2,7 +2,7 @@
 // (opcional) uno para el paciente. Son HTML con estilos en línea y tablas, que es lo único que
 // renderizan bien los clientes de correo (Outlook incluido). Sin imágenes: Outlook de escritorio
 // no soporta WebP y las imágenes remotas suelen bloquearse.
-import { hours } from '../data/business';
+import { address, hours, phone } from '../data/business';
 import { escapeHtml } from './mail';
 import { formatBytes, LINK_TTL_SECONDS } from './referralFiles';
 
@@ -24,8 +24,8 @@ export interface BuiltEmail {
 const BRAND = '#B13E25';
 const BEIGE = '#E3DBD4';
 const INK = '#484B54';
-const PHONE = '(519) 601-3636';
-const ADDRESS = '562 Waterloo Street, London, Ontario N6B 2P9';
+const PHONE = phone;
+const ADDRESS = address.fullAddress;
 
 const formatDate = (iso?: string) => {
   if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
@@ -97,7 +97,7 @@ function renderSections(r: Referral): string {
     .join('');
 }
 
-function renderFiles(files: EmailFile[] = []): string {
+function renderFiles(files: EmailFile[] = [], attached = false): string {
   if (files.length === 0) return '';
   const rows = files
     .map((f) => {
@@ -107,7 +107,11 @@ function renderFiles(files: EmailFile[] = []): string {
     })
     .join('');
   const expires = new Date(Date.now() + LINK_TTL_SECONDS * 1000).toLocaleDateString('en-CA', { timeZone: 'America/Toronto', year: 'numeric', month: 'long', day: 'numeric' });
-  const note = files.some((f) => f.url) ? `Download links work until ${expires}. Please save the files to your system.` : 'These files were sent to the clinic.';
+  const note = !files.some((f) => f.url)
+    ? 'These files were sent to the clinic.'
+    : attached
+      ? `The files are attached to this email. The links are a backup and work until ${expires}.`
+      : `Download links work until ${expires}. Please save the files to your system.`;
   return `<tr><td style="padding:18px 0 4px;"><div style="font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:${BRAND};border-bottom:2px solid ${BEIGE};padding-bottom:6px;">Attached files (${files.length})</div></td></tr><tr><td><table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table><div style="padding-top:6px;font-size:12px;color:#777;">${note}</div></td></tr>`;
 }
 
@@ -142,13 +146,14 @@ const intro = (html: string) => `<tr><td style="padding:18px 0 0;font-size:16px;
 const submittedAt = () =>
   new Date().toLocaleString('en-CA', { timeZone: 'America/Toronto', dateStyle: 'medium', timeStyle: 'short' });
 
-export function clinicEmail(r: Referral, files: EmailFile[] = []): BuiltEmail {
+// `attached`: los archivos también van adjuntos al correo (los enlaces quedan de respaldo).
+export function clinicEmail(r: Referral, files: EmailFile[] = [], attached = false): BuiltEmail {
   const patient = `${clean(r.first_name)} ${clean(r.last_name)}`;
   const doctor = `Dr. ${clean(r.doctor_name)} ${clean(r.doctor_last_name)}`;
   const inner =
     intro(`New referral from <strong>${escapeHtml(doctor)}</strong> (${escapeHtml(clean(r.office_name))}) for <strong>${escapeHtml(patient)}</strong>.<br><span style="font-size:13px;color:#777;">Received ${escapeHtml(submittedAt())} (Eastern time). Reply to this email to answer the referring dentist.</span>`) +
     badges(r) +
-    renderFiles(files) +
+    renderFiles(files, attached) +
     renderSections(r);
   return {
     subject: `${isEmergency(r) ? 'URGENT - ' : ''}New referral: ${patient} (${clean(r.referred_for)})`,

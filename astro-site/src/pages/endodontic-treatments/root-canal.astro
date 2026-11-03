@@ -3,6 +3,7 @@
 // Dental Trauma. Textos según las correcciones del cliente (lenguaje claro para el
 // paciente, manteniendo el tono profesional).
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { email, emailHref, phone, phoneHref } from '../../data/business';
 import PageHero from '../../components/PageHero.astro';
 import SplitSection from '../../components/treatments/SplitSection.astro';
 import ImageRow from '../../components/treatments/ImageRow.astro';
@@ -42,7 +43,7 @@ const protocolSteps = [
 ];
 
 const faqs = [
-  { q: 'How do I refer my patient to 562 endodontics?', a: 'Referrals can be made through the online referral form, CDANet, by email at <a href="mailto:info@562endodontics.com" class="font-semibold text-brand-rust hover:underline">info@562endodontics.com</a>, or by phone at <a href="tel:+15196013636" class="font-semibold text-brand-rust hover:underline">(519) 601-3636</a>. Urgent cases are usually seen the same day or within 24–48 hours.' },
+  { q: 'How do I refer my patient to 562 endodontics?', a: `Referrals can be made through the online referral form, CDANet, by email at <a href="${emailHref}" class="font-semibold text-brand-rust hover:underline">${email}</a>, or by phone at <a href="${phoneHref}" class="font-semibold text-brand-rust hover:underline">${phone}</a>. Urgent cases are usually seen the same day or within 24–48 hours.` },
   { q: 'Will a 3D CBCT scan be taken at my consultation?', a: 'If indicated, a CBCT scan may be taken during the consultation. This three-dimensional imaging provides detailed views of the tooth and surrounding structures, allowing for more precise diagnosis and treatment planning than conventional radiographs.' },
   { q: 'Will the referring dentist receive a report after treatment?', a: 'Yes. Each case generates a clinical summary, including post-operative radiographs.' },
   { q: 'What if the case is more complex than expected?', a: 'If consultation findings significantly change the treatment plan, the endodontist will contact the referring dentist before proceeding.' },

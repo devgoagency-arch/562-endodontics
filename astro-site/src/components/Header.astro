@@ -1,6 +1,6 @@
 ---
 import InfoItem from './InfoItem.astro';
-import { hours } from '../data/business';
+import { address, hours, phone, phoneHref } from '../data/business';
 
 // Menús desplegables (mega menú) del nav. Cada clave de `menus` se enlaza
 // desde `navLinks[].menu`. Para agregar una columna basta sumar un ítem; el
@@ -88,9 +88,9 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
     </a>
 
     <div class="flex items-center gap-8 text-base">
-      <InfoItem label="Location" text="562 Waterloo st, London, ON, N6B 2P9" icon="pin" href="https://www.google.com/maps/place/562+Waterloo+St,+London,+ON+N6B+2P9" />
+      <InfoItem label="Location" text={address.oneLine} icon="pin" href={address.mapsUrl} />
       <InfoItem label="Our Hours" text={hours.weekday} icon="clock" />
-      <InfoItem label="Contact us" text="(519) 601-3636" icon="phone" href="tel:+15196013636" />
+      <InfoItem label="Contact us" text={phone} icon="phone" href={phoneHref} />
     </div>
   </div>
 
@@ -197,7 +197,7 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
 <!-- Barra sticky de acción rápida en móvil: llamar / referir siempre a mano,
      porque la mayoría del tráfico local llega con intención inmediata. -->
 <div data-pagefind-ignore class="fixed inset-x-0 bottom-0 z-40 flex border-t border-stone-200 bg-white shadow-lg lg:hidden">
-  <a href="tel:+15196013636" class="flex flex-1 items-center justify-center gap-2 py-3 font-heading text-sm font-semibold text-brand-ink">
+  <a href={phoneHref} class="flex flex-1 items-center justify-center gap-2 py-3 font-heading text-sm font-semibold text-brand-ink">
     Call Now
   </a>
   <a href="/referrals" class="flex flex-1 items-center justify-center gap-2 bg-brand-rust py-3 font-heading text-sm font-semibold text-white">

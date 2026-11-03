@@ -32,6 +32,9 @@ export default defineConfig({
   },
   adapter: vercel({
     webAnalytics: { enabled: true },
+    // /api/referral baja los archivos del Blob y los adjunta al correo: con 10 archivos de 10 MB necesita más
+    // que los 10 s por defecto.
+    maxDuration: 60,
   }),
   integrations: [sitemap({ filter: (page) => !/\/(404|500)\/?$/.test(page) })],
   vite: {
