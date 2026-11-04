@@ -1,5 +1,6 @@
 ---
 import { address, email, emailHref, hours, phoneHref, phoneVanityWide } from '../data/business';
+import TurnstileField from './TurnstileField.astro';
 
 const quickLinks = [
   { label: 'Home', href: '/' },
@@ -24,7 +25,7 @@ const quickLinks = [
     <p class="mt-2 text-base text-white/80">
       Get updates on new treatments, professional development events, and news from 562 endodontics.
     </p>
-    <form class="mx-auto mt-5 flex max-w-md flex-col gap-3 sm:flex-row" action="/api/subscribe" method="post">
+    <form data-subscribe-form class="mx-auto mt-5 flex max-w-md flex-col gap-3 sm:flex-row sm:flex-wrap" action="/api/subscribe" method="post">
       <label for="newsletter-email" class="sr-only">Email address</label>
       <input
         id="newsletter-email"
@@ -32,11 +33,14 @@ const quickLinks = [
         name="email"
         placeholder="Your Email Address"
         required
-        class="w-full rounded-full border border-white/30 bg-white/10 px-5 py-3 text-base text-white placeholder:text-white/60 focus:bg-white/15"
+        class="w-full rounded-full border border-white/30 bg-white/10 px-5 py-3 text-base text-white placeholder:text-white/60 focus:bg-white/15 sm:flex-1"
       />
-      <button type="submit" class="shrink-0 rounded-full bg-white px-7 py-3 font-heading text-sm font-semibold text-brand-rust transition hover:bg-stone-100">
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden" />
+      <TurnstileField />
+      <button type="submit" class="shrink-0 rounded-full bg-white px-7 py-3 font-heading text-sm font-semibold text-brand-rust transition hover:bg-stone-100 disabled:opacity-70">
         Subscribe
       </button>
+      <p class="subscribe-status hidden w-full text-sm font-medium text-white" role="status"></p>
     </form>
   </div>
 
@@ -89,3 +93,35 @@ const quickLinks = [
     <button type="button" data-cookie-settings class="ml-3 underline transition hover:text-white">Cookie settings</button>
   </div>
 </footer>
+
+<script>
+  const w = window as unknown as {
+    turnstileReady?: (form: HTMLFormElement) => Promise<void>;
+    resetTurnstile?: (form: HTMLFormElement) => void;
+  };
+
+  const form = document.querySelector<HTMLFormElement>('form[data-subscribe-form]');
+  const status = form?.querySelector<HTMLParagraphElement>('.subscribe-status');
+  const button = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!button || !status) return;
+    button.disabled = true;
+    button.textContent = 'Sending...';
+    status.classList.add('hidden');
+    try {
+      await w.turnstileReady?.(form);
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+      if (!res.ok) throw new Error('Request failed');
+      form.reset();
+      status.textContent = "Thank you for subscribing! We'll keep you posted.";
+    } catch {
+      status.textContent = 'Something went wrong. Please try again or call us at (519) 601-3636.';
+    } finally {
+      status.classList.remove('hidden');
+      w.resetTurnstile?.(form);
+      button.disabled = false;
+      button.textContent = 'Subscribe';
+    }
+  });
+</script>

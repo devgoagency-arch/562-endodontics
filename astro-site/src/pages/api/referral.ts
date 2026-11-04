@@ -3,6 +3,8 @@ import { CaptchaNotConfiguredError, TURNSTILE_FIELD, clientIp, verifyTurnstile }
 import { get } from '@vercel/blob';
 import { INLINE_ATTACHMENTS_MAX, MAIL_FROM, MailNotConfiguredError, MailSendError, isEmail, sendMail, sendMailWithAttachments, type MailAttachment } from '../../lib/mail';
 import { clinicEmail, doctorEmail, patientEmail } from '../../lib/referralEmail';
+import { postToWordPress, wordpressConfigured } from '../../lib/wordpress';
+import { referralRows } from '../../lib/referralFields';
 import { ALLOWED_TYPES, extensionOf, parseManifest, signedLink, verifyTicket, type FileEntry } from '../../lib/referralFiles';
 
 // Se renderiza on-demand (Vercel Function), no en build time — un formulario
@@ -118,6 +120,16 @@ export const POST: APIRoute = async ({ request }) => {
   } catch (error) {
     console.error('Failed to send referral email', error);
     return json({ error: error instanceof MailNotConfiguredError ? 'Email provider not configured' : 'Failed to send email' }, 500);
+  }
+
+  // Copia en la sección "Referrals" del WordPress de la clínica (datos + enlaces a los documentos). El correo es
+  // lo principal: si esto falla solo se registra, no se le avisa al dentista.
+  if (wordpressConfigured) {
+    try {
+      await postToWordPress('referral', { fields: referral, rows: referralRows(referral), files: clinicFiles });
+    } catch (error) {
+      console.error('Failed to save the referral in WordPress', error);
+    }
   }
 
   // Confirmación para el dentista que refiere. El remitente es siempre la clínica; si falla, la
