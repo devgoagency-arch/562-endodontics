@@ -39,6 +39,15 @@ export const GET: APIRoute = ({ site }) => {
 - Email: ${businessSchema.email}
 - Hours: ${hours.weekday}
 - Area served: ${businessSchema.areaServed.join('; ')}
+- Coordinates: ${businessSchema.geo.latitude}, ${businessSchema.geo.longitude}
+- Specialty: endodontics only (no general dentistry)
+
+## How dentists refer a patient
+
+- Online referral form: ${url('/referrals/')} (patient and referring-doctor details, reason for referral, tooth number, insurance, optional X-rays and files up to 10 MB each).
+- Printable form: ${url('/files/562-endodontics-patient-referral-form.pdf')}
+- The referring dentist receives a copy of the referral by email; the clinic then contacts the patient to schedule.
+- Each treatment page below includes a "Frequently asked questions" section for patients and referring dentists.
 
 ## Endodontic treatments
 

@@ -35,7 +35,7 @@ export const POST: APIRoute = async ({ request }) => {
         subscribersConfigured ? '<p>The address was also added to the Subscribers list in the website admin.</p>' : ''
       }`,
     }),
-    subscribersConfigured ? saveSubscriber(email, 'Website footer') : Promise.reject(new Error('Subscriber list not configured')),
+    subscribersConfigured ? saveSubscriber(email, 'Website footer - consent v1') : Promise.reject(new Error('Subscriber list not configured')),
   ]);
   results.forEach((result, i) => {
     if (result.status === 'rejected' && !(i === 1 && !subscribersConfigured)) {

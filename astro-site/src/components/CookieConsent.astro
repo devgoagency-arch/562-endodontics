@@ -28,7 +28,7 @@
     <h2 id="cookie-title" class="font-heading text-lg font-semibold text-brand-rust">Your privacy</h2>
     <p id="cookie-text" class="mt-2 text-base text-brand-ink/80">
       We use only the cookies needed to make this site work. With your permission, we also load third-party content such as
-      Google Maps. You can change your choice at any time from "Cookie settings" in the footer. See our
+      Google Maps and measure visits with Google Analytics. You can change your choice at any time from "Cookie settings" in the footer. See our
       <a href="/privacy-policy/" class="font-semibold text-brand-rust underline">Privacy Policy</a>.
     </p>
     <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -61,6 +61,13 @@
         </div>
         <input id="cookie-media" type="checkbox" data-cookie-category="media" class="mt-1 h-5 w-5" />
       </li>
+      <li class="flex items-start justify-between gap-4 py-3">
+        <div>
+          <label for="cookie-analytics" class="font-heading text-base font-semibold text-brand-ink">Analytics</label>
+          <p class="text-sm text-brand-ink/70">Google Analytics, to understand how visitors use the site (pages viewed, devices, country).</p>
+        </div>
+        <input id="cookie-analytics" type="checkbox" data-cookie-category="analytics" class="mt-1 h-5 w-5" />
+      </li>
     </ul>
     <div class="mt-4 flex flex-col gap-3 sm:flex-row">
       <button type="button" data-cookie-action="save" class="rounded-full border border-brand-rust bg-brand-rust px-6 py-2.5 font-heading text-sm font-semibold text-white transition hover:bg-brand-rustDark">
@@ -76,7 +83,11 @@
 <script>
   const KEY = '562-consent';
   const MAX_AGE_MS = 365 * 24 * 60 * 60 * 1000;
-  const CATEGORIES = ['media'] as const;
+  const CATEGORIES = ['media', 'analytics'] as const;
+  // Google Analytics 4 (la misma propiedad del WordPress anterior). Solo se carga con permiso y solo en el
+  // dominio real, para que las pruebas y las vistas previas no ensucien las estadísticas.
+  const GA_ID = 'G-SEYJBSDS2C';
+  const GA_HOSTS = ['562endodontics.com', 'www.562endodontics.com'];
   type Category = (typeof CATEGORIES)[number];
   type Consent = { v: 1; ts: number } & Record<Category, boolean>;
 
@@ -94,6 +105,36 @@
     } catch {}
     document.dispatchEvent(new CustomEvent('consent:change', { detail: consent }));
     syncEmbeds();
+    syncAnalytics();
+  }
+
+  // --- Google Analytics: se carga solo si la persona lo autorizó ---
+  let gaLoaded = false;
+  function syncAnalytics() {
+    const allowed = Boolean(read()?.analytics) && GA_HOSTS.includes(location.hostname);
+    // Si se retira el permiso: se apaga la medición y se borran las cookies de GA.
+    (window as any)[`ga-disable-${GA_ID}`] = !allowed;
+    if (!allowed) {
+      if (gaLoaded) {
+        document.cookie.split(';').map((c) => c.split('=')[0].trim()).filter((n) => n === '_ga' || n.startsWith('_ga_')).forEach((n) => {
+          for (const domain of [location.hostname, '.' + location.hostname.replace(/^www\./, '')]) {
+            document.cookie = `${n}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${domain}`;
+          }
+        });
+      }
+      return;
+    }
+    if (gaLoaded) return;
+    gaLoaded = true;
+    const w = window as any;
+    w.dataLayer = w.dataLayer || [];
+    w.gtag = function () { w.dataLayer.push(arguments); };
+    w.gtag('js', new Date());
+    w.gtag('config', GA_ID);
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+    document.head.append(script);
   }
 
   const root = document.getElementById('cookie-consent') as HTMLElement;
@@ -178,4 +219,5 @@
     else show('main');
   }
   syncEmbeds();
+  syncAnalytics();
 </script>

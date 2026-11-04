@@ -90,6 +90,7 @@ export const businessSchema = {
   ],
   areaServed: ['London, Ontario', 'Middlesex County, Ontario'],
   sameAs: [
+    'https://maps.app.goo.gl/xLKyStzwr9GVsnHC9',
     'https://www.instagram.com/562endodontics/',
     'https://www.linkedin.com/in/jacqueline-lopez-gross-dds-msc-frcd-c-2041102/',
   ],

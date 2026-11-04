@@ -4,5 +4,22 @@
       "path": "/api/cleanup-files",
       "schedule": "0 9 * * 0"
     }
+  ],
+  "redirects": [
+    { "source": "/high-tech-facility-2-2", "destination": "/about-us/", "permanent": true },
+    { "source": "/high-tech-facility-2-2/", "destination": "/about-us/", "permanent": true },
+    { "source": "/high-tech-facility-2", "destination": "/our-clinic/", "permanent": true },
+    { "source": "/high-tech-facility-2/", "destination": "/our-clinic/", "permanent": true },
+    { "source": "/footer-562", "destination": "/", "permanent": true },
+    { "source": "/footer-562/", "destination": "/", "permanent": true },
+    { "source": "/hello-world", "destination": "/", "permanent": true },
+    { "source": "/hello-world/", "destination": "/", "permanent": true },
+    { "source": "/elementor-hf/home", "destination": "/", "permanent": true },
+    { "source": "/elementor-hf/home/", "destination": "/", "permanent": true },
+    { "source": "/elementor-hf/home-2", "destination": "/", "permanent": true },
+    { "source": "/elementor-hf/home-2/", "destination": "/", "permanent": true },
+    { "source": "/elementor-hf/our-dental-clinic-2", "destination": "/", "permanent": true },
+    { "source": "/elementor-hf/our-dental-clinic-2/", "destination": "/", "permanent": true },
+    { "source": "/wp-content/uploads/PatientReferral_FORM2025-1.pdf", "destination": "/files/562-endodontics-patient-referral-form.pdf", "permanent": true }
   ]
 }

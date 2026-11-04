@@ -308,6 +308,9 @@ const steps = [
           Thank you — we've sent a copy of this referral to your email for your records. Our team will
           be in touch shortly to confirm the appointment.
         </p>
+        <button type="button" id="send-another" class="mt-6 rounded-full bg-brand-rust px-8 py-2 font-heading text-sm font-semibold text-white transition hover:bg-brand-rustDark">
+          Send another referral
+        </button>
       </div>
     </div>
   </section>
@@ -512,6 +515,12 @@ const steps = [
         submitBtn.textContent = 'Submit';
         w.resetTurnstile?.(form);
       }
+    });
+
+    // Para enviar otro referral: se recarga la página con el formulario vacío (también borra los datos del
+    // paciente anterior de la pantalla).
+    document.getElementById('send-another')?.addEventListener('click', () => {
+      window.location.assign(window.location.pathname);
     });
 
     render();

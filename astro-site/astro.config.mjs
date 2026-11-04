@@ -29,6 +29,13 @@ export default defineConfig({
   redirects: {
     '/high-tech-facility-2-2/': { status: 301, destination: '/about-us/' },
     '/high-tech-facility-2/': { status: 301, destination: '/our-clinic/' },
+    // Páginas técnicas/de prueba del WordPress viejo que Google tiene indexadas (plantillas de Elementor,
+    // pie de página y la entrada "Hello world"): no existen en el sitio nuevo, van a la portada.
+    '/footer-562/': { status: 301, destination: '/' },
+    '/hello-world/': { status: 301, destination: '/' },
+    '/elementor-hf/home/': { status: 301, destination: '/' },
+    '/elementor-hf/home-2/': { status: 301, destination: '/' },
+    '/elementor-hf/our-dental-clinic-2/': { status: 301, destination: '/' },
   },
   adapter: vercel({
     webAnalytics: { enabled: true },
