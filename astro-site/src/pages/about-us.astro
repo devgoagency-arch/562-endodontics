@@ -5,12 +5,14 @@ import LineIcon from '../components/LineIcon.astro';
 import JustifiedGallery from '../components/JustifiedGallery.astro';
 import ContactCta from '../components/ContactCta.astro';
 import { doctors } from '../data/doctors';
+import { imageSize } from '../lib/imageSize';
 import { address, businessSchema } from '../data/business';
 
 // Cada doctor es una Person (no un Physician: en schema.org ese tipo es un
 // negocio médico, no un profesional individual), enlazada a la clínica por
 // worksFor. El @id coincide con el que arma businessSchema.employee, para que
 // la relación quede en los dos sentidos.
+const doctorPhotoSizes = await Promise.all(doctors.map((doc) => imageSize(doc.photo)));
 const doctorSchemas = doctors.map((doc) => ({
   '@context': 'https://schema.org',
   '@type': 'Person',
@@ -87,10 +89,10 @@ const gallery = [
 
       <div class="grid gap-4 md:mt-28">
         <div class="grid grid-cols-2 gap-4">
-          <img src={`/images/clinic/562-endodontics-london-ontario-treatment-room-overhead.webp`} alt="Overhead view of a treatment room with the doctor at the operating microscope" class="aspect-208/300 w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
-          <img src={`/images/team/562-endodontics-london-ontario-endodontist-and-assistants-with-microscope.webp`} alt="Endodontist and assistants working with the operating microscope" class="aspect-208/300 w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+          <img src={`/images/clinic/562-endodontics-london-ontario-treatment-room-overhead.webp`} width="1008" height="756" alt="Overhead view of a treatment room with the doctor at the operating microscope" class="aspect-208/300 w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+          <img src={`/images/team/562-endodontics-london-ontario-endodontist-and-assistants-with-microscope.webp`} width="655" height="540" alt="Endodontist and assistants working with the operating microscope" class="aspect-208/300 w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
         </div>
-        <img src={`/images/team/562-endodontics-london-ontario-team.webp`} alt="The full 562 endodontics team in black scrubs" class="aspect-447/290 w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+        <img src={`/images/team/562-endodontics-london-ontario-team.webp`} width="1282" height="800" alt="The full 562 endodontics team in black scrubs" class="aspect-447/290 w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
       </div>
     </div>
   </section>
@@ -100,9 +102,9 @@ const gallery = [
     <div class="mx-auto max-w-6xl px-6">
       <h2 class="text-center font-heading text-3xl font-semibold leading-tight text-brand-rust sm:text-[32px]">Meet the Doctors</h2>
       <div class="mt-10 space-y-8" data-reveal-each>
-        {doctors.map((doc) => (
+        {doctors.map((doc, i) => (
           <article class="grid items-center gap-8 rounded-[20px] bg-brand-rust p-6 md:grid-cols-[40fr_60fr] md:p-8">
-            <img src={doc.photo} alt={`${doc.name}, endodontist`} class="h-auto w-full rounded-[20px]" loading="lazy" />
+            <img src={doc.photo} width={doctorPhotoSizes[i].width} height={doctorPhotoSizes[i].height} alt={`${doc.name}, endodontist`} class="h-auto w-full rounded-[20px]" loading="lazy" />
             <div class="flex flex-col justify-center md:pr-6">
               <h3 class="font-heading text-3xl font-semibold leading-tight text-white sm:text-[32px]">{doc.name}</h3>
               <div class="my-5 h-0.5 w-20 bg-brand-tan"></div>

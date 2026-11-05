@@ -1,5 +1,6 @@
 ---
 import InfoItem from './InfoItem.astro';
+import ResponsiveImg from './ResponsiveImg.astro';
 import { address, hours, phone, phoneHref } from '../data/business';
 
 // Menús desplegables (mega menú) del nav. Cada clave de `menus` se enlaza
@@ -84,7 +85,7 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
        que el header sticky no ocupe demasiado alto una vez fijo arriba. -->
   <div id="header-info-bar" class="mx-auto hidden max-w-7xl items-center justify-between overflow-hidden px-6 transition-[max-height,opacity,padding] duration-300 lg:flex" style="max-height: 130px; padding-top: 1.5rem; padding-bottom: 1.5rem;">
     <a href="/">
-      <img src="/logo/logo-black.webp" alt="562 endodontics logo" id="header-logo" class="h-[74px] w-auto transition-all duration-300" />
+      <img src="/logo/logo-black.webp" width="800" height="259" alt="562 endodontics logo" id="header-logo" class="h-[74px] w-auto transition-all duration-300" />
     </a>
 
     <div class="flex items-center gap-8 text-base">
@@ -97,7 +98,7 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
   <!-- Nav principal -->
   <nav id="header-nav" class="border-t border-stone-100">
     <div class="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-3 transition-[padding] duration-300 lg:justify-end min-[1180px]:justify-center">
-      <a href="/" id="nav-logo-link" class="lg:hidden"><img src="/logo/logo-black.webp" alt="562 endodontics logo" id="nav-logo-img" class="h-12 w-auto" /></a>
+      <a href="/" id="nav-logo-link" class="lg:hidden"><img src="/logo/logo-black.webp" width="800" height="259" alt="562 endodontics logo" id="nav-logo-img" class="h-12 w-auto" /></a>
 
       <ul class="hidden items-center gap-3 whitespace-nowrap font-heading text-[13px] font-semibold uppercase tracking-wide text-brand-ink min-[1180px]:flex min-[1360px]:gap-5 min-[1360px]:text-sm">
         {navLinks.map((link) => (
@@ -185,7 +186,7 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
               </span>
             </div>
             <div class="relative min-h-36 w-[38%] shrink-0">
-              <img src={item.image} alt="" class="absolute inset-0 h-full w-full rounded-[20px] object-cover" loading="lazy" />
+              <ResponsiveImg src={item.image} class="absolute inset-0 h-full w-full rounded-[20px] object-cover" sizes="160px" />
             </div>
           </a>
         ))}
@@ -333,7 +334,12 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
   }
 
   syncSpacer();
-  window.addEventListener('resize', syncSpacer);
+  // Los eventos de resize llegan a ráfagas: se agrupan en un solo cálculo por frame (lee el layout una vez).
+  let spacerFrame = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(spacerFrame);
+    spacerFrame = requestAnimationFrame(syncSpacer);
+  });
   document.fonts?.ready.then(syncSpacer);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();

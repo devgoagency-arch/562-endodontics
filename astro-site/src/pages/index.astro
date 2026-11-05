@@ -2,12 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import SectionBackdrop from '../components/SectionBackdrop.astro';
+import ResponsiveImg from '../components/ResponsiveImg.astro';
 import { address, businessSchema, hours, phoneHref, phoneVanity } from '../data/business';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import ConsentEmbed from '../components/ConsentEmbed.astro';
 import TreatmentGrid from '../components/TreatmentGrid.astro';
 import TestimonialsSection from '../components/TestimonialsSection.astro';
 import ContactCta from '../components/ContactCta.astro';
+import { imageSize } from '../lib/imageSize';
 
 const aboutFeatures = [
   'Limited to endodontics',
@@ -33,7 +35,7 @@ const techItems = [
     eyebrow: 'GENTLEWAVE',
     title: 'Experience revolutionary care with the GentleWave® Procedure',
     youtube: 'https://www.youtube.com/embed/fMccTug-11k',
-    poster: 'https://img.youtube.com/vi/fMccTug-11k/maxresdefault.jpg',
+    poster: 'https://img.youtube.com/vi/fMccTug-11k/sddefault.jpg',
     logo: '/images/logos/gentlewave-authorized-practice-logo.webp',
     logoAlt: 'GentleWave Procedure Authorized Practice',
     logoClass: 'h-[90px]',
@@ -59,6 +61,8 @@ const techItems = [
     logoClass: 'h-[78px]',
   },
 ];
+
+const techLogoSizes = await Promise.all(techItems.map((item) => imageSize(item.logo)));
 
 // "Most dentists refer patients to us for:" — 5 motivos clínicos (sección
 // "Why would a dentist refer you to us"). No confundir con los 6 tratamientos
@@ -159,8 +163,8 @@ function cardColors(color: 'white' | 'rust', index: number) {
       <div id="teasers-card" class="mx-auto grid max-w-6xl gap-6 rounded-2xl bg-brand-rust p-3 shadow-2xl sm:grid-cols-3">
         {teasers.map((t) => (
           <a href={t.href} class="reveal group rounded-xl p-7 transition hover:bg-white/10">
-            <h3 class="font-heading text-lg font-semibold text-white">{t.title}</h3>
-            <p class="mt-2 text-base text-white/80">{t.text}</p>
+            <h2 class="font-heading text-lg font-semibold text-white">{t.title}</h2>
+            <p class="mt-2 text-base text-white/85">{t.text}</p>
             <span class="mt-3 inline-block text-sm font-semibold uppercase tracking-wide text-white transition group-hover:translate-x-1">
               Learn More →
             </span>
@@ -187,17 +191,17 @@ function cardColors(color: 'white' | 'rust', index: number) {
 
           <div class="reveal mt-10 flex flex-wrap items-center gap-8">
             <a href="https://www.ratemds.com/doctor-ratings/dr-jacqueline-lopez-gross-london-on-ca/" target="_blank" rel="noopener" class="rounded-lg bg-white/95 p-2 transition hover:opacity-90">
-              <img src="/images/logos/ratemds-reviews-logo.svg" alt="RateMDs reviews for 562 endodontics" class="h-10 w-auto" />
+              <img src="/images/logos/ratemds-reviews-logo.svg" width="159" height="43" alt="RateMDs reviews for 562 endodontics" class="h-10 w-auto" loading="lazy" />
             </a>
             <a href="https://www.google.com/maps/place/562+endodontics/@42.9909536,-81.2447238,17z" target="_blank" rel="noopener" class="rounded-lg bg-white/95 p-2 transition hover:opacity-90">
-              <img src="/images/logos/google-reviews-logo.svg" alt="Google reviews for 562 endodontics" class="h-10 w-auto" />
+              <img src="/images/logos/google-reviews-logo.svg" width="1116" height="458" alt="Google reviews for 562 endodontics" class="h-10 w-auto" loading="lazy" />
             </a>
           </div>
         </div>
       </div>
 
       <div class="relative min-h-[360px]">
-        <img src="/images/clinic/562-endodontics-london-ontario-treatment-room.webp" alt="Treatment room at the 562 endodontics office in London, Ontario" class="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+        <ResponsiveImg src="/images/clinic/562-endodontics-london-ontario-treatment-room.webp" alt="Treatment room at the 562 endodontics office in London, Ontario" class="absolute inset-0 h-full w-full object-cover" sizes="(min-width: 1024px) 50vw, 100vw" />
       </div>
     </div>
   </section>
@@ -213,12 +217,19 @@ function cardColors(color: 'white' | 'rust', index: number) {
     function setCardHalfHeightVar() {
       const card = document.getElementById('teasers-card');
       if (card) {
-        document.documentElement.style.setProperty('--card-half-h', `${card.offsetHeight / 2}px`);
-        document.documentElement.style.setProperty('--card-h', `${card.offsetHeight}px`);
+        // Una sola lectura de layout y después las dos escrituras: leer entre ellas obligaba al
+        // navegador a recalcular el layout dos veces seguidas (reflow forzado).
+        const cardHeight = card.offsetHeight;
+        document.documentElement.style.setProperty('--card-half-h', `${cardHeight / 2}px`);
+        document.documentElement.style.setProperty('--card-h', `${cardHeight}px`);
       }
     }
     setCardHalfHeightVar();
-    window.addEventListener('resize', setCardHalfHeightVar);
+    let cardFrame = 0;
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(cardFrame);
+      cardFrame = requestAnimationFrame(setCardHalfHeightVar);
+    });
   </script>
 
   <!-- ALTA TECNOLOGÍA: demos en video de los equipos (High Tech Facility) -->
@@ -228,16 +239,16 @@ function cardColors(color: 'white' | 'rust', index: number) {
         A <span class="font-semibold text-brand-rust">High Tech</span> Facility
       </h2>
       <div class="mt-14 grid gap-14 md:grid-cols-3 md:gap-8">
-        {techItems.map((item) => (
+        {techItems.map((item, i) => (
           <div class="reveal flex flex-col items-center text-center">
             <p class="font-heading text-sm font-medium uppercase tracking-[0.2em] text-brand-rust">{item.eyebrow}</p>
             <h3 class="mt-4 font-heading text-2xl font-medium leading-snug text-brand-rust md:min-h-34">{item.title}</h3>
             <VideoEmbed youtube={item.youtube} mp4={item.video} poster={item.poster} title={item.title} class="mt-6" />
             <div class="mt-6 flex h-[134px] w-[269px] items-center justify-center rounded-xl bg-white shadow-md ring-1 ring-stone-100">
-              <img src={item.logo} alt={item.logoAlt} class={`${item.logoClass} w-auto max-w-[202px] object-contain`} loading="lazy" />
+              <img src={item.logo} width={techLogoSizes[i].width} height={techLogoSizes[i].height} alt={item.logoAlt} class={`${item.logoClass} w-auto max-w-[202px] object-contain`} loading="lazy" />
             </div>
             <a href={`/high-tech-facility/#${item.id}`} class="mt-6 inline-flex items-center rounded-[20px_20px_3px_3px] bg-brand-rust px-8 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-brand-rustDark">
-              Learn More
+              Learn More<span class="sr-only"> about {item.eyebrow}</span>
             </a>
           </div>
         ))}
@@ -252,7 +263,7 @@ function cardColors(color: 'white' | 'rust', index: number) {
     <h2 class="reveal mt-2 font-heading text-4xl font-light leading-tight text-brand-ink sm:text-[43px]"><span class="block">About</span>
       <img src="/logo/562-endodontics-center-gray.svg" alt="562 endodontics" width="821" height="407" class="mx-auto mt-3 block h-[2.3em] w-auto" />
     </h2>
-    <p class="reveal mx-auto mt-5 max-w-2xl text-lg text-brand-ink/70">
+    <p class="reveal mx-auto mt-5 max-w-2xl text-lg text-brand-ink/80">
       We provide specialized care for protecting and preserving natural teeth with the highest
       standards while giving back to the community. Our staff is committed to staying up-to-date on
       the latest treatments and practices. We are dedicated to supporting local initiatives to make a
@@ -260,8 +271,8 @@ function cardColors(color: 'white' | 'rust', index: number) {
     </p>
 
     <div class="reveal mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-      <img src="/images/clinic/562-endodontics-london-ontario-clinic-reception.webp" alt="Reception of the 562 endodontics clinic in London, Ontario" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
-      <img src="/images/team/562-endodontics-london-ontario-team.webp" alt="The 562 endodontics team in London, Ontario" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
+      <img src="/images/clinic/562-endodontics-london-ontario-clinic-reception.webp" width="1640" height="1230" alt="Reception of the 562 endodontics clinic in London, Ontario" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
+      <img src="/images/team/562-endodontics-london-ontario-team.webp" width="1282" height="800" alt="The 562 endodontics team in London, Ontario" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
     </div>
 
     <ul class="reveal mx-auto mt-10 grid max-w-3xl grid-cols-1 gap-x-8 gap-y-4 text-left sm:grid-cols-3">
@@ -273,7 +284,7 @@ function cardColors(color: 'white' | 'rust', index: number) {
       ))}
     </ul>
     <a href="/about-us" class="reveal mt-10 inline-block rounded-full bg-brand-rust px-9 py-3.5 font-heading text-base font-semibold text-white transition hover:bg-brand-rustDark">
-      Learn More
+      Learn More<span class="sr-only"> about 562 endodontics and our team</span>
     </a>
     </div>
   </section>
@@ -294,7 +305,7 @@ function cardColors(color: 'white' | 'rust', index: number) {
         experts for complex clinical procedures or challenging diagnostics.
       </p>
       <a href="/about-us" class="reveal mt-8 inline-block rounded-full bg-white px-9 py-3.5 font-heading text-base font-semibold text-brand-rust transition hover:bg-stone-100">
-        Learn More
+        Learn More<span class="sr-only"> about why dentists refer patients to 562 endodontics</span>
       </a>
     </div>
 
@@ -325,10 +336,10 @@ function cardColors(color: 'white' | 'rust', index: number) {
       We are proudly associated with the following organizations
     </h2>
     <div class="mx-auto mt-10 flex max-w-5xl flex-wrap items-center justify-center gap-x-14 gap-y-10 px-6">
-      <a href="https://www.aae.org/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/american-association-of-endodontists-logo.webp" alt="American Association of Endodontists logo" class="h-24 w-auto object-contain" loading="lazy" /></a>
-      <a href="https://www.caendo.ca/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/canadian-academy-of-endodontics-logo.webp" alt="Canadian Academy of Endodontics logo" class="h-20 w-auto object-contain" loading="lazy" /></a>
-      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/western-university-logo.webp" alt="Western University logo" class="h-16 w-auto object-contain" loading="lazy" /></a>
-      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/university-of-toronto-logo.webp" alt="University of Toronto logo" class="h-16 w-auto object-contain" loading="lazy" /></a>
+      <a href="https://www.aae.org/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/american-association-of-endodontists-logo.webp" width="200" height="179" alt="American Association of Endodontists logo" class="h-24 w-auto object-contain" loading="lazy" /></a>
+      <a href="https://www.caendo.ca/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/canadian-academy-of-endodontics-logo.webp" width="200" height="120" alt="Canadian Academy of Endodontics logo" class="h-20 w-auto object-contain" loading="lazy" /></a>
+      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/western-university-logo.webp" width="250" height="107" alt="Western University logo" class="h-16 w-auto object-contain" loading="lazy" /></a>
+      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/university-of-toronto-logo.webp" width="250" height="110" alt="University of Toronto logo" class="h-16 w-auto object-contain" loading="lazy" /></a>
     </div>
   </section>
 
@@ -356,10 +367,10 @@ function cardColors(color: 'white' | 'rust', index: number) {
 
       <div class="reveal flex flex-col justify-center text-left">
         <h2 class="font-heading text-3xl font-light leading-tight text-brand-ink sm:text-[43px]">Contact us</h2>
-        <p class="mt-4 text-lg text-brand-ink/70">
+        <p class="mt-4 text-lg text-brand-ink/80">
           Contact us today to learn more about how we can help you care for your endodontic needs.
         </p>
-        <p class="mt-3 text-lg text-brand-ink/70">
+        <p class="mt-3 text-lg text-brand-ink/80">
           Thank you for considering 562 endodontics as your endodontic care provider.
         </p>
 
@@ -371,15 +382,15 @@ function cardColors(color: 'white' | 'rust', index: number) {
               rel="noopener"
               class="font-heading text-base font-semibold text-brand-rust hover:underline"
             >Location</a>
-            <p class="text-base text-brand-ink/70">{address.oneLine}</p>
+            <p class="text-base text-brand-ink/80">{address.oneLine}</p>
           </div>
           <div>
             <a href={phoneHref} class="font-heading text-base font-semibold text-brand-rust hover:underline">Call Us</a>
-            <p class="text-base text-brand-ink/70">{phoneVanity}</p>
+            <p class="text-base text-brand-ink/80">{phoneVanity}</p>
           </div>
           <div>
             <p class="font-heading text-base font-semibold text-brand-ink">Working Hours</p>
-            <p class="text-base text-brand-ink/70">{hours.weekday}</p>
+            <p class="text-base text-brand-ink/80">{hours.weekday}</p>
           </div>
         </div>
       </div>

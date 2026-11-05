@@ -11,8 +11,18 @@ interface Props {
   poster?: string;
   class?: string;
 }
+import { imageSize } from '../lib/imageSize';
+
 const { title, youtube, mp4, poster, class: className = '' } = Astro.props;
 const thumb = poster ?? (youtube ? `https://i.ytimg.com/vi/${youtube}/hqdefault.jpg` : '');
+// Miniaturas de YouTube: tamaño fijo según el nombre del archivo; las locales se leen de public/.
+const thumbSize = thumb.includes('sddefault')
+  ? { width: 640, height: 480 }
+  : thumb.includes('hqdefault')
+    ? { width: 480, height: 360 }
+    : thumb.includes('maxresdefault')
+      ? { width: 1280, height: 720 }
+      : await imageSize(thumb);
 ---
 
 <button
@@ -24,7 +34,7 @@ const thumb = poster ?? (youtube ? `https://i.ytimg.com/vi/${youtube}/hqdefault.
   data-video-title={title}
   aria-label={`Play video: ${title}`}
 >
-  {thumb && <img src={thumb} alt="" class="h-full w-full object-cover" loading="lazy" />}
+  {thumb && <img src={thumb} width={thumbSize.width} height={thumbSize.height} alt="" class="h-full w-full object-cover" loading="lazy" />}
   <span class="absolute bottom-3 left-3 flex h-11 w-11 items-center justify-center rounded-full border border-stone-300 bg-white/95 shadow-lg transition group-hover:scale-110 group-hover:bg-white">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="ml-0.5 text-brand-rust" aria-hidden="true"><path d="M8 5v14l11-7Z" /></svg>
   </span>

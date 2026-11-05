@@ -42,7 +42,7 @@ const steps = [
       <h2 class="font-heading text-3xl font-light leading-tight text-brand-ink sm:text-[38px]">
         Thanks for entrusting us with your patients' endodontic needs.
       </h2>
-      <p class="mt-5 text-lg text-brand-ink/70">
+      <p class="mt-5 text-lg text-brand-ink/80">
         At <strong class="font-semibold text-brand-ink">562 endodontics</strong>, we understand how important it is
         to ensure the highest quality of care, and your referral means a lot to us. Rest assured that we will take
         great care in providing the best possible service for your patient.
@@ -65,8 +65,8 @@ const steps = [
     <div class="relative mx-auto max-w-3xl px-6">
       <div class="text-center">
         <h2 class="font-heading text-3xl font-light leading-tight text-brand-ink sm:text-[38px]">Online Referral Form</h2>
-        <p class="mt-4 text-lg text-brand-ink/70">Please fill out this form to refer a patient.</p>
-        <p class="mt-1 text-lg text-brand-ink/70">You will receive a copy of the referral form via email for your records after submission.</p>
+        <p class="mt-4 text-lg text-brand-ink/80">Please fill out this form to refer a patient.</p>
+        <p class="mt-1 text-lg text-brand-ink/80">You will receive a copy of the referral form via email for your records after submission.</p>
       </div>
       <hr class="my-10 border-brand-rust/20" />
 
@@ -189,11 +189,11 @@ const steps = [
 
           <div>
             <p class="font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">Please upload any patient files or x-rays here:</p>
-            <p class="mt-1 text-xs text-brand-ink/60">Please send the most recent periapical and bitewing if available.</p>
+            <p class="mt-1 text-xs text-brand-ink/80">Please send the most recent periapical and bitewing if available.</p>
             <label class="mt-2 block text-sm font-medium text-brand-ink">
               Add your file here
               <input type="file" name="media_field[]" multiple accept=".jpg,.jpeg,.png,.heic,.pdf,.txt,.doc,.docx,.xls,.xlsx" class="mt-1 w-full rounded-lg border border-dashed border-stone-300 px-4 py-3 text-sm" />
-              <span class="mt-1 block text-xs font-normal text-brand-ink/50">Up to 10 files. Maximum file size: 10 MB per file. JPG, PNG, HEIC, PDF, Word, Excel or text.</span>
+              <span class="mt-1 block text-xs font-normal text-brand-ink/80">Up to 10 files. Maximum file size: 10 MB per file. JPG, PNG, HEIC, PDF, Word, Excel or text.</span>
             </label>
             <ul id="file-list" class="mt-2 space-y-1 text-sm text-brand-ink/80" aria-live="polite"></ul>
             <p id="file-error" class="mt-2 hidden text-sm font-medium text-red-600" role="alert"></p>
@@ -226,7 +226,7 @@ const steps = [
 
           <label class="block text-sm font-medium text-brand-ink">
             Restoration After Treatment *
-            <span class="mt-0.5 block text-xs font-normal text-brand-ink/60">We will restore with Resin Modified Glass Ionomer to keep as a base for the composite core unless you prefer:</span>
+            <span class="mt-0.5 block text-xs font-normal text-brand-ink/80">We will restore with Resin Modified Glass Ionomer to keep as a base for the composite core unless you prefer:</span>
             <select name="restoration_after_treatment" required class="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2 text-sm">
               <option value="">Select an option</option>
               <option>Restore with core</option>
@@ -271,14 +271,14 @@ const steps = [
 
           <label class="block text-sm font-medium text-brand-ink">
             Special Accommodation
-            <span class="mt-0.5 block text-xs font-normal text-brand-ink/60">Relevant medical condition, accommodation, dental anxiety, urgent matter, staff member, doctor's relative, etc.</span>
+            <span class="mt-0.5 block text-xs font-normal text-brand-ink/80">Relevant medical condition, accommodation, dental anxiety, urgent matter, staff member, doctor's relative, etc.</span>
             <textarea name="special_considerations" rows="3" class="mt-1 w-full rounded-lg border border-stone-300 px-4 py-2 text-sm"></textarea>
           </label>
 
           <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden" />
           <TurnstileField />
 
-          <label class="flex items-start gap-2 text-xs text-brand-ink/70">
+          <label class="flex items-start gap-2 text-xs text-brand-ink/80">
             <input type="checkbox" name="terms_conditions" required class="mt-0.5" />
             I acknowledge that I agree to the Terms of Use and have read the <a href="/privacy-policy" class="underline">Privacy Policy</a> *
           </label>
