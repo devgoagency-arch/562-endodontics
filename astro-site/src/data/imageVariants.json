@@ -1,0 +1,56 @@
+{
+  "/images/clinic/562-endodontics-london-ontario-clinic-building.webp": {
+    "width": 1600,
+    "height": 1200,
+    "widths": [
+      800,
+      1200,
+      1600
+    ]
+  },
+  "/images/clinic/562-endodontics-london-ontario-clinic-reception.webp": {
+    "width": 1640,
+    "height": 1230,
+    "widths": [
+      800,
+      1200,
+      1640
+    ]
+  },
+  "/images/clinic/562-endodontics-london-ontario-endodontic-treatment-patient-and-assistants.webp": {
+    "width": 1920,
+    "height": 1440,
+    "widths": [
+      800,
+      1200,
+      1920
+    ]
+  },
+  "/images/clinic/562-endodontics-london-ontario-endodontist-treating-patient-with-microscope.webp": {
+    "width": 1619,
+    "height": 1512,
+    "widths": [
+      800,
+      1200,
+      1619
+    ]
+  },
+  "/images/clinic/562-endodontics-london-ontario-treatment-room-wide.webp": {
+    "width": 1440,
+    "height": 706,
+    "widths": [
+      800,
+      1200,
+      1440
+    ]
+  },
+  "/images/clinic/562-endodontics-london-ontario-treatment-room.webp": {
+    "width": 1440,
+    "height": 961,
+    "widths": [
+      800,
+      1200,
+      1440
+    ]
+  }
+}

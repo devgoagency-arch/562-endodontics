@@ -1,0 +1,37 @@
+---
+// <img> responsive para las fotos grandes de public/images/clinic: si la foto tiene variantes
+// generadas (scripts/optimize-images.mjs -> src/data/imageVariants.json) arma un <picture> con AVIF
+// + srcset en WebP y las dimensiones intrínsecas; si no, es un <img> normal. El tamaño con que se
+// muestra lo siguen decidiendo las clases CSS que se pasen en `class`.
+import variants from '../data/imageVariants.json';
+
+interface Props {
+  src: string;
+  alt?: string;
+  class?: string;
+  // Ancho (en CSS) con el que se muestra, para que el navegador elija la variante. Las fotos de
+  // fondo usan `object-cover`, así que en móvil se muestran bastante más anchas que la pantalla.
+  sizes?: string;
+  eager?: boolean; // true = imagen visible al cargar (LCP): sin lazy y con prioridad alta
+}
+const { src, alt = '', class: className, sizes = '(min-width: 1024px) 100vw, 150vw', eager = false } = Astro.props;
+
+const entry = (variants as Record<string, { width: number; height: number; widths: number[] }>)[src];
+const base = src.replace(/\.webp$/, '');
+const avifSet = entry?.widths.map((w) => `${base}-${w}w.avif ${w}w`).join(', ');
+// El original (el más ancho) es el único WebP con su nombre de siempre; los menores llevan el sufijo.
+const webpSet = entry?.widths.map((w) => `${w === entry.width ? src : `${base}-${w}w.webp`} ${w}w`).join(', ');
+const loading = eager ? 'eager' : 'lazy';
+const fetchpriority = eager ? 'high' : undefined;
+---
+
+{
+  entry ? (
+    <picture>
+      <source type="image/avif" srcset={avifSet} sizes={sizes} />
+      <img src={src} srcset={webpSet} sizes={sizes} alt={alt} width={entry.width} height={entry.height} class={className} loading={loading} fetchpriority={fetchpriority} decoding={eager ? undefined : 'async'} />
+    </picture>
+  ) : (
+    <img src={src} alt={alt} class={className} loading={loading} fetchpriority={fetchpriority} />
+  )
+}
