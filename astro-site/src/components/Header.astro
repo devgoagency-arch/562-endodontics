@@ -214,6 +214,14 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
     menu?.classList.toggle('hidden');
     toggle.setAttribute('aria-expanded', String(Boolean(isOpen)));
   });
+  // Los enlaces que llevan a un ancla de la misma página (ej. "Contact Us" -> #form) no recargan la
+  // página, así que el menú móvil hay que cerrarlo al tocar cualquier enlace.
+  menu?.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement).closest('a')) return;
+    menu.classList.remove('flex');
+    menu.classList.add('hidden');
+    toggle?.setAttribute('aria-expanded', 'false');
+  });
 
   // Mega menús: abren con hover (con una pequeña demora al cerrar para poder
   // cruzar del botón al panel), con click/tap y con teclado; cierran con
