@@ -26,7 +26,7 @@ const PHOTOS = [
   '/images/clinic/562-endodontics-london-ontario-treatment-room.webp',
 ];
 const WIDTHS = [800, 1200];
-const AVIF_QUALITY = 50;
+const AVIF_QUALITY = 42;
 const WEBP_QUALITY = 65;
 
 // ruta pública -> ancho máximo (px)
