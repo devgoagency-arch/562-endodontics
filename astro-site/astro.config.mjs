@@ -13,6 +13,9 @@ export default defineConfig({
   // Astro 7 cambió el valor por defecto a 'jsx' (reglas de espacios de React), que pega palabras
   // separadas por saltos de línea junto a enlaces/negritas. true = comportamiento de Astro 5.
   compressHTML: true,
+  // El CSS (Tailwind + fuentes, ~11 KB) va dentro del HTML en vez de en un archivo aparte: así no bloquea el
+  // primer pintado con una petición extra y las fuentes se descubren antes.
+  build: { inlineStylesheets: 'always' },
   // Dominios desde los que se sirve el sitio. Astro 5 solo confía en el nombre del sitio que manda
   // Vercel (x-forwarded-host) si está en esta lista; sin ella toma "localhost" y su protección contra
   // envíos de otros sitios (checkOrigin) rechaza con 403 TODOS los formularios (/api/contact y
