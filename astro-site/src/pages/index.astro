@@ -217,12 +217,19 @@ function cardColors(color: 'white' | 'rust', index: number) {
     function setCardHalfHeightVar() {
       const card = document.getElementById('teasers-card');
       if (card) {
-        document.documentElement.style.setProperty('--card-half-h', `${card.offsetHeight / 2}px`);
-        document.documentElement.style.setProperty('--card-h', `${card.offsetHeight}px`);
+        // Una sola lectura de layout y después las dos escrituras: leer entre ellas obligaba al
+        // navegador a recalcular el layout dos veces seguidas (reflow forzado).
+        const cardHeight = card.offsetHeight;
+        document.documentElement.style.setProperty('--card-half-h', `${cardHeight / 2}px`);
+        document.documentElement.style.setProperty('--card-h', `${cardHeight}px`);
       }
     }
     setCardHalfHeightVar();
-    window.addEventListener('resize', setCardHalfHeightVar);
+    let cardFrame = 0;
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(cardFrame);
+      cardFrame = requestAnimationFrame(setCardHalfHeightVar);
+    });
   </script>
 
   <!-- ALTA TECNOLOGÍA: demos en video de los equipos (High Tech Facility) -->

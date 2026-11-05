@@ -334,7 +334,12 @@ const itemWidth = (count: number) => (count === 2 ? '' : 'basis-[calc((100%-3rem
   }
 
   syncSpacer();
-  window.addEventListener('resize', syncSpacer);
+  // Los eventos de resize llegan a ráfagas: se agrupan en un solo cálculo por frame (lee el layout una vez).
+  let spacerFrame = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(spacerFrame);
+    spacerFrame = requestAnimationFrame(syncSpacer);
+  });
   document.fonts?.ready.then(syncSpacer);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
