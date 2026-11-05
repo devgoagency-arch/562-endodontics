@@ -163,8 +163,8 @@ function cardColors(color: 'white' | 'rust', index: number) {
       <div id="teasers-card" class="mx-auto grid max-w-6xl gap-6 rounded-2xl bg-brand-rust p-3 shadow-2xl sm:grid-cols-3">
         {teasers.map((t) => (
           <a href={t.href} class="reveal group rounded-xl p-7 transition hover:bg-white/10">
-            <h3 class="font-heading text-lg font-semibold text-white">{t.title}</h3>
-            <p class="mt-2 text-base text-white/80">{t.text}</p>
+            <h2 class="font-heading text-lg font-semibold text-white">{t.title}</h2>
+            <p class="mt-2 text-base text-white/85">{t.text}</p>
             <span class="mt-3 inline-block text-sm font-semibold uppercase tracking-wide text-white transition group-hover:translate-x-1">
               Learn More →
             </span>
@@ -256,7 +256,7 @@ function cardColors(color: 'white' | 'rust', index: number) {
     <h2 class="reveal mt-2 font-heading text-4xl font-light leading-tight text-brand-ink sm:text-[43px]"><span class="block">About</span>
       <img src="/logo/562-endodontics-center-gray.svg" alt="562 endodontics" width="821" height="407" class="mx-auto mt-3 block h-[2.3em] w-auto" />
     </h2>
-    <p class="reveal mx-auto mt-5 max-w-2xl text-lg text-brand-ink/70">
+    <p class="reveal mx-auto mt-5 max-w-2xl text-lg text-brand-ink/80">
       We provide specialized care for protecting and preserving natural teeth with the highest
       standards while giving back to the community. Our staff is committed to staying up-to-date on
       the latest treatments and practices. We are dedicated to supporting local initiatives to make a
@@ -360,10 +360,10 @@ function cardColors(color: 'white' | 'rust', index: number) {
 
       <div class="reveal flex flex-col justify-center text-left">
         <h2 class="font-heading text-3xl font-light leading-tight text-brand-ink sm:text-[43px]">Contact us</h2>
-        <p class="mt-4 text-lg text-brand-ink/70">
+        <p class="mt-4 text-lg text-brand-ink/80">
           Contact us today to learn more about how we can help you care for your endodontic needs.
         </p>
-        <p class="mt-3 text-lg text-brand-ink/70">
+        <p class="mt-3 text-lg text-brand-ink/80">
           Thank you for considering 562 endodontics as your endodontic care provider.
         </p>
 
@@ -375,15 +375,15 @@ function cardColors(color: 'white' | 'rust', index: number) {
               rel="noopener"
               class="font-heading text-base font-semibold text-brand-rust hover:underline"
             >Location</a>
-            <p class="text-base text-brand-ink/70">{address.oneLine}</p>
+            <p class="text-base text-brand-ink/80">{address.oneLine}</p>
           </div>
           <div>
             <a href={phoneHref} class="font-heading text-base font-semibold text-brand-rust hover:underline">Call Us</a>
-            <p class="text-base text-brand-ink/70">{phoneVanity}</p>
+            <p class="text-base text-brand-ink/80">{phoneVanity}</p>
           </div>
           <div>
             <p class="font-heading text-base font-semibold text-brand-ink">Working Hours</p>
-            <p class="text-base text-brand-ink/70">{hours.weekday}</p>
+            <p class="text-base text-brand-ink/80">{hours.weekday}</p>
           </div>
         </div>
       </div>
