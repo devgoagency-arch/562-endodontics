@@ -2,6 +2,8 @@
 // Bloque texto + imagen reutilizable para páginas de tratamiento (plantilla
 // para Cracked Teeth y el resto). `imagePosition` controla de qué lado va
 // la foto; el texto siempre va en el <slot />.
+import { imageSize } from '../../lib/imageSize';
+
 interface Props {
   imageSrc: string;
   imageAlt: string;
@@ -26,6 +28,7 @@ const {
   gridCols = 'md:grid-cols-5',
   py = 'py-16 lg:py-20',
 } = Astro.props;
+const imageSize_ = await imageSize(imageSrc);
 ---
 
 <section class={`${bg} ${py}`}>
@@ -34,7 +37,7 @@ const {
       <slot />
     </div>
     <div class={`${imageCols} ${imagePosition === 'left' ? 'md:order-1' : ''}`}>
-      <img src={imageSrc} alt={imageAlt} class={`h-full w-full ${imageAspect} ${imageRounded} object-cover shadow-md`} loading="lazy" />
+      <img src={imageSrc} width={imageSize_.width} height={imageSize_.height} alt={imageAlt} class={`h-full w-full ${imageAspect} ${imageRounded} object-cover shadow-md`} loading="lazy" />
     </div>
   </div>
 </section>

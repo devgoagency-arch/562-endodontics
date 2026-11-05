@@ -9,6 +9,7 @@ import ConsentEmbed from '../components/ConsentEmbed.astro';
 import TreatmentGrid from '../components/TreatmentGrid.astro';
 import TestimonialsSection from '../components/TestimonialsSection.astro';
 import ContactCta from '../components/ContactCta.astro';
+import { imageSize } from '../lib/imageSize';
 
 const aboutFeatures = [
   'Limited to endodontics',
@@ -60,6 +61,8 @@ const techItems = [
     logoClass: 'h-[78px]',
   },
 ];
+
+const techLogoSizes = await Promise.all(techItems.map((item) => imageSize(item.logo)));
 
 // "Most dentists refer patients to us for:" — 5 motivos clínicos (sección
 // "Why would a dentist refer you to us"). No confundir con los 6 tratamientos
@@ -188,10 +191,10 @@ function cardColors(color: 'white' | 'rust', index: number) {
 
           <div class="reveal mt-10 flex flex-wrap items-center gap-8">
             <a href="https://www.ratemds.com/doctor-ratings/dr-jacqueline-lopez-gross-london-on-ca/" target="_blank" rel="noopener" class="rounded-lg bg-white/95 p-2 transition hover:opacity-90">
-              <img src="/images/logos/ratemds-reviews-logo.svg" alt="RateMDs reviews for 562 endodontics" class="h-10 w-auto" loading="lazy" />
+              <img src="/images/logos/ratemds-reviews-logo.svg" width="159" height="43" alt="RateMDs reviews for 562 endodontics" class="h-10 w-auto" loading="lazy" />
             </a>
             <a href="https://www.google.com/maps/place/562+endodontics/@42.9909536,-81.2447238,17z" target="_blank" rel="noopener" class="rounded-lg bg-white/95 p-2 transition hover:opacity-90">
-              <img src="/images/logos/google-reviews-logo.svg" alt="Google reviews for 562 endodontics" class="h-10 w-auto" loading="lazy" />
+              <img src="/images/logos/google-reviews-logo.svg" width="1116" height="458" alt="Google reviews for 562 endodontics" class="h-10 w-auto" loading="lazy" />
             </a>
           </div>
         </div>
@@ -229,13 +232,13 @@ function cardColors(color: 'white' | 'rust', index: number) {
         A <span class="font-semibold text-brand-rust">High Tech</span> Facility
       </h2>
       <div class="mt-14 grid gap-14 md:grid-cols-3 md:gap-8">
-        {techItems.map((item) => (
+        {techItems.map((item, i) => (
           <div class="reveal flex flex-col items-center text-center">
             <p class="font-heading text-sm font-medium uppercase tracking-[0.2em] text-brand-rust">{item.eyebrow}</p>
             <h3 class="mt-4 font-heading text-2xl font-medium leading-snug text-brand-rust md:min-h-34">{item.title}</h3>
             <VideoEmbed youtube={item.youtube} mp4={item.video} poster={item.poster} title={item.title} class="mt-6" />
             <div class="mt-6 flex h-[134px] w-[269px] items-center justify-center rounded-xl bg-white shadow-md ring-1 ring-stone-100">
-              <img src={item.logo} alt={item.logoAlt} class={`${item.logoClass} w-auto max-w-[202px] object-contain`} loading="lazy" />
+              <img src={item.logo} width={techLogoSizes[i].width} height={techLogoSizes[i].height} alt={item.logoAlt} class={`${item.logoClass} w-auto max-w-[202px] object-contain`} loading="lazy" />
             </div>
             <a href={`/high-tech-facility/#${item.id}`} class="mt-6 inline-flex items-center rounded-[20px_20px_3px_3px] bg-brand-rust px-8 py-3 font-heading text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-brand-rustDark">
               Learn More
@@ -261,8 +264,8 @@ function cardColors(color: 'white' | 'rust', index: number) {
     </p>
 
     <div class="reveal mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-      <img src="/images/clinic/562-endodontics-london-ontario-clinic-reception.webp" alt="Reception of the 562 endodontics clinic in London, Ontario" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
-      <img src="/images/team/562-endodontics-london-ontario-team.webp" alt="The 562 endodontics team in London, Ontario" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
+      <img src="/images/clinic/562-endodontics-london-ontario-clinic-reception.webp" width="1640" height="1230" alt="Reception of the 562 endodontics clinic in London, Ontario" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
+      <img src="/images/team/562-endodontics-london-ontario-team.webp" width="1282" height="800" alt="The 562 endodontics team in London, Ontario" class="col-span-1 h-40 w-full rounded-2xl object-cover sm:col-span-2 sm:h-56" loading="lazy" />
     </div>
 
     <ul class="reveal mx-auto mt-10 grid max-w-3xl grid-cols-1 gap-x-8 gap-y-4 text-left sm:grid-cols-3">
@@ -326,10 +329,10 @@ function cardColors(color: 'white' | 'rust', index: number) {
       We are proudly associated with the following organizations
     </h2>
     <div class="mx-auto mt-10 flex max-w-5xl flex-wrap items-center justify-center gap-x-14 gap-y-10 px-6">
-      <a href="https://www.aae.org/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/american-association-of-endodontists-logo.webp" alt="American Association of Endodontists logo" class="h-24 w-auto object-contain" loading="lazy" /></a>
-      <a href="https://www.caendo.ca/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/canadian-academy-of-endodontics-logo.webp" alt="Canadian Academy of Endodontics logo" class="h-20 w-auto object-contain" loading="lazy" /></a>
-      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/western-university-logo.webp" alt="Western University logo" class="h-16 w-auto object-contain" loading="lazy" /></a>
-      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/university-of-toronto-logo.webp" alt="University of Toronto logo" class="h-16 w-auto object-contain" loading="lazy" /></a>
+      <a href="https://www.aae.org/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/american-association-of-endodontists-logo.webp" width="200" height="179" alt="American Association of Endodontists logo" class="h-24 w-auto object-contain" loading="lazy" /></a>
+      <a href="https://www.caendo.ca/" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/canadian-academy-of-endodontics-logo.webp" width="200" height="120" alt="Canadian Academy of Endodontics logo" class="h-20 w-auto object-contain" loading="lazy" /></a>
+      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/western-university-logo.webp" width="250" height="107" alt="Western University logo" class="h-16 w-auto object-contain" loading="lazy" /></a>
+      <a href="http://www.ldds.ca/home.html" target="_blank" rel="noopener" class="transition hover:scale-105"><img src="/images/logos/university-of-toronto-logo.webp" width="250" height="110" alt="University of Toronto logo" class="h-16 w-auto object-contain" loading="lazy" /></a>
     </div>
   </section>
 

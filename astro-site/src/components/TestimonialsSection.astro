@@ -3,7 +3,9 @@
 // están las instrucciones para la actualización mensual).
 import { reviews, summary, SHOW_COUNT, GOOGLE_REVIEWS_URL } from '../data/reviews';
 
-const items = reviews.slice(0, SHOW_COUNT);
+import { imageSize } from '../lib/imageSize';
+
+const items = await Promise.all(reviews.slice(0, SHOW_COUNT).map(async (t) => ({ ...t, avatarSize: t.avatar ? await imageSize(t.avatar) : {} })));
 const monthYear = (value?: string) =>
   value ? new Date(`${value}-15`).toLocaleDateString('en-CA', { month: 'long', year: 'numeric', timeZone: 'UTC' }) : 'Google review';
 ---
@@ -20,7 +22,7 @@ const monthYear = (value?: string) =>
       rel="noopener"
       class="reveal mx-auto mt-8 inline-flex flex-wrap items-center justify-center gap-x-5 gap-y-2 rounded-2xl border border-stone-200 bg-white px-6 py-4 shadow-xs transition hover:shadow-md"
     >
-      <img src="/images/logos/google-reviews-logo.svg" alt="Google Reviews" class="h-10 w-auto" loading="lazy" />
+      <img src="/images/logos/google-reviews-logo.svg" width="1116" height="458" alt="Google Reviews" class="h-10 w-auto" loading="lazy" />
       <span class="flex items-center gap-2">
         <span class="font-heading text-3xl font-semibold text-brand-ink">{summary.rating.toFixed(1)}</span>
         <span class="text-xl tracking-wide text-brand-rust" aria-hidden="true">★★★★★</span>
@@ -35,7 +37,7 @@ const monthYear = (value?: string) =>
         <article class="reveal flex w-full flex-col rounded-2xl border border-stone-200 p-7 text-left shadow-xs md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
           <div class="flex items-center gap-3">
             {t.avatar ? (
-              <img src={t.avatar} alt="" class="h-10 w-10 rounded-full object-cover" loading="lazy" />
+              <img src={t.avatar} width={t.avatarSize.width} height={t.avatarSize.height} alt="" class="h-10 w-10 rounded-full object-cover" loading="lazy" />
             ) : (
               <span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-rust/10 font-heading text-sm font-semibold text-brand-rust" aria-hidden="true">
                 {t.author.charAt(0)}

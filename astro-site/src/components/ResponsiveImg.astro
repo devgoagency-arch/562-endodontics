@@ -4,6 +4,7 @@
 // + srcset en WebP y las dimensiones intrínsecas; si no, es un <img> normal. El tamaño con que se
 // muestra lo siguen decidiendo las clases CSS que se pasen en `class`.
 import variants from '../data/imageVariants.json';
+import { imageSize } from '../lib/imageSize';
 
 interface Props {
   src: string;
@@ -21,6 +22,7 @@ const base = src.replace(/\.webp$/, '');
 const avifSet = entry?.widths.map((w) => `${base}-${w}w.avif ${w}w`).join(', ');
 // El original (el más ancho) es el único WebP con su nombre de siempre; los menores llevan el sufijo.
 const webpSet = entry?.widths.map((w) => `${w === entry.width ? src : `${base}-${w}w.webp`} ${w}w`).join(', ');
+const fallbackSize = entry ? {} : await imageSize(src);
 const loading = eager ? 'eager' : 'lazy';
 const fetchpriority = eager ? 'high' : undefined;
 ---
@@ -32,6 +34,6 @@ const fetchpriority = eager ? 'high' : undefined;
       <img src={src} srcset={webpSet} sizes={sizes} alt={alt} width={entry.width} height={entry.height} class={className} loading={loading} fetchpriority={fetchpriority} decoding={eager ? undefined : 'async'} />
     </picture>
   ) : (
-    <img src={src} alt={alt} class={className} loading={loading} fetchpriority={fetchpriority} />
+    <img src={src} alt={alt} width={fallbackSize.width} height={fallbackSize.height} class={className} loading={loading} fetchpriority={fetchpriority} />
   )
 }

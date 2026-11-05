@@ -16,12 +16,18 @@ const { images, rows = 2 } = Astro.props;
 const items = await Promise.all(
   images.map(async (img, index) => {
     let ratio = 4 / 3;
+    let width: number | undefined;
+    let height: number | undefined;
     try {
       const file = await readFile(path.join(process.cwd(), 'public', img.src));
       const meta = await sharp(file).metadata();
-      if (meta.width && meta.height) ratio = meta.width / meta.height;
+      if (meta.width && meta.height) {
+        ratio = meta.width / meta.height;
+        width = meta.width;
+        height = meta.height;
+      }
     } catch {}
-    return { ...img, ratio, index };
+    return { ...img, ratio, index, width, height };
   })
 );
 
@@ -61,6 +67,8 @@ for (let row = 1; row <= rows; row++) {
           <button type="button" data-gallery-item={img.index} class="block w-full cursor-zoom-in" aria-label={`Open photo: ${img.alt}`}>
             <img
               src={img.src}
+              width={img.width}
+              height={img.height}
               alt={img.alt}
               loading="lazy"
               class="h-auto w-full rounded-[20px] object-cover transition hover:opacity-90"

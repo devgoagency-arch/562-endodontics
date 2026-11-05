@@ -13,12 +13,15 @@ interface Props {
   openLabel: string;
   class?: string;
 }
+import { imageSize } from '../lib/imageSize';
+
 const { src, title, preview, previewAlt, provider = 'Google', openUrl, openLabel, class: className = '' } = Astro.props;
+const previewSize = await imageSize(preview);
 ---
 
 <div data-consent-embed="media" data-src={src} data-title={title} class={`relative overflow-hidden bg-[#f2eeea] ${className}`}>
   <div data-consent-placeholder class="absolute inset-0">
-    <img src={preview} alt={previewAlt} class="h-full w-full object-cover" loading="lazy" />
+    <img src={preview} width={previewSize.width} height={previewSize.height} alt={previewAlt} class="h-full w-full object-cover" loading="lazy" />
     <div class="absolute inset-x-3 bottom-3 rounded-2xl bg-white/95 p-4 shadow-lg sm:inset-x-auto sm:left-4 sm:bottom-4 sm:max-w-sm">
       <p class="text-sm text-brand-ink/80">
         The interactive map is provided by {provider}. Loading it shares your IP address with {provider}, so we ask first.

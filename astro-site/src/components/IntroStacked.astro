@@ -9,7 +9,11 @@ interface Props {
   bottomAlt: string;
   bottomPosition?: string;
 }
+import { imageSize } from '../lib/imageSize';
+
 const { topSrc, topAlt, bottomSrc, bottomAlt, bottomPosition = 'object-top' } = Astro.props;
+const topSize = await imageSize(topSrc);
+const bottomSize = await imageSize(bottomSrc);
 ---
 
 <section class="bg-white py-16 lg:py-20">
@@ -18,8 +22,8 @@ const { topSrc, topAlt, bottomSrc, bottomAlt, bottomPosition = 'object-top' } = 
       <slot />
     </div>
     <div class="flex flex-col gap-5">
-      <img src={topSrc} alt={topAlt} class="aspect-670/300 w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
-      <img src={bottomSrc} alt={bottomAlt} class={`aspect-670/290 w-full rounded-[20px] object-cover shadow-md ${bottomPosition}`} loading="lazy" />
+      <img src={topSrc} width={topSize.width} height={topSize.height} alt={topAlt} class="aspect-670/300 w-full rounded-[20px] object-cover shadow-md" loading="lazy" />
+      <img src={bottomSrc} width={bottomSize.width} height={bottomSize.height} alt={bottomAlt} class={`aspect-670/290 w-full rounded-[20px] object-cover shadow-md ${bottomPosition}`} loading="lazy" />
     </div>
   </div>
 </section>
