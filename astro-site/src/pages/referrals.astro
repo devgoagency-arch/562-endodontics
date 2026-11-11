@@ -190,11 +190,15 @@ const steps = [
           <div>
             <p class="font-heading text-sm font-semibold uppercase tracking-wide text-brand-rust">Please upload any patient files or x-rays here:</p>
             <p class="mt-1 text-xs text-brand-ink/80">Please send the most recent periapical and bitewing if available.</p>
-            <label class="mt-2 block text-sm font-medium text-brand-ink">
-              Add your file here
-              <input type="file" name="media_field[]" multiple accept=".jpg,.jpeg,.png,.heic,.pdf,.txt,.doc,.docx,.xls,.xlsx" class="mt-1 w-full rounded-lg border border-dashed border-stone-300 px-4 py-3 text-sm" />
-              <span class="mt-1 block text-xs font-normal text-brand-ink/80">Up to 10 files. Maximum file size: 10 MB per file. JPG, PNG, HEIC, PDF, Word, Excel or text. You can add files in more than one go; every file you attach is listed below, and you can remove any of them.</span>
-            </label>
+            <div class="mt-3">
+              <!-- El campo nativo queda oculto (sigue siendo el que lleva los archivos) y se abre con un botón claro. -->
+              <input id="media-input" type="file" name="media_field[]" multiple accept=".jpg,.jpeg,.png,.heic,.pdf,.txt,.doc,.docx,.xls,.xlsx" class="peer sr-only" />
+              <label for="media-input" class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-brand-rust px-6 py-2.5 font-heading text-sm font-semibold text-white shadow-sm transition hover:bg-brand-rustDark peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-brand-rust">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+                <span id="file-add-label">Add files</span>
+              </label>
+              <span class="mt-2 block text-xs font-normal text-brand-ink/80">Up to 10 files. Maximum file size: 10 MB per file. JPG, PNG, HEIC, PDF, Word, Excel or text. You can add files more than once; every file you attach is listed below, and you can remove any of them.</span>
+            </div>
             <div id="file-summary" class="mt-3 hidden rounded-lg border border-stone-200 bg-stone-50 p-3">
               <p id="file-count" class="text-sm font-semibold text-brand-ink"></p>
               <ul id="file-list" class="mt-2 divide-y divide-stone-200 text-sm text-brand-ink" aria-live="polite"></ul>
@@ -425,6 +429,8 @@ const steps = [
     function showFiles() {
       fileSummaryEl.classList.toggle('hidden', selected.length === 0);
       fileCountEl.textContent = `${selected.length} ${selected.length === 1 ? 'file' : 'files'} attached (up to ${MAX_FILES})`;
+      const addLabel = document.getElementById('file-add-label');
+      if (addLabel) addLabel.textContent = selected.length ? 'Add more files' : 'Add files';
       fileListEl.replaceChildren(...selected.map((file, index) => {
         const li = document.createElement('li');
         li.className = 'flex items-center justify-between gap-3 py-2';
@@ -433,8 +439,8 @@ const steps = [
         label.textContent = `${file.name} (${sizeLabel(file.size)})`;
         const remove = document.createElement('button');
         remove.type = 'button';
-        remove.className = 'shrink-0 rounded-full border border-stone-300 px-3 py-1 text-xs font-semibold text-brand-ink transition hover:bg-white';
-        remove.textContent = 'Remove';
+        remove.className = 'inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full border border-red-300 bg-white px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-50';
+        remove.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg><span>Remove</span>';
         remove.setAttribute('aria-label', `Remove ${file.name}`);
         remove.addEventListener('click', () => {
           selected.splice(index, 1);
