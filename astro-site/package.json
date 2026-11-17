@@ -12,13 +12,13 @@
     "prebuild": "node scripts/sync-settings.mjs"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.4",
-    "@astrojs/vercel": "^11.0.18",
+    "@astrojs/sitemap": "^3.7.5",
+    "@astrojs/vercel": "^11.0.22",
     "@fontsource/heebo": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
     "@tailwindcss/vite": "^4.3.4",
     "@vercel/blob": "^2.8.2",
-    "astro": "^7.4.5",
+    "astro": "^7.4.12",
     "sharp": "^0.35.5",
     "tailwindcss": "^4.3.4"
   },
